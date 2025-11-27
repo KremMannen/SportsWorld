@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\flyin\\Documents\\Projects\\SportsWorld\\sportsworld-backend\\sportsworld-backend.csproj": {}
+    "C:\\Users\\Marius\\Documents\\Skole\\Webutvikling\\Eksamen - høst 2025\\sportsworld-backend\\sportsworld-backend.csproj": {}
   },
   "projects": {
-    "C:\\Users\\flyin\\Documents\\Projects\\SportsWorld\\sportsworld-backend\\sportsworld-backend.csproj": {
+    "C:\\Users\\Marius\\Documents\\Skole\\Webutvikling\\Eksamen - høst 2025\\sportsworld-backend\\sportsworld-backend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\flyin\\Documents\\Projects\\SportsWorld\\sportsworld-backend\\sportsworld-backend.csproj",
+        "projectUniqueName": "C:\\Users\\Marius\\Documents\\Skole\\Webutvikling\\Eksamen - høst 2025\\sportsworld-backend\\sportsworld-backend.csproj",
         "projectName": "sportsworld-backend",
-        "projectPath": "C:\\Users\\flyin\\Documents\\Projects\\SportsWorld\\sportsworld-backend\\sportsworld-backend.csproj",
-        "packagesPath": "C:\\Users\\flyin\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\flyin\\Documents\\Projects\\SportsWorld\\sportsworld-backend\\obj\\",
+        "projectPath": "C:\\Users\\Marius\\Documents\\Skole\\Webutvikling\\Eksamen - høst 2025\\sportsworld-backend\\sportsworld-backend.csproj",
+        "packagesPath": "C:\\Users\\Marius\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Marius\\Documents\\Skole\\Webutvikling\\Eksamen - høst 2025\\sportsworld-backend\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\flyin\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\Marius\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
@@ -68,7 +68,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.307/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.306/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

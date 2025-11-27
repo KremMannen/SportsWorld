@@ -1,11 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "lLPfPPKUx/0=",
+  "dgSpecHash": "zKmsSS1p/g8=",
   "success": true,
-  "projectFilePath": "C:\\Users\\flyin\\Documents\\Projects\\SportsWorld\\sportsworld-backend\\sportsworld-backend.csproj",
+  "projectFilePath": "C:\\Users\\Marius\\Documents\\Skole\\Webutvikling\\Eksamen - høst 2025\\sportsworld-backend\\sportsworld-backend.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\flyin\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.11\\microsoft.aspnetcore.openapi.9.0.11.nupkg.sha512",
-    "C:\\Users\\flyin\\.nuget\\packages\\microsoft.openapi\\1.6.17\\microsoft.openapi.1.6.17.nupkg.sha512"
+    "C:\\Users\\Marius\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.11\\microsoft.aspnetcore.openapi.9.0.11.nupkg.sha512",
+    "C:\\Users\\Marius\\.nuget\\packages\\microsoft.openapi\\1.6.17\\microsoft.openapi.1.6.17.nupkg.sha512"
   ],
   "logs": []
 }
