@@ -53,6 +53,10 @@
               "suppressParent": "All",
               "target": "Package",
               "version": "[9.*, )"
+            },
+            "Microsoft.EntityFrameworkCore.Sqlite": {
+              "target": "Package",
+              "version": "[9.*, )"
             }
           },
           "imports": [
