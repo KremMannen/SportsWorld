@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("sportsworld-backend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+924ddc8a54f3960a372288508e94dfdc21820dee")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+915bca5f47f7fb754fda57cbe0663b9e42b5fcc6")]
 [assembly: System.Reflection.AssemblyProductAttribute("sportsworld-backend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("sportsworld-backend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
