@@ -13,22 +13,25 @@ public class ImageUploadController(IWebHostEnvironment webHostEnvironment) : Con
         {
             return BadRequest("No file uploaded.");
         }
-            
-            try
-            { // TODO: Sjekke om file er null
-            string webRootPath = webHostEnvironment.WebRootPath; // Stien til webAPIet
+        try
+        {
+            string webRootPath = webHostEnvironment.WebRootPath; 
             string uniqueFileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
-            string absolutePath = Path.Combine( //Stien + mappen med bilder i API + navnet på opprettet fil
+
+            //Stien + mappen med bilder i API + navnet på opprettet fil
+            string absolutePath = Path.Combine
+            ( 
                 webRootPath,
                 "images",
                 uniqueFileName 
-                );
+            );
 
-            using (var fileStream = new FileStream(absolutePath, FileMode.Create)) // Åpner og lukker filstrømmen
+            // Åpner og lukker filstrømmen
+            using (var fileStream = new FileStream(absolutePath, FileMode.Create)) 
             {
-                await file.CopyToAsync(fileStream); // Lagrer bilde fra frontend til images mappen
+                // Lagrer bilde fra frontend til images mappen
+                await file.CopyToAsync(fileStream); 
             }
-
             return Created(absolutePath, uniqueFileName); 
         }
         catch
