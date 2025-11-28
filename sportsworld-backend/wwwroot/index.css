@@ -1,18 +1,20 @@
 body {
-  margin: 24px;
   background: #f6f8f7;
-  color: #000000;
   font-family: sans-serif;
+  margin: 0px;
 }
 .wrap {
-  max-width: 1100px;
-  margin: 0 auto;
+  margin: 24px auto;
+  padding: 0 10% 0 10%;
+  display: block;
 }
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 40px;
+  color: white;
+  background-color: #000;
 }
 .header__heading {
   margin: 0;
@@ -20,8 +22,22 @@ body {
 }
 .header__lead {
   margin: 0;
-  color: #555;
+  color: white;
   font-size: 14px;
+}
+
+.header__title {
+  margin: 16px;
+
+  color: white;
+  font-size: 14px;
+}
+
+.header__base {
+  margin: 16px;
+  color: white;
+  font-size: 14px;
+  background-color: #4c0000;
 }
 .grid {
   display: grid;
@@ -58,11 +74,21 @@ body {
   margin-top: 14px;
 }
 .card__header {
-  margin-top: 0;
+  height: 40px;
+  padding: 0 0 0 10px;
+  width: 100%;
+  margin: 0;
   font-size: 18px;
+  background-color: #4c0000;
+  color: white;
+  display: flex;
+  align-items: center;
 }
 .card__endpoint {
+  padding: 10px 0 0 0;
   display: grid;
+  background-color: white;
+  padding: 10px 0 0 10px;
 }
 .card__row {
   display: grid;
@@ -71,7 +97,6 @@ body {
   align-items: center;
   padding: 4px 0 8px 0;
   border: none;
-  background: none;
 }
 .method {
   font-weight: 600;

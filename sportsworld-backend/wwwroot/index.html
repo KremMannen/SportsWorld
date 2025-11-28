@@ -7,19 +7,18 @@
     <link rel="stylesheet" href="index.css" />
   </head>
   <body>
+    <header class="header">
+      <div class="header__title">
+        <h1 class="header__heading">SportsWorld API</h1>
+        <p class="header__lead">
+          Simple index of available endpoints and example requests
+        </p>
+      </div>
+      <div class="header__base">Base URL: <strong>/api</strong></div>
+    </header>
     <div class="wrap">
-      <header class="header">
-        <div class="header__title">
-          <h1 class="header__heading">SportsWorld API</h1>
-          <p class="header__lead">
-            Simple index of available endpoints and example requests
-          </p>
-        </div>
-        <div class="header__base muted">Base URL: <strong>/api</strong></div>
-      </header>
-
       <div class="grid">
-        <aside class="topbar">
+        <section class="topbar">
           <div class="topbar__resource">
             <div class="topbar__info">
               <strong class="topbar__name">Athletes</strong>
@@ -43,7 +42,7 @@
             </div>
             <div class="topbar__badge badge">/venue</div>
           </div>
-        </aside>
+        </section>
 
         <main class="main">
           <section class="card">
