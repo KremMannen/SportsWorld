@@ -34,6 +34,7 @@ public class AthleteController (SportsWorldContext _context) : ControllerBase
             {
                 return NotFound("No athlete found with that ID.");
             }
+            return Ok(athlete); 
         }
         catch (Exception e)
         {
@@ -47,8 +48,8 @@ public class AthleteController (SportsWorldContext _context) : ControllerBase
         try
         {
             _context.Athletes.Add(newAthlete);
-            await _context
-            return CreatedAtAction("Get", new {id = newAthlete.Id}, newAthlete)
+            await _context.SaveChangesAsync(); 
+            return CreatedAtAction("Get", new {id = newAthlete.Id}, newAthlete); 
         }
         catch (Exception e)
         {
@@ -64,7 +65,7 @@ public class AthleteController (SportsWorldContext _context) : ControllerBase
             Athlete? athlete = await _context.Athletes.FindAsync(id);
             if (athlete != null)
             {
-                _context.Athletes.Remove(todo);
+                _context.Athletes.Remove(athlete);
                 await _context.SaveChangesAsync();
                 return NoContent();
             }

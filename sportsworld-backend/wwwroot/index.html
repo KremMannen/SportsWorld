@@ -1,11 +1,149 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sportsworld API</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SportsWorld API — Index</title>
+    <link rel="stylesheet" href="index.css" />
   </head>
   <body>
-    <p>asdasdas</p>
+    <div class="wrap">
+      <header class="header">
+        <div class="header__title">
+          <h1 class="header__heading">SportsWorld API</h1>
+          <p class="header__lead">
+            Simple index of available endpoints and example requests
+          </p>
+        </div>
+        <div class="header__base muted">Base URL: <strong>/api</strong></div>
+      </header>
+
+      <div class="grid">
+        <aside class="topbar">
+          <div class="topbar__resource">
+            <div class="topbar__info">
+              <strong class="topbar__name">Athletes</strong>
+              <div class="topbar__description muted">Manage athletes</div>
+            </div>
+            <div class="topbar__badge badge">/athlete</div>
+          </div>
+
+          <div class="topbar__resource">
+            <div class="topbar__info">
+              <strong class="topbar__name">Finances</strong>
+              <div class="topbar__description muted">Financial records</div>
+            </div>
+            <div class="topbar__badge badge">/finance</div>
+          </div>
+
+          <div class="topbar__resource">
+            <div class="topbar__info">
+              <strong class="topbar__name">Venues</strong>
+              <div class="topbar__description muted">Sports venues</div>
+            </div>
+            <div class="topbar__badge badge">/venue</div>
+          </div>
+        </aside>
+
+        <main class="main">
+          <section class="card">
+            <h3 class="card__header">Endpoints — Athletes</h3>
+            <div class="card__endpoint">
+              <div class="card__row">
+                <div class="method method--get">GET</div>
+                <div class="card__path">/api/athlete</div>
+                <div class="card__desc muted">List all athletes</div>
+              </div>
+              <div class="card__row">
+                <div class="method method--get">GET</div>
+                <div class="card__path">/api/athlete/{id}</div>
+                <div class="card__desc muted">Get athlete by id</div>
+              </div>
+              <div class="card__row">
+                <div class="method method--post">POST</div>
+                <div class="card__path">/api/athlete</div>
+                <div class="card__desc muted">Create new athlete</div>
+              </div>
+              <div class="card__row">
+                <div class="method method--put">PUT</div>
+                <div class="card__path">/api/athlete</div>
+                <div class="card__desc muted">Update athlete</div>
+              </div>
+              <div class="card__row">
+                <div class="method method--delete">DELETE</div>
+                <div class="card__path">/api/athlete/{id}</div>
+                <div class="card__desc muted">Delete by id</div>
+              </div>
+            </div>
+          </section>
+
+          <section class="card">
+            <h3 class="card__header">Endpoints — Finances</h3>
+            <div class="card__endpoint">
+              <div class="card__row">
+                <div class="method method--get">GET</div>
+                <div class="card__path">/api/finance</div>
+                <div class="card__desc muted">List all finances</div>
+              </div>
+              <div class="card__row">
+                <div class="method method--get">GET</div>
+                <div class="card__path">/api/finance/{id}</div>
+                <div class="card__desc muted">Get finance by id</div>
+              </div>
+              <div class="card__row">
+                <div class="method method--post">POST</div>
+                <div class="card__path">/api/finance</div>
+                <div class="card__desc muted">Create new finance</div>
+              </div>
+              <div class="card__row">
+                <div class="method method--put">PUT</div>
+                <div class="card__path">/api/finance</div>
+                <div class="card__desc muted">Update finance</div>
+              </div>
+              <div class="card__row">
+                <div class="method method--delete">DELETE</div>
+                <div class="card__path">/api/finance/{id}</div>
+                <div class="card__desc muted">Delete by id</div>
+              </div>
+            </div>
+          </section>
+
+          <section class="card">
+            <h3 class="card__header">Endpoints — Venues</h3>
+            <div class="card__endpoint">
+              <div class="card__row">
+                <div class="method method--get">GET</div>
+                <div class="card__path">/api/venue</div>
+                <div class="card__desc muted">List all venues</div>
+              </div>
+              <div class="card__row">
+                <div class="method method--get">GET</div>
+                <div class="card__path">/api/venue/{id}</div>
+                <div class="card__desc muted">Get venue by id</div>
+              </div>
+              <div class="card__row">
+                <div class="method method--post">POST</div>
+                <div class="card__path">/api/venue</div>
+                <div class="card__desc muted">Create new venue</div>
+              </div>
+              <div class="card__row">
+                <div class="method method--put">PUT</div>
+                <div class="card__path">/api/venue</div>
+                <div class="card__desc muted">Update venue</div>
+              </div>
+              <div class="card__row">
+                <div class="method method--delete">DELETE</div>
+                <div class="card__path">/api/venue/{id}</div>
+                <div class="card__desc muted">Delete by id</div>
+              </div>
+            </div>
+          </section>
+
+          <footer class="footer">
+            Generated index for provided controllers — Athlete, Finance, Venue.
+          </footer>
+        </main>
+      </div>
+    </div>
   </body>
 </html>
