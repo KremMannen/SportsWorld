@@ -26,6 +26,12 @@ builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
+// Gjør index filen accessable
+DefaultFilesOptions options = new DefaultFilesOptions();
+options.DefaultFileNames.Add("index.html");
+
+app.UseDefaultFiles(options);
+
 app.UseStaticFiles();
 
 app.UseCors("AllowAnyOrigin");
