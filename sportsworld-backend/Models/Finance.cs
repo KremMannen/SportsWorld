@@ -10,4 +10,5 @@ public class Finance : IFinance
     public int MoneyLeft { get; set; }
     public int NumberOfPurchases { get; set; }
     public int MoneySpent { get; set; }
+    public int Debt { get; set; }
 }

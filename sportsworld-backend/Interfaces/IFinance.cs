@@ -6,4 +6,5 @@ interface IFinance
     int MoneyLeft { get; set; }
     int NumberOfPurchases { get; set; }
     int MoneySpent { get; set; }
+    int Debt { get; set; }
 }
