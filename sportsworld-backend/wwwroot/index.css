@@ -4,7 +4,7 @@ body {
   margin: 0;
 }
 
-.wrap {
+.container {
   margin: auto;
   padding: 0 10%;
   display: block;
@@ -41,40 +41,40 @@ body {
   border-radius: 4px;
 }
 
-.grid {
+.layout {
   display: grid;
   grid-template-columns: 1fr;
   gap: 18px;
 }
 
-.section {
+.resources {
   background: transparent;
 
   border: none;
 }
 
-.section__resource {
+.resources__item {
   display: flex;
   justify-content: space-between;
   padding: 4px 0;
   border-bottom: 1px solid #ccc;
 }
 
-.section__info {
+.resources__info {
   display: flex;
   flex-direction: column;
 }
 
-.section__name {
+.resources__name {
   font-weight: bold;
 }
 
-.section__description {
+.resources__description {
   color: #555;
   font-size: 13px;
 }
 
-.section__badge {
+.resources__badge {
   background: none;
   color: #222;
   padding: 0;
@@ -131,13 +131,13 @@ body {
   font-size: 12px;
 }
 
-.card {
+.endpoints {
   background: transparent;
   padding: 0;
   margin-bottom: 20px;
 }
 
-.card__header {
+.endpoints__header {
   height: 40px;
   padding: 0 10px 0 10px;
   width: 100%;
@@ -149,13 +149,13 @@ body {
   align-items: center;
 }
 
-.card__content {
+.endpoints__content {
   width: 100%;
   padding: 10px;
   background-color: white;
 }
 
-.card__row {
+.endpoints__row {
   display: grid;
   grid-template-columns: 80px 1fr 140px;
   gap: 8px;
@@ -164,45 +164,45 @@ body {
   border: none;
 }
 
-.card__method {
+.endpoints__method {
   font-weight: 600;
   font-size: 13px;
   color: #000;
 }
 
-.card__method--get {
+.endpoints__method--get {
   color: green;
 }
 
-.card__method--post {
+.endpoints__method--post {
   color: blue;
 }
 
-.card__method--put {
+.endpoints__method--put {
   color: orange;
 }
 
-.card__method--delete {
+.endpoints__method--delete {
   color: red;
 }
 
-.card__path {
+.endpoints__path {
   font-size: 14px;
 }
 
-.card__desc {
+.endpoints__desc {
   font-size: 13px;
   color: #555;
 }
 
-.footer {
+.page-footer {
   margin-top: 20px;
   color: #555;
   font-size: 13px;
 }
 
 @media (max-width: 800px) {
-  .wrap {
+  .container {
     padding: 0 5%;
   }
 }

@@ -16,158 +16,170 @@
       </div>
       <div class="header__base">Base URL: <strong>/api</strong></div>
     </header>
-
-    <div class="wrap">
-      <div class="grid">
-        <section class="section">
-          <div class="section__resource">
-            <div class="section__info">
-              <strong class="section__name">Athletes</strong>
-              <div class="section__description">Manage athletes</div>
-            </div>
-            <div class="section__badge">/athlete</div>
-          </div>
-
-          <div class="section__resource">
-            <div class="section__info">
-              <strong class="section__name">Finances</strong>
-              <div class="section__description">Financial records</div>
-            </div>
-            <div class="section__badge">/finance</div>
-          </div>
-
-          <div class="section__resource">
-            <div class="section__info">
-              <strong class="section__name">Venues</strong>
-              <div class="section__description">Sports venues</div>
-            </div>
-            <div class="section__badge">/venue</div>
-          </div>
-        </section>
-
-        <section class="examples">
-          <h3 class="examples__title">Example Requests</h3>
-          <div class="examples__list">
-            <div class="examples__item">
-              <span class="examples__method examples__method--get">GET</span>
-              <code class="examples__url"
-                >http://localhost:5110/api/athlete</code
-              >
-            </div>
-            <div class="examples__item">
-              <span class="examples__method examples__method--get">GET</span>
-              <code class="examples__url"
-                >http://localhost:5110/api/athlete/5</code
-              >
-            </div>
-            <div class="examples__item">
-              <span class="examples__method examples__method--post">POST</span>
-              <code class="examples__url"
-                >http://localhost:5110/api/finance</code
-              >
-            </div>
-          </div>
-        </section>
-
-        <main class="main">
-          <section class="card">
-            <h3 class="card__header">Endpoints — Athletes</h3>
-            <div class="card__content">
-              <div class="card__row">
-                <div class="card__method card__method--get">GET</div>
-                <div class="card__path">/api/athlete</div>
-                <div class="card__desc">List all athletes</div>
+    <main class="page">
+      <div class="container">
+        <div class="layout">
+          <section class="resources">
+            <div class="resources__item">
+              <div class="resources__info">
+                <strong class="resources__name">Athletes</strong>
+                <div class="resources__description">Manage athletes</div>
               </div>
-              <div class="card__row">
-                <div class="card__method card__method--get">GET</div>
-                <div class="card__path">/api/athlete/{id}</div>
-                <div class="card__desc">Get athlete by id</div>
+              <div class="resources__badge">/athlete</div>
+            </div>
+
+            <div class="resources__item">
+              <div class="resources__info">
+                <strong class="resources__name">Finances</strong>
+                <div class="resources__description">Financial records</div>
               </div>
-              <div class="card__row">
-                <div class="card__method card__method--post">POST</div>
-                <div class="card__path">/api/athlete</div>
-                <div class="card__desc">Create new athlete</div>
+              <div class="resources__badge">/finance</div>
+            </div>
+
+            <div class="resources__item">
+              <div class="resources__info">
+                <strong class="resources__name">Venues</strong>
+                <div class="resources__description">Sports venues</div>
               </div>
-              <div class="card__row">
-                <div class="card__method card__method--put">PUT</div>
-                <div class="card__path">/api/athlete</div>
-                <div class="card__desc">Update athlete</div>
+              <div class="resources__badge">/venue</div>
+            </div>
+          </section>
+
+          <section class="examples">
+            <h3 class="examples__title">Example Requests</h3>
+            <div class="examples__list">
+              <div class="examples__item">
+                <span class="examples__method examples__method--get">GET</span>
+                <code class="examples__url"
+                  >http://localhost:5110/api/athlete</code
+                >
               </div>
-              <div class="card__row">
-                <div class="card__method card__method--delete">DELETE</div>
-                <div class="card__path">/api/athlete/{id}</div>
-                <div class="card__desc">Delete by id</div>
+              <div class="examples__item">
+                <span class="examples__method examples__method--get">GET</span>
+                <code class="examples__url"
+                  >http://localhost:5110/api/athlete/5</code
+                >
+              </div>
+              <div class="examples__item">
+                <span class="examples__method examples__method--post"
+                  >POST</span
+                >
+                <code class="examples__url"
+                  >http://localhost:5110/api/finance</code
+                >
               </div>
             </div>
           </section>
 
-          <section class="card">
-            <h3 class="card__header">Endpoints — Finances</h3>
-            <div class="card__content">
-              <div class="card__row">
-                <div class="card__method card__method--get">GET</div>
-                <div class="card__path">/api/finance</div>
-                <div class="card__desc">List all finances</div>
+          <section class="endpoints">
+            <h3 class="endpoints__header">Endpoints — Athletes</h3>
+            <div class="endpoints__content">
+              <div class="endpoints__row">
+                <div class="endpoints__method endpoints__method--get">GET</div>
+                <div class="endpoints__path">/api/athlete</div>
+                <div class="endpoints__desc">List all athletes</div>
               </div>
-              <div class="card__row">
-                <div class="card__method card__method--get">GET</div>
-                <div class="card__path">/api/finance/{id}</div>
-                <div class="card__desc">Get finance by id</div>
+              <div class="endpoints__row">
+                <div class="endpoints__method endpoints__method--get">GET</div>
+                <div class="endpoints__path">/api/athlete/{id}</div>
+                <div class="endpoints__desc">Get athlete by id</div>
               </div>
-              <div class="card__row">
-                <div class="card__method card__method--post">POST</div>
-                <div class="card__path">/api/finance</div>
-                <div class="card__desc">Create new finance</div>
+              <div class="endpoints__row">
+                <div class="endpoints__method endpoints__method--post">
+                  POST
+                </div>
+                <div class="endpoints__path">/api/athlete</div>
+                <div class="endpoints__desc">Create new athlete</div>
               </div>
-              <div class="card__row">
-                <div class="card__method card__method--put">PUT</div>
-                <div class="card__path">/api/finance</div>
-                <div class="card__desc">Update finance</div>
+              <div class="endpoints__row">
+                <div class="endpoints__method endpoints__method--put">PUT</div>
+                <div class="endpoints__path">/api/athlete</div>
+                <div class="endpoints__desc">Update athlete</div>
               </div>
-              <div class="card__row">
-                <div class="card__method card__method--delete">DELETE</div>
-                <div class="card__path">/api/finance/{id}</div>
-                <div class="card__desc">Delete by id</div>
-              </div>
-            </div>
-          </section>
-
-          <section class="card">
-            <h3 class="card__header">Endpoints — Venues</h3>
-            <div class="card__content">
-              <div class="card__row">
-                <div class="card__method card__method--get">GET</div>
-                <div class="card__path">/api/venue</div>
-                <div class="card__desc">List all venues</div>
-              </div>
-              <div class="card__row">
-                <div class="card__method card__method--get">GET</div>
-                <div class="card__path">/api/venue/{id}</div>
-                <div class="card__desc">Get venue by id</div>
-              </div>
-              <div class="card__row">
-                <div class="card__method card__method--post">POST</div>
-                <div class="card__path">/api/venue</div>
-                <div class="card__desc">Create new venue</div>
-              </div>
-              <div class="card__row">
-                <div class="card__method card__method--put">PUT</div>
-                <div class="card__path">/api/venue</div>
-                <div class="card__desc">Update venue</div>
-              </div>
-              <div class="card__row">
-                <div class="card__method card__method--delete">DELETE</div>
-                <div class="card__path">/api/venue/{id}</div>
-                <div class="card__desc">Delete by id</div>
+              <div class="endpoints__row">
+                <div class="endpoints__method endpoints__method--delete">
+                  DELETE
+                </div>
+                <div class="endpoints__path">/api/athlete/{id}</div>
+                <div class="endpoints__desc">Delete by id</div>
               </div>
             </div>
           </section>
 
-          <footer class="footer">
+          <section class="endpoints">
+            <h3 class="endpoints__header">Endpoints — Finances</h3>
+            <div class="endpoints__content">
+              <div class="endpoints__row">
+                <div class="endpoints__method endpoints__method--get">GET</div>
+                <div class="endpoints__path">/api/finance</div>
+                <div class="endpoints__desc">List all finances</div>
+              </div>
+              <div class="endpoints__row">
+                <div class="endpoints__method endpoints__method--get">GET</div>
+                <div class="endpoints__path">/api/finance/{id}</div>
+                <div class="endpoints__desc">Get finance by id</div>
+              </div>
+              <div class="endpoints__row">
+                <div class="endpoints__method endpoints__method--post">
+                  POST
+                </div>
+                <div class="endpoints__path">/api/finance</div>
+                <div class="endpoints__desc">Create new finance</div>
+              </div>
+              <div class="endpoints__row">
+                <div class="endpoints__method endpoints__method--put">PUT</div>
+                <div class="endpoints__path">/api/finance</div>
+                <div class="endpoints__desc">Update finance</div>
+              </div>
+              <div class="endpoints__row">
+                <div class="endpoints__method endpoints__method--delete">
+                  DELETE
+                </div>
+                <div class="endpoints__path">/api/finance/{id}</div>
+                <div class="endpoints__desc">Delete by id</div>
+              </div>
+            </div>
+          </section>
+
+          <section class="endpoints">
+            <h3 class="endpoints__header">Endpoints — Venues</h3>
+            <div class="endpoints__content">
+              <div class="endpoints__row">
+                <div class="endpoints__method endpoints__method--get">GET</div>
+                <div class="endpoints__path">/api/venue</div>
+                <div class="endpoints__desc">List all venues</div>
+              </div>
+              <div class="endpoints__row">
+                <div class="endpoints__method endpoints__method--get">GET</div>
+                <div class="endpoints__path">/api/venue/{id}</div>
+                <div class="endpoints__desc">Get venue by id</div>
+              </div>
+              <div class="endpoints__row">
+                <div class="endpoints__method endpoints__method--post">
+                  POST
+                </div>
+                <div class="endpoints__path">/api/venue</div>
+                <div class="endpoints__desc">Create new venue</div>
+              </div>
+              <div class="endpoints__row">
+                <div class="endpoints__method endpoints__method--put">PUT</div>
+                <div class="endpoints__path">/api/venue</div>
+                <div class="endpoints__desc">Update venue</div>
+              </div>
+              <div class="endpoints__row">
+                <div class="endpoints__method endpoints__method--delete">
+                  DELETE
+                </div>
+                <div class="endpoints__path">/api/venue/{id}</div>
+                <div class="endpoints__desc">Delete by id</div>
+              </div>
+            </div>
+          </section>
+          <footer class="page-footer">
             Index for API controllers — Athlete, Finance, Venue.
           </footer>
-        </main>
+        </div>
       </div>
-    </div>
+    </main>
   </body>
 </html>
