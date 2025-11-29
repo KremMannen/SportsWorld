@@ -200,9 +200,3 @@ body {
   color: #555;
   font-size: 13px;
 }
-
-@media (max-width: 800px) {
-  .container {
-    padding: 0 5%;
-  }
-}
