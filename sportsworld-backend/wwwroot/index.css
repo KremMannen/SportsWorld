@@ -134,11 +134,12 @@ body {
 .card {
   background: transparent;
   padding: 0;
+  margin-bottom: 20px;
 }
 
 .card__header {
   height: 40px;
-  padding: 0 0 0 10px;
+  padding: 0 10px 0 10px;
   width: 100%;
   margin: 0;
   font-size: 18px;
@@ -149,7 +150,8 @@ body {
 }
 
 .card__content {
-  padding: 10px 0 0 10px;
+  width: 100%;
+  padding: 10px;
   background-color: white;
 }
 
