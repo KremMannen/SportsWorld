@@ -17,10 +17,12 @@ export const VenueContext = createContext<IVenueContext | null>(null);
 export const VenueProvider = ({ children }: IProviderProps) => {
   const [venues, setVenues] = useState<IVenue[]>([]);
   const [searchResults, setSearchResults] = useState<IVenue[]>([]);
-
+  const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
 
   const showAll = async () => {
+    setIsLoading(true);
+    setErrorMessage("");
     try {
       const data = await getVenues();
       setVenues(data);
@@ -31,10 +33,14 @@ export const VenueProvider = ({ children }: IProviderProps) => {
           ? error.message
           : "Loading failed, unknown reason"
       );
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const searchByID = async (id: number) => {
+    setIsLoading(true);
+    setErrorMessage("");
     try {
       const data = await getVenueById(id);
       setSearchResults([data]);
@@ -44,10 +50,14 @@ export const VenueProvider = ({ children }: IProviderProps) => {
           ? error.message
           : "Loading failed, unknown reason"
       );
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const searchByName = async (name: string) => {
+    setIsLoading(true);
+    setErrorMessage("");
     try {
       const data = await getVenueByName(name);
       setSearchResults(data);
@@ -57,10 +67,13 @@ export const VenueProvider = ({ children }: IProviderProps) => {
           ? error.message
           : "Loading failed, unknown reason"
       );
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const addVenue = async (newVenue: Omit<IVenue, "id">, img: File) => {
+    setErrorMessage("");
     try {
       const response = await ImageUploadService.uploadVenueImage(img);
       const venueWithImage = { ...newVenue, image: response.fileName };
@@ -74,6 +87,7 @@ export const VenueProvider = ({ children }: IProviderProps) => {
   };
 
   const deleteVenueById = async (id: number) => {
+    setErrorMessage("");
     try {
       await deleteVenue(id);
       await showAll();
@@ -85,6 +99,7 @@ export const VenueProvider = ({ children }: IProviderProps) => {
   };
 
   const updateVenue = async (updatedVenue: IVenue) => {
+    setErrorMessage("");
     try {
       await putVenue(updatedVenue);
       await showAll();

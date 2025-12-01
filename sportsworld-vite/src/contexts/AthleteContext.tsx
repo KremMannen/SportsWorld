@@ -17,10 +17,12 @@ export const AthleteContext = createContext<IAthleteContext | null>(null);
 export const AthleteProvider = ({ children }: IProviderProps) => {
   const [athletes, setAthletes] = useState<IAthlete[]>([]);
   const [searchResults, setSearchResults] = useState<IAthlete[]>([]);
-
+  const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
 
   const showAll = async () => {
+    setIsLoading(true);
+    setErrorMessage("");
     try {
       const data = await getAthletes();
       setAthletes(data);
@@ -31,36 +33,43 @@ export const AthleteProvider = ({ children }: IProviderProps) => {
           ? error.message
           : "Loading failed, unknown reason"
       );
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const searchByID = async (id: number) => {
+    setIsLoading(true);
+    setErrorMessage("");
     try {
       const data = await getAthleteById(id);
       setSearchResults([data]);
     } catch (error) {
       setErrorMessage(
-        error instanceof Error
-          ? error.message
-          : "Loading failed, unknown reason"
+        error instanceof Error ? error.message : "Search failed, unknown reason"
       );
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const searchByName = async (name: string) => {
+    setIsLoading(true);
+    setErrorMessage("");
     try {
       const data = await getAthletesByName(name);
       setSearchResults(data);
     } catch (error) {
       setErrorMessage(
-        error instanceof Error
-          ? error.message
-          : "Loading failed, unknown reason"
+        error instanceof Error ? error.message : "Search failed, unknown reason"
       );
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const addAthlete = async (athlete: Omit<IAthlete, "id">, img: File) => {
+    setErrorMessage("");
     try {
       const response = await ImageUploadService.uploadAthleteImage(img);
       const athleteWithImage = { ...athlete, image: response.fileName };
@@ -74,6 +83,7 @@ export const AthleteProvider = ({ children }: IProviderProps) => {
   };
 
   const deleteAthleteById = async (id: number) => {
+    setErrorMessage("");
     try {
       await deleteAthlete(id);
       await showAll();
@@ -85,6 +95,7 @@ export const AthleteProvider = ({ children }: IProviderProps) => {
   };
 
   const updateAthlete = async (athlete: IAthlete) => {
+    setErrorMessage("");
     try {
       await putAthlete(athlete);
       await showAll();
@@ -104,6 +115,7 @@ export const AthleteProvider = ({ children }: IProviderProps) => {
       value={{
         athletes,
         searchResults,
+        isLoading,
         errorMessage,
         showAll,
         searchByID,

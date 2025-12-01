@@ -11,6 +11,7 @@ export const FinanceProvider = ({ children }: IProviderProps) => {
   const [errorMessage, setErrorMessage] = useState<string>("");
 
   const showFinance = async () => {
+    setErrorMessage("");
     try {
       const data = await getFinances();
       setFinance(data[0] || null);
@@ -24,6 +25,7 @@ export const FinanceProvider = ({ children }: IProviderProps) => {
   };
 
   const updateFinance = async (updatedFinance: IFinance) => {
+    setErrorMessage("");
     try {
       await putFinance(updatedFinance);
       await showFinance();

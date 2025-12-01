@@ -4,6 +4,7 @@ export interface IAthleteContext {
   athletes: IAthlete[];
   searchResults: IAthlete[];
   errorMessage: string;
+  isLoading: boolean;
   showAll: () => Promise<void>;
   searchByID: (id: number) => Promise<void>;
   searchByName: (name: string) => Promise<void>;
