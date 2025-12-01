@@ -34,7 +34,7 @@ public class FinanceController (SportsWorldContext _context) : ControllerBase
 
              if (existingFinance != null)
         {
-            return BadRequest("Finans-objekt finnes allerede. Oppdater dette eller slett det for å skape nytt.");
+            return BadRequest("Kan ikke legge til et nytt finans-objekt. Oppdater eksisterende eller slett det for å lage nytt.");
         }
 
             _context.Finances.Add(newFinance);
@@ -81,7 +81,7 @@ public class FinanceController (SportsWorldContext _context) : ControllerBase
             /* Sjekker først om det finnes noe å redigere. */
             if (finance == null)
             {
-                return NotFound("Ingen finans-objekter å oppdatere. Legg til");
+                return NotFound("Ingen finans-objekter å oppdatere. Legg til nytt.");
             }
 
             _context.Entry(editedFinance).State = EntityState.Modified;
