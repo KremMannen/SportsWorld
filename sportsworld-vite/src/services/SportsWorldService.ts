@@ -138,3 +138,20 @@ const putFinance = async (editedFinance: IFinance): Promise<void> => {
 
 // Not implemented
 // POST and Delete -- Not necessary in current scope
+
+export {
+  getAthletes,
+  getAthleteById,
+  getAthleteByName,
+  postAthlete,
+  deleteAthlete,
+  putAthlete,
+  getVenues,
+  getVenueById,
+  getVenueByName,
+  postVenue,
+  deleteVenue,
+  putVenue,
+  getFinances,
+  putFinance,
+};
