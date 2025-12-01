@@ -13,14 +13,14 @@ public class ImageUploadController(IWebHostEnvironment webHostEnvironment) : Con
     // Hver mappe får sitt eget endepunkt, så det enkelt kan brukes i service i frontend
     // Basert på endpoint, kalles SaveFile funksjonen med folder forhåndsbestemt i absolutePath.
 
-    [HttpPost("athlete")]
+    [HttpPost("athlete")] // http://localhost:5110/api/ImageUpload/athlete
     public async Task<ActionResult> UploadAthlete(IFormFile file)
     {
         return await SaveFile(file, "AthleteImages");
     }
 
 
-    [HttpPost("venue")]
+    [HttpPost("venue")] // http://localhost:5110/api/ImageUpload/venue
     public async Task<ActionResult> UploadVenue(IFormFile file)
     {
         return await SaveFile(file, "VenueImages");
