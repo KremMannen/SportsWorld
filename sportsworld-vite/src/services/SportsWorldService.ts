@@ -20,16 +20,15 @@ const getAthletes = async (): Promise<IAthlete[]> => {
 
 const getAthleteById = async (id: number): Promise<IAthlete> => {
   try {
-    const result = await axios.get<IAthlete>(`${athleteEndpoint}/${id}`);
-    return result.data;
+    const { data } = await axios.get<IAthlete>(`${athleteEndpoint}/${id}`);
+    return data;
   } catch (error) {
     console.error("getAthleteById: Failed to fetch athlete:", error);
     throw error;
   }
 };
-("byname/{name}");
 
-const getAthleteByName = async (query: String): Promise<IAthlete> => {
+const getAthleteByName = async (query: string): Promise<IAthlete> => {
   try {
     const result = await axios.get<IAthlete>(
       `${athleteEndpoint}/byname/${query}`
@@ -41,12 +40,30 @@ const getAthleteByName = async (query: String): Promise<IAthlete> => {
   }
 };
 
-const postAthlete = async (newAthlete: IAthlete) => {
+const postAthlete = async (newAthlete: IAthlete): Promise<IAthlete> => {
   try {
-    const { data } = await axios.post<number>(athleteEndpoint, newAthlete);
-    console.log(data);
+    const { data } = await axios.post<IAthlete>(athleteEndpoint, newAthlete);
+    return data;
   } catch (error) {
-    console.error("postAthlete: Failed to post Athlete:", error);
+    console.error("postAthlete: Failed to post athlete:", error);
+    throw error;
+  }
+};
+
+const deleteAthlete = async (id: number): Promise<void> => {
+  try {
+    await axios.delete(`${athleteEndpoint}/${id}`);
+  } catch (error) {
+    console.error("deleteAthlete: Failed to delete athlete:", error);
+    throw error;
+  }
+};
+
+const putAthlete = async (editedAthlete: IAthlete): Promise<void> => {
+  try {
+    await axios.put(athleteEndpoint, editedAthlete);
+  } catch (error) {
+    console.error("putAthlete: Failed to put athlete:", error);
     throw error;
   }
 };
