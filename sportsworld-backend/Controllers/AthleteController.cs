@@ -10,7 +10,7 @@ namespace sportsworld_backend.Controllers;
 
 public class AthleteController (SportsWorldContext _context) : ControllerBase
 {
-    [HttpGet]
+    [HttpGet] // Hent alle atleter
     public async Task<ActionResult<List<Athlete>>> Get()
     {
         try
@@ -24,7 +24,7 @@ public class AthleteController (SportsWorldContext _context) : ControllerBase
         }
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{id}")] // Hent atlet basert på ID
     public async Task<ActionResult<Athlete>> Get(int id)
     {
         try
@@ -42,7 +42,7 @@ public class AthleteController (SportsWorldContext _context) : ControllerBase
         }
     }
 
-    [HttpPost]
+    [HttpPost] // Legg til ny atlet
     public async Task<ActionResult<Athlete>> Post(Athlete newAthlete)
     {
         try
@@ -57,7 +57,7 @@ public class AthleteController (SportsWorldContext _context) : ControllerBase
         }
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("{id}")] // Slett atlet basert på ID
     public async Task<IActionResult> Delete(int id)
     {
         try
@@ -80,7 +80,7 @@ public class AthleteController (SportsWorldContext _context) : ControllerBase
         }
     }
 
-    [HttpPut]
+    [HttpPut] // Endre atlet-info
     public async Task<ActionResult<Athlete>> Put(Athlete editedAthlete)
     {
         try

@@ -4,12 +4,6 @@ body {
   margin: 0;
 }
 
-.container {
-  margin: auto;
-  padding: 0 10%;
-  display: block;
-}
-
 .header {
   display: flex;
   justify-content: space-between;
@@ -41,6 +35,13 @@ body {
   border-radius: 4px;
 }
 
+/* Bruker Block og 1fr-grid løsning da alle elementer skal spanne hele bredden.*/
+.container {
+  margin: auto;
+  padding: 0 10%;
+  display: block;
+}
+
 .layout {
   display: grid;
   grid-template-columns: 1fr;
@@ -49,7 +50,6 @@ body {
 
 .resources {
   background: transparent;
-
   border: none;
 }
 

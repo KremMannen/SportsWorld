@@ -10,7 +10,7 @@ namespace sportsworld_backend.Controllers;
 
 public class FinanceController (SportsWorldContext _context) : ControllerBase
 {
-    [HttpGet]
+    [HttpGet] // Hent all finans-info, selv om det kun er en rad i tabellen.
     public async Task<ActionResult<List<Finance>>> Get()
     {
         try
@@ -24,7 +24,7 @@ public class FinanceController (SportsWorldContext _context) : ControllerBase
         }
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{id}")] // Redundant? Vil kun være én rad i tabellen. Samme resultat som vanlig getAll funksjon, bare med ekstra steg.
     public async Task<ActionResult<Finance>> Get(int id)
     {
         try
@@ -42,7 +42,7 @@ public class FinanceController (SportsWorldContext _context) : ControllerBase
         }
     }
 
-    [HttpPost]
+    [HttpPost] // Vi skal ikke legge til nytt objekt i denne databasen. Kun se og endre på ett eksisterende objekt.
     public async Task<ActionResult<Finance>> Post(Finance newFinance)
     {
         try
@@ -57,7 +57,7 @@ public class FinanceController (SportsWorldContext _context) : ControllerBase
         }
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("{id}")] // Skal vi kunne slette raden? I så fall så fjerner vi all informasjon i hele tabellen. En vanlig delete uten ID funker også like bra.
     public async Task<IActionResult> Delete(int id)
     {
         try
@@ -80,7 +80,7 @@ public class FinanceController (SportsWorldContext _context) : ControllerBase
         }
     }
 
-    [HttpPut]
+    [HttpPut] // Endre info i finance-raden
     public async Task<ActionResult<Finance>> Put(Finance editedFinance)
     {
         try
