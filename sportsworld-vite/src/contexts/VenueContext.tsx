@@ -120,6 +120,7 @@ export const VenueProvider = ({ children }: IProviderProps) => {
         venues,
         searchResults,
         errorMessage,
+        isLoading,
         showAll,
         searchByID,
         searchByName,
