@@ -51,7 +51,7 @@ public class AthleteController (SportsWorldContext _context) : ControllerBase
                 athlete => athlete.Name.ToLower().Contains(name.ToLower()))
                 .ToListAsync();
 
-            // ToListAsync returnerer en tom liste dersom det ikke er noen resultater. Ikke null. Sjekker derfor antall returnerte objekter.
+            // ToListAsync returnerer en tom liste dersom det ikke er noen resultater. Ikke null. Sjekker derfor antall returnerte
             if (athletes.Count == 0)
             {
                 return NotFound("No athlete found with that Name.");

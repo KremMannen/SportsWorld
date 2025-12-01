@@ -4,7 +4,7 @@ namespace sportsworld_backend.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ImageUploadController(IWebHostEnvironment webHostEnvironment) : ControllerBase
+public class AthleteImageUploadController(IWebHostEnvironment webHostEnvironment) : ControllerBase
 {
     [HttpPost]
     public async Task<ActionResult> Post(IFormFile file)
@@ -23,6 +23,7 @@ public class ImageUploadController(IWebHostEnvironment webHostEnvironment) : Con
             ( 
                 webRootPath,
                 "images",
+                "AthleteImages",
                 uniqueFileName 
             );
 
