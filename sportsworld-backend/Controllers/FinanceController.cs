@@ -24,29 +24,19 @@ public class FinanceController (SportsWorldContext _context) : ControllerBase
         }
     }
 
-    [HttpGet("{id}")] // Redundant? Vil kun være én rad i tabellen. Samme resultat som vanlig getAll funksjon, bare med ekstra steg.
-    public async Task<ActionResult<Finance>> Get(int id)
-    {
-        try
-        {
-            Finance? finance = await _context.Finances.FindAsync(id);
-            if (finance == null)
-            {
-                return NotFound("No finance found with that ID.");
-            }
-            return Ok(finance);
-        }
-        catch (Exception e)
-        {
-            return StatusCode(500, $"Error: {e.Message}");
-        }
-    }
 
-    [HttpPost] // Vi skal ikke legge til nytt objekt i denne databasen. Kun se og endre på ett eksisterende objekt.
+    [HttpPost] // Skal kun brukes om raden har blitt slettet og bruker vil legge inn all data på nytt. Flush and reset.
     public async Task<ActionResult<Finance>> Post(Finance newFinance)
     {
         try
         {
+            var existingFinance = await _context.Finances.FirstOrDefaultAsync();
+
+             if (existingFinance != null)
+        {
+            return BadRequest("Finans-objekt finnes allerede. Oppdater dette eller slett det for å skape nytt.");
+        }
+
             _context.Finances.Add(newFinance);
             await _context.SaveChangesAsync();
             return CreatedAtAction("Get", new { id = newFinance.Id }, newFinance);
@@ -57,12 +47,13 @@ public class FinanceController (SportsWorldContext _context) : ControllerBase
         }
     }
 
-    [HttpDelete("{id}")] // Skal vi kunne slette raden? I så fall så fjerner vi all informasjon i hele tabellen. En vanlig delete uten ID funker også like bra.
-    public async Task<IActionResult> Delete(int id)
+    [HttpDelete] // Sletter første rad i tabellen. Skal aldri være flere rader her uansett.
+    public async Task<IActionResult> Delete()
     {
         try
         {
-            Finance? finance = await _context.Finances.FindAsync(id);
+            var finance = await _context.Finances.FirstOrDefaultAsync();
+
             if (finance != null)
             {
                 _context.Finances.Remove(finance);
@@ -71,7 +62,7 @@ public class FinanceController (SportsWorldContext _context) : ControllerBase
             }
             else
             {
-                return NotFound();
+                return NotFound("Fant ikke finans-objekt");
             }
         }
         catch (Exception e)
@@ -85,6 +76,17 @@ public class FinanceController (SportsWorldContext _context) : ControllerBase
     {
         try
         {
+            var finance = await _context.Finances.FirstOrDefaultAsync();
+        
+            /* Sjekker først om det finnes noe å redigere. */
+            if (finance == null)
+            {
+                return NotFound("Ingen finans-objekter å oppdatere. Legg til");
+            }
+
+            /* Setter ID i nytt objekt til å være likt det eksisterende objektet, ikke defaultverdien som er 0. */
+            editedFinance.Id = finance.Id;
+
             _context.Entry(editedFinance).State = EntityState.Modified;
             await _context.SaveChangesAsync();
             return NoContent();
