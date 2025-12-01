@@ -84,9 +84,6 @@ public class FinanceController (SportsWorldContext _context) : ControllerBase
                 return NotFound("Ingen finans-objekter å oppdatere. Legg til");
             }
 
-            /* Setter ID i nytt objekt til å være likt det eksisterende objektet, ikke defaultverdien som er 0. */
-            editedFinance.Id = finance.Id;
-
             _context.Entry(editedFinance).State = EntityState.Modified;
             await _context.SaveChangesAsync();
             return NoContent();
