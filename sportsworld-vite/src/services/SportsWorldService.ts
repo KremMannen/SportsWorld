@@ -104,7 +104,7 @@ const deleteVenue = async (id: number): Promise<void> => {
   try {
     await axios.delete(`${venueEndpoint}/${id}`);
   } catch (error) {
-    console.error("deleteAthlete: Failed to delete venue:", error);
+    console.error("deleteVenue: Failed to delete venue:", error);
     throw error;
   }
 };
@@ -127,7 +127,6 @@ const getFinances = async (): Promise<IFinance[]> => {
     throw error;
   }
 };
-
 const putFinance = async (editedFinance: IFinance): Promise<void> => {
   try {
     await axios.put(financeEndpoint, editedFinance);
