@@ -20,9 +20,10 @@ public class VenueController (SportsWorldContext _context) : ControllerBase
         }
         catch (Exception e)
         {
-            return StatusCode(500, $"En feil oppsto: {e.Message}");
+            return StatusCode(500, $"Error: {e.Message}");
         }
     }
+
 
     [HttpGet("{id}")]
     public async Task<ActionResult<Venue>> Get(int id)
@@ -41,6 +42,31 @@ public class VenueController (SportsWorldContext _context) : ControllerBase
             return StatusCode(500, $"Error: {e.Message}");
         }
     }
+
+
+    [HttpGet("byname/{name}")]
+    public async Task<ActionResult<List<Venue>>> GetByName(string name)
+    {
+         try
+        {
+            List<Venue> venues = await _context.Venues.Where(
+                venue => venue.Name.ToLower().Contains(name.ToLower()))
+                .ToListAsync();
+
+            // ToListAsync returnerer en tom liste dersom det ikke er noen resultater. Ikke null. Sjekker derfor antall returnerte objekter.
+            if (venues.Count == 0)
+            {
+                return NotFound("No venue found with that name.");
+            }
+
+            return Ok(venues); 
+        }
+        catch (Exception e)
+        {
+            return StatusCode(500, $"Error: {e.Message}");
+        }
+    }
+
 
     [HttpPost]
     public async Task<ActionResult<Venue>> Post(Venue newVenue)

@@ -42,6 +42,29 @@ public class AthleteController (SportsWorldContext _context) : ControllerBase
         }
     }
 
+    [HttpGet("byname/{name}")]
+    public async Task<ActionResult<List<Athlete>>> GetByName(string name)
+    {
+         try
+        {
+            List<Athlete> athletes = await _context.Athletes.Where(
+                athlete => athlete.Name.ToLower().Contains(name.ToLower()))
+                .ToListAsync();
+
+            // ToListAsync returnerer en tom liste dersom det ikke er noen resultater. Ikke null. Sjekker derfor antall returnerte objekter.
+            if (athletes.Count == 0)
+            {
+                return NotFound("No athlete found with that Name.");
+            }
+
+            return Ok(athletes); 
+        }
+        catch (Exception e)
+        {
+            return StatusCode(500, $"Error: {e.Message}");
+        }
+    }
+
     [HttpPost] // Legg til ny atlet
     public async Task<ActionResult<Athlete>> Post(Athlete newAthlete)
     {

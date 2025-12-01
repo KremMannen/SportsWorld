@@ -20,7 +20,7 @@ public class FinanceController (SportsWorldContext _context) : ControllerBase
         }
         catch (Exception e)
         {
-            return StatusCode(500, $"En feil oppsto: {e.Message}");
+            return StatusCode(500, $"Error: {e.Message}");
         }
     }
 
@@ -34,7 +34,7 @@ public class FinanceController (SportsWorldContext _context) : ControllerBase
 
              if (existingFinance != null)
         {
-            return BadRequest("Kan ikke legge til et nytt finans-objekt. Oppdater eksisterende eller slett det for å lage nytt.");
+            return BadRequest("Can't add new object. Update or delete existing objekt.");
         }
 
             _context.Finances.Add(newFinance);
@@ -62,7 +62,7 @@ public class FinanceController (SportsWorldContext _context) : ControllerBase
             }
             else
             {
-                return NotFound("Fant ikke finans-objekt");
+                return NotFound("Can't find Finance-object");
             }
         }
         catch (Exception e)
@@ -81,7 +81,7 @@ public class FinanceController (SportsWorldContext _context) : ControllerBase
             /* Sjekker først om det finnes noe å redigere. */
             if (finance == null)
             {
-                return NotFound("Ingen finans-objekter å oppdatere. Legg til nytt.");
+                return NotFound("Can't find Finance object to update. Try creating a new one");
             }
 
             _context.Entry(editedFinance).State = EntityState.Modified;
