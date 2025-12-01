@@ -1,176 +1,178 @@
 <!DOCTYPE html>
 <html lang="en">
 
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>SportsWorld API — Index</title>
-    <link rel="stylesheet" href="CSS/index.css">
-  </head>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SportsWorld API — Index</title>
+  <link rel="stylesheet" href="CSS/index.css">
+</head>
 
-  <body>
+<body>
 
-    <header class="header">
-      <div class="header__title">
-        <h1 class="header__heading">SportsWorld API</h1>
-        <p class="header__lead">
-          Simple index of available endpoints and example requests
-        </p>
+  <header class="header">
+    <div class="header__title">
+      <h1 class="header__heading">SportsWorld API</h1>
+      <p class="header__lead">
+        Simple index of available endpoints and example requests
+      </p>
+    </div>
+    <div class="header__base">Base URL: <strong>/api</strong></div>
+  </header>
+
+  <main class="container layout">
+
+    <section class="resources">
+      <div class="resources__item">
+        <div class="resources__info">
+          <h3 class="resources__name">Athletes</h3>
+          <p class="resources__description">Manage athletes</p>
+        </div>
+        <div class="resources__badge">/athlete</div>
       </div>
-      <div class="header__base">Base URL: <strong>/api</strong></div>
-    </header>
 
-    <main class="container layout">
-
-      <section class="resources">
-        <div class="resources__item">
-          <div class="resources__info">
-            <strong class="resources__name">Athletes</strong>
-            <div class="resources__description">Manage athletes</div>
-          </div>
-          <div class="resources__badge">/athlete</div>
+      <div class="resources__item">
+        <div class="resources__info">
+          <h3 class="resources__name">Finances</h3>
+          <p class="resources__description">Financial records</p>
         </div>
+        <div class="resources__badge">/finance</div>
+      </div>
 
-        <div class="resources__item">
-          <div class="resources__info">
-            <strong class="resources__name">Finances</strong>
-            <div class="resources__description">Financial records</div>
-          </div>
-          <div class="resources__badge">/finance</div>
+      <div class="resources__item">
+        <div class="resources__info">
+          <h3 class="resources__name">Venues</h3>
+          <p class="resources__description">Sports venues</p>
         </div>
+        <div class="resources__badge">/venue</div>
+      </div>
+    </section>
 
-        <div class="resources__item">
-          <div class="resources__info">
-            <strong class="resources__name">Venues</strong>
-            <div class="resources__description">Sports venues</div>
-          </div>
-          <div class="resources__badge">/venue</div>
+    <section class="examples">
+      <h3 class="examples__title">Example Requests</h3>
+      <div class="examples__list">
+        <div class="examples__item">
+          <span class="examples__method examples__method--get">GET</span>
+          <code class="examples__url">http://localhost:5110/api/athlete</code>
         </div>
-      </section>
+        <div class="examples__item">
+          <span class="examples__method examples__method--get">GET</span>
+          <code class="examples__url">http://localhost:5110/api/athlete/5</code>
+        </div>
+        <div class="examples__item">
+          <span class="examples__method examples__method--post">POST</span>
+          <code class="examples__url">http://localhost:5110/api/finance</code>
+        </div>
+      </div>
+    </section>
 
-      <section class="examples">
-        <h3 class="examples__title">Example Requests</h3>
-        <div class="examples__list">
-          <div class="examples__item">
-            <span class="examples__method examples__method--get">GET</span>
-            <code class="examples__url">http://localhost:5110/api/athlete</code>
-          </div>
-          <div class="examples__item">
-            <span class="examples__method examples__method--get">GET</span>
-            <code class="examples__url">http://localhost:5110/api/athlete/5</code>
-          </div>
-          <div class="examples__item">
-            <span class="examples__method examples__method--post">POST</span>
-            <code class="examples__url">http://localhost:5110/api/finance</code>
-          </div>
+    <section class="endpoints">
+      <h3 class="endpoints__header">Endpoints — Athletes</h3>
+      <div class="endpoints__content">
+        <div class="endpoints__row">
+          <p class="endpoints__method endpoints__method--get">GET</p>
+          <p class="endpoints__path">/api/athlete</p>
+          <p class="endpoints__desc">List all athletes</p>
         </div>
-      </section>
+        <div class="endpoints__row">
+          <p class="endpoints__method endpoints__method--get">GET</p>
+          <p class="endpoints__path">/api/athlete/{id}</p>
+          <p class="endpoints__desc">Get athlete by id</p>
+        </div>
+        <div class="endpoints__row">
+          <p class="endpoints__method endpoints__method--post">POST</p>
+          <p class="endpoints__path">/api/athlete</p>
+          <p class="endpoints__desc">Create athlete object</p>
+        </div>
+        <div class="endpoints__row">
+          <p class="endpoints__method endpoints__method--post">POST</p>
+          <p class="endpoints__path">/api/imageupload/athlete</p>
+          <p class="endpoints__desc">Upload image of athlete</p>
+        </div>
+        <div class="endpoints__row">
+          <p class="endpoints__method endpoints__method--put">PUT</p>
+          <p class="endpoints__path">/api/athlete</p>
+          <p class="endpoints__desc">Update athlete</p>
+        </div>
+        <div class="endpoints__row">
+          <p class="endpoints__method endpoints__method--delete">DELETE</p>
+          <p class="endpoints__path">/api/athlete/{id}</p>
+          <p class="endpoints__desc">Delete by id</p>
+        </div>
+      </div>
+    </section>
 
-      <section class="endpoints">
-        <h3 class="endpoints__header">Endpoints — Athletes</h3>
-        <div class="endpoints__content">
-          <div class="endpoints__row">
-            <div class="endpoints__method endpoints__method--get">GET</div>
-            <div class="endpoints__path">/api/athlete</div>
-            <div class="endpoints__desc">List all athletes</div>
-          </div>
-          <div class="endpoints__row">
-            <div class="endpoints__method endpoints__method--get">GET</div>
-            <div class="endpoints__path">/api/athlete/{id}</div>
-            <div class="endpoints__desc">Get athlete by id</div>
-          </div>
-          <div class="endpoints__row">
-            <div class="endpoints__method endpoints__method--post">POST</div>
-            <div class="endpoints__path">/api/athlete</div>
-            <div class="endpoints__desc">Create athlete object</div>
-          </div>
-          <div class="endpoints__row">
-            <div class="endpoints__method endpoints__method--post">POST</div>
-            <div class="endpoints__path">/api/imageupload/athlete</div>
-            <div class="endpoints__desc">Upload image of athlete</div>
-          </div>
-          <div class="endpoints__row">
-            <div class="endpoints__method endpoints__method--put">PUT</div>
-            <div class="endpoints__path">/api/athlete</div>
-            <div class="endpoints__desc">Update athlete</div>
-          </div>
-          <div class="endpoints__row">
-            <div class="endpoints__method endpoints__method--delete">DELETE</div>
-            <div class="endpoints__path">/api/athlete/{id}</div>
-            <div class="endpoints__desc">Delete by id</div>
-          </div>
+    <section class="endpoints">
+      <h3 class="endpoints__header">Endpoints — Finances</h3>
+      <div class="endpoints__content">
+        <div class="endpoints__row">
+          <p class="endpoints__method endpoints__method--get">GET</p>
+          <p class="endpoints__path">/api/finance</p>
+          <p class="endpoints__desc">List all finances</p>
         </div>
-      </section>
+        <div class="endpoints__row">
+          <p class="endpoints__method endpoints__method--get">GET</p>
+          <p class="endpoints__path">/api/finance/{id}</p>
+          <p class="endpoints__desc">Get finance by id</p>
+        </div>
+        <div class="endpoints__row">
+          <p class="endpoints__method endpoints__method--post">POST</p>
+          <p class="endpoints__path">/api/finance</p>
+          <p class="endpoints__desc">Create finance object</p>
+        </div>
+        <div class="endpoints__row">
+          <p class="endpoints__method endpoints__method--put">PUT</p>
+          <p class="endpoints__path">/api/finance</p>
+          <p class="endpoints__desc">Update finance</p>
+        </div>
+        <div class="endpoints__row">
+          <p class="endpoints__method endpoints__method--delete">DELETE</p>
+          <p class="endpoints__path">/api/finance</p>
+          <p class="endpoints__desc">Delete all finance data</p>
+        </div>
+      </div>
+    </section>
 
-      <section class="endpoints">
-        <h3 class="endpoints__header">Endpoints — Finances</h3>
-        <div class="endpoints__content">
-          <div class="endpoints__row">
-            <div class="endpoints__method endpoints__method--get">GET</div>
-            <div class="endpoints__path">/api/finance</div>
-            <div class="endpoints__desc">List all finances</div>
-          </div>
-          <div class="endpoints__row">
-            <div class="endpoints__method endpoints__method--get">GET</div>
-            <div class="endpoints__path">/api/finance/{id}</div>
-            <div class="endpoints__desc">Get finance by id</div>
-          </div>
-          <div class="endpoints__row">
-            <div class="endpoints__method endpoints__method--post">POST</div>
-            <div class="endpoints__path">/api/finance</div>
-            <div class="endpoints__desc">Create finance object</div>
-          </div>
-          <div class="endpoints__row">
-            <div class="endpoints__method endpoints__method--put">PUT</div>
-            <div class="endpoints__path">/api/finance</div>
-            <div class="endpoints__desc">Update finance</div>
-          </div>
-          <div class="endpoints__row">
-            <div class="endpoints__method endpoints__method--delete">DELETE</div>
-            <div class="endpoints__path">/api/finance</div>
-            <div class="endpoints__desc">Delete all finance data</div>
-          </div>
+    <section class="endpoints">
+      <h3 class="endpoints__header">Endpoints — Venues</h3>
+      <div class="endpoints__content">
+        <div class="endpoints__row">
+          <p class="endpoints__method endpoints__method--get">GET</p>
+          <p class="endpoints__path">/api/venue</p>
+          <p class="endpoints__desc">List all venues</p>
         </div>
-      </section>
+        <div class="endpoints__row">
+          <p class="endpoints__method endpoints__method--get">GET</p>
+          <p class="endpoints__path">/api/venue/{id}</p>
+          <p class="endpoints__desc">Get venue by id</p>
+        </div>
+        <div class="endpoints__row">
+          <p class="endpoints__method endpoints__method--post">POST</p>
+          <p class="endpoints__path">/api/venue</p>
+          <p class="endpoints__desc">Create venue object</p>
+        </div>
+        <div class="endpoints__row">
+          <p class="endpoints__method endpoints__method--post">POST</p>
+          <p class="endpoints__path">/api/imageupload/venue</p>
+          <p class="endpoints__desc">Upload image of venue</p>
+        </div>
+        <div class="endpoints__row">
+          <p class="endpoints__method endpoints__method--put">PUT</p>
+          <p class="endpoints__path">/api/venue</p>
+          <p class="endpoints__desc">Update venue</p>
+        </div>
+        <div class="endpoints__row">
+          <p class="endpoints__method endpoints__method--delete">DELETE</p>
+          <p class="endpoints__path">/api/venue/{id}</p>
+          <p class="endpoints__desc">Delete by id</p>
+        </div>
+      </div>
+    </section>
 
-      <section class="endpoints">
-        <h3 class="endpoints__header">Endpoints — Venues</h3>
-        <div class="endpoints__content">
-          <div class="endpoints__row">
-            <div class="endpoints__method endpoints__method--get">GET</div>
-            <div class="endpoints__path">/api/venue</div>
-            <div class="endpoints__desc">List all venues</div>
-          </div>
-          <div class="endpoints__row">
-            <div class="endpoints__method endpoints__method--get">GET</div>
-            <div class="endpoints__path">/api/venue/{id}</div>
-            <div class="endpoints__desc">Get venue by id</div>
-          </div>
-          <div class="endpoints__row">
-            <div class="endpoints__method endpoints__method--post">POST</div>
-            <div class="endpoints__path">/api/venue</div>
-            <div class="endpoints__desc">Create venue object</div>
-          </div>
-          <div class="endpoints__row">
-            <div class="endpoints__method endpoints__method--post">POST</div>
-            <div class="endpoints__path">/api/imageupload/venue</div>
-            <div class="endpoints__desc">Upload image of venue</div>
-          </div>
-          <div class="endpoints__row">
-            <div class="endpoints__method endpoints__method--put">PUT</div>
-            <div class="endpoints__path">/api/venue</div>
-            <div class="endpoints__desc">Update venue</div>
-          </div>
-          <div class="endpoints__row">
-            <div class="endpoints__method endpoints__method--delete">DELETE</div>
-            <div class="endpoints__path">/api/venue/{id}</div>
-            <div class="endpoints__desc">Delete by id</div>
-          </div>
-        </div>
-      </section>
-      <footer class="page-footer">
-        Index for API controllers — Athlete, Finance, Venue.
-      </footer>
-    </main>
-  </body>
+    <footer class="page-footer">
+      Index for API controllers — Athlete, Finance, Venue.
+    </footer>
+  </main>
+</body>
+
 </html>
