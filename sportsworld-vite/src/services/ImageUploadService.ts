@@ -31,7 +31,6 @@ const uploadImage = async (
     return data;
   } catch (error) {
     console.error("Image upload failed:", error);
-    alert("Failed to upload image. Please try again.");
     throw error;
   }
 };

@@ -21,47 +21,78 @@ export const AthleteProvider = ({ children }: IProviderProps) => {
   const [errorMessage, setErrorMessage] = useState<string>("");
 
   const showAll = async () => {
-    const data = await getAthletes();
-    setAthletes(data);
-    setSearchResults([]);
+    try {
+      const data = await getAthletes();
+      setAthletes(data);
+      setSearchResults([]);
+    } catch (error) {
+      setErrorMessage(
+        error instanceof Error
+          ? error.message
+          : "Loading failed, unknown reason"
+      );
+    }
   };
 
   const searchByID = async (id: number) => {
-    const data = await getAthleteById(id);
-    setSearchResults([data]);
+    try {
+      const data = await getAthleteById(id);
+      setSearchResults([data]);
+    } catch (error) {
+      setErrorMessage(
+        error instanceof Error
+          ? error.message
+          : "Loading failed, unknown reason"
+      );
+    }
   };
 
   const searchByName = async (name: string) => {
-    const data = await getAthletesByName(name);
-    setSearchResults(data);
+    try {
+      const data = await getAthletesByName(name);
+      setSearchResults(data);
+    } catch (error) {
+      setErrorMessage(
+        error instanceof Error
+          ? error.message
+          : "Loading failed, unknown reason"
+      );
+    }
   };
 
   const addAthlete = async (athlete: Omit<IAthlete, "id">, img: File) => {
     try {
       const response = await ImageUploadService.uploadAthleteImage(img);
-      if (!response) {
-        setErrorMessage("addAthlete: Image upload failed!");
-        return;
-      }
       const athleteWithImage = { ...athlete, image: response.fileName };
       await postAthlete(athleteWithImage);
       await showAll();
     } catch (error) {
-      console.error("addAthlete: Athlete upload failed:", error);
       setErrorMessage(
-        error instanceof Error ? error.message : "Upload failed, unknown reason"
+        error instanceof Error ? error.message : "Add failed, unknown reason"
       );
     }
   };
 
   const deleteAthleteById = async (id: number) => {
-    await deleteAthlete(id);
-    await showAll();
+    try {
+      await deleteAthlete(id);
+      await showAll();
+    } catch (error) {
+      setErrorMessage(
+        error instanceof Error ? error.message : "Delete failed, unknown reason"
+      );
+    }
   };
 
   const updateAthlete = async (athlete: IAthlete) => {
-    await putAthlete(athlete);
-    await showAll();
+    try {
+      await putAthlete(athlete);
+      await showAll();
+    } catch (error) {
+      setErrorMessage(
+        error instanceof Error ? error.message : "Update failed, unknown reason"
+      );
+    }
   };
 
   useEffect(() => {
