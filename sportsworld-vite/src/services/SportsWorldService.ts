@@ -39,7 +39,9 @@ const getAthletesByName = async (query: string): Promise<IAthlete[]> => {
     throw error;
   }
 };
-const postAthlete = async (newAthlete: IAthlete): Promise<IAthlete> => {
+const postAthlete = async (
+  newAthlete: Omit<IAthlete, "id">
+): Promise<IAthlete> => {
   try {
     const { data } = await axios.post<IAthlete>(athleteEndpoint, newAthlete);
     return data;
