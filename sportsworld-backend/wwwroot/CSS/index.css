@@ -67,11 +67,14 @@ body {
 
 .resources__name {
   font-weight: bold;
+  font-size: 16px; 
+  margin: 0; 
 }
 
 .resources__description {
   color: #555;
   font-size: 13px;
+  margin: 0; 
 }
 
 .resources__badge {
@@ -168,6 +171,7 @@ body {
   font-weight: 600;
   font-size: 13px;
   color: #000;
+  margin: 0; 
 }
 
 .endpoints__method--get {
@@ -188,11 +192,13 @@ body {
 
 .endpoints__path {
   font-size: 14px;
+  margin: 0; 
 }
 
 .endpoints__desc {
   font-size: 13px;
   color: #555;
+  margin: 0; 
 }
 
 .page-footer {
