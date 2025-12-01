@@ -28,9 +28,9 @@ const getAthleteById = async (id: number): Promise<IAthlete> => {
     throw error;
   }
 };
-const getAthleteByName = async (query: string): Promise<IAthlete> => {
+const getAthletesByName = async (query: string): Promise<IAthlete[]> => {
   try {
-    const result = await axios.get<IAthlete>(
+    const result = await axios.get<IAthlete[]>(
       `${athleteEndpoint}/byname/${query}`
     );
     return result.data;
@@ -82,9 +82,11 @@ const getVenueById = async (id: number): Promise<IVenue> => {
     throw error;
   }
 };
-const getVenueByName = async (query: string): Promise<IVenue> => {
+const getVenueByName = async (query: string): Promise<IVenue[]> => {
   try {
-    const result = await axios.get<IVenue>(`${venueEndpoint}/byname/${query}`);
+    const result = await axios.get<IVenue[]>(
+      `${venueEndpoint}/byname/${query}`
+    );
     return result.data;
   } catch (error) {
     console.error("getVenueByName: Failed to fetch venues:", error);
@@ -142,7 +144,7 @@ const putFinance = async (editedFinance: IFinance): Promise<void> => {
 export {
   getAthletes,
   getAthleteById,
-  getAthleteByName,
+  getAthletesByName,
   postAthlete,
   deleteAthlete,
   putAthlete,
