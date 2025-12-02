@@ -1,11 +1,12 @@
+import type { FC } from "react";
 import type { IVenueCardProps } from "../interfaces/IVenueCard.ts";
 
-export const VenueCard = ({
+export const VenueCard: FC<IVenueCardProps> = ({
   venue,
   variant,
   onEdit,
   onDelete,
-}: IVenueCardProps) => {
+}) => {
   const renderButtons = () => {
     switch (variant) {
       case "view":
@@ -37,7 +38,7 @@ export const VenueCard = ({
   return (
     <div className={`bg-green-100 rounded-lg p-4 shadow-md`}>
       <img
-        src={`/images/AthleteImages/${venue.image}`}
+        src={`/images/VenueImages/${venue.image}`}
         alt={venue.name}
         className="w-full h-48 object-cover rounded-md mb-3"
       />
