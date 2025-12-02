@@ -34,6 +34,7 @@ export const AthleteProvider = ({ children }: IProviderProps) => {
       setAthletes(data);
       setSearchResults([]);
     } catch (error) {
+      // Her må vi bruke tertiary operator for å forsikre typescript om at det er en Error som blir throwa
       setErrorMessage(
         error instanceof Error
           ? error.message
