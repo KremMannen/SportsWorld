@@ -1,5 +1,5 @@
 export interface IVenue {
-  id?: number;
+  id: number;
   name: string;
   capacity: number;
   image?: string;
