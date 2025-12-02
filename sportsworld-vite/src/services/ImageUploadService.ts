@@ -32,6 +32,8 @@ const uploadImage = async (
   } catch (error) {
     console.error("Image upload failed:", error);
     throw error;
+  } finally {
+    formData.delete("file");
   }
 };
 

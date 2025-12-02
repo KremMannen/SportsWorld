@@ -7,8 +7,20 @@ const athleteEndpoint = "http://localhost:5003/api/athlete";
 const venueEndpoint = "http://localhost:5003/api/venue";
 const financeEndpoint = "http://localhost:5003/api/finance";
 
-// Fremfor å returnere null / [] i catchen til disse funksjonene throwes erroren
-// Dette for å kunne bruke de til å gi brukeren feedback på UI nivå
+// Fremfor å returnere null / [] i catchen til disse funksjonene throwes erroren oppover til Context
+// Dette for å kunne gi de til brukeren i UI
+
+// Designvalg: Foreleser har tidligere anvendt dedikerte interfaces
+// som funksjonenes return type annotation. (feks. IResponseList) Vi benytter ikke slike wrappers, siden
+// vi ikke har behov for success boolen.
+// Denne informasjonen formidles gjennom tryCatch blokkene, som er dedikert til error handling.
+
+// Pages kan sjekke Contextens errorMessage variabel (satt fra thrown error)
+// for å vite om operasjonen var vellykket.
+
+// En konsekvens av dette er at vi trenger ikke sette IAthlete som nullable i feks getAthleteById
+// Dersom den ikke finner noen resultater håndteres dette i catch blokken, og vi slipper å ta stilling
+// til dette i hoved-logikken.
 
 const getAthletes = async (): Promise<IAthlete[]> => {
   try {

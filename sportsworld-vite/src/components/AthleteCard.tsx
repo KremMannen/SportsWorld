@@ -1,12 +1,19 @@
+import type { FC } from "react";
 import type { IAthleteCardProps } from "../interfaces/IAthleteCard.ts";
+import type { IAthlete } from "../interfaces/IAthlete.ts";
 
-export const AthleteCard = ({
+// Vi ønsker en modulær AthleteCard komponent som kan generere de forskjellige variantene vi
+// skisserte i prototype-fasen.
+// På denne måten slipper vi å skrive 3 veldig like komponenter i henhold til DRY-prinsippet.
+// Vi tar derfor en string som parameter i komponenten som bestemmer hvilke knapper som skal genereres i kortet.
+
+export const AthleteCard: FC<IAthleteCardProps> = ({
   athlete,
   variant,
   onEdit,
   onDelete,
   onSign,
-}: IAthleteCardProps) => {
+}) => {
   // Endrer bakgrunnsfarge ut ifra om de er kjøpt eller ikke
   const bgColor = athlete.purchased ? "bg-green-100" : "bg-gray-100";
 
@@ -34,14 +41,16 @@ export const AthleteCard = ({
         );
 
       case "sign":
-        return !athlete.purchased ? (
+        if (athlete.purchased) return null;
+
+        return (
           <button
             onClick={() => onSign?.(athlete)}
             className="bg-green-500 text-white px-4 py-2 rounded w-full"
           >
             Sign to Team
           </button>
-        ) : null;
+        );
 
       default:
         return null;
