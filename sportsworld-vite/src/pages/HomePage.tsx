@@ -1,7 +1,11 @@
+import FeaturedFighters from "../components/FeaturedFighters";
+
 const HomePage = () => {
   return (
     <main>
-      <section></section>
+      <section>
+        <FeaturedFighters />
+      </section>
     </main>
   );
 };

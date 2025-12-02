@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, NavLink, Link } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HomePage from "../pages/HomePage";
 import {
   AdminPage,
@@ -7,45 +7,12 @@ import {
   RegisterPage,
   VenuePage,
 } from "../pages";
+import Header from "../components/Header";
 
 const AppRouting = () => {
   return (
     <BrowserRouter>
-      {/* Header component*/}
-
-      <header className="">
-        <nav className="">
-          <h1 className="">SportsWorld</h1>
-          <ul className="">
-            <li>
-              <Link to="/" className="">
-                Hjem
-              </Link>
-            </li>
-            <li>
-              <Link to="/admin" className="">
-                Admin
-              </Link>
-            </li>
-            <li>
-              <Link to="/register" className="">
-                Register
-              </Link>
-            </li>
-            <li>
-              <Link to="/finances" className="">
-                Finances
-              </Link>
-            </li>
-            <li>
-              <Link to="/venues" className="">
-                Venues
-              </Link>
-            </li>
-          </ul>
-        </nav>
-      </header>
-
+      <Header />
       <main>
         <Routes>
           <Route path="/" element={<HomePage />} />

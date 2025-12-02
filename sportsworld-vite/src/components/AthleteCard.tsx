@@ -1,10 +1,11 @@
 import type { FC } from "react";
-import type { IAthleteCardProps } from "../interfaces/IAthleteCard.ts";
+import type { IAthleteCardProps } from "../interfaces/IAthleteCardProps.ts";
 
 // Vi ønsker en modulær AthleteCard komponent som kan generere de forskjellige variantene vi
 // skisserte i prototype-fasen.
 // På denne måten slipper vi å skrive 3 veldig like komponenter i henhold til DRY-prinsippet.
 // Vi tar derfor en string som parameter i komponenten som bestemmer hvilke knapper som skal genereres i kortet.
+// Hvordan vi håndterer TypeSafetyen til stringen forklares i IAthleteCard
 
 export const AthleteCard: FC<IAthleteCardProps> = ({
   athlete,
@@ -17,6 +18,7 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
   const bgColor = athlete.purchased ? "bg-green-100" : "bg-gray-100";
 
   const renderButtons = () => {
+    // Bruker switch fremfor if. Representerer i større grad at variant skal være 1 av 3 muligheter.
     switch (variant) {
       case "view":
         return null;

@@ -3,9 +3,9 @@ import type { IAthlete } from "../interfaces/IAthlete";
 import type { IVenue } from "../interfaces/IVenue";
 import type { IFinance } from "../interfaces/IFinance";
 
-const athleteEndpoint = "http://localhost:5003/api/athlete";
-const venueEndpoint = "http://localhost:5003/api/venue";
-const financeEndpoint = "http://localhost:5003/api/finance";
+const athleteEndpoint = "http://localhost:5110/api/athlete";
+const venueEndpoint = "http://localhost:5110/api/venue";
+const financeEndpoint = "http://localhost:5110/api/finance";
 
 // Fremfor å returnere null / [] i catchen til disse funksjonene throwes erroren oppover til Context
 // for å kunne vise de til brukeren i UI
