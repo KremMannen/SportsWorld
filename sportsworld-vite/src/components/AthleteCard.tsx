@@ -1,6 +1,5 @@
 import type { FC } from "react";
 import type { IAthleteCardProps } from "../interfaces/IAthleteCard.ts";
-import type { IAthlete } from "../interfaces/IAthlete.ts";
 
 // Vi ønsker en modulær AthleteCard komponent som kan generere de forskjellige variantene vi
 // skisserte i prototype-fasen.
