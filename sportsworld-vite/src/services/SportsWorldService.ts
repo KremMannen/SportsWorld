@@ -8,11 +8,12 @@ const venueEndpoint = "http://localhost:5003/api/venue";
 const financeEndpoint = "http://localhost:5003/api/finance";
 
 // Fremfor å returnere null / [] i catchen til disse funksjonene throwes erroren oppover til Context
-// Dette for å kunne gi de til brukeren i UI
+// for å kunne vise de til brukeren i UI
 
-// Designvalg: Foreleser har tidligere anvendt dedikerte interfaces
-// som funksjonenes return type annotation. (feks. IResponseList) Vi benytter ikke slike wrappers, siden
-// vi ikke har behov for success boolen.
+// Foreleser har tidligere anvendt dedikerte interfaces som return type annotation til funksjonene i
+// service. (feks. IResponseList) Vi benytter ikke slike wrappers, siden vi ikke har behov for
+// success boolen.
+
 // Denne informasjonen formidles gjennom tryCatch blokkene, som er dedikert til error handling.
 
 // Pages kan sjekke Contextens errorMessage variabel (satt fra thrown error)
@@ -107,7 +108,7 @@ const getVenueByName = async (query: string): Promise<IVenue[]> => {
     throw error;
   }
 };
-const postVenue = async (newVenue: IVenue): Promise<IVenue> => {
+const postVenue = async (newVenue: Omit<IVenue, "id">): Promise<IVenue> => {
   try {
     const { data } = await axios.post<IVenue>(venueEndpoint, newVenue);
     return data;

@@ -1,4 +1,4 @@
-const VenuePage = () => {
+const NotFoundPage = () => {
   return (
     <main>
       <section></section>
@@ -6,4 +6,4 @@ const VenuePage = () => {
   );
 };
 
-export default VenuePage;
+export default NotFoundPage;

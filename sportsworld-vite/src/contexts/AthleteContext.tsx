@@ -18,12 +18,12 @@ export const AthleteProvider = ({ children }: IProviderProps) => {
   const [athletes, setAthletes] = useState<IAthlete[]>([]);
   const [searchResults, setSearchResults] = useState<IAthlete[]>([]);
 
-  // I funksjoner som laster inn nye athletes benyttes isLoading for å tilby foreldre-komponenten en måte å sjekke om
+  // I funksjoner som laster inn nye athletes kan benytte isLoading for å tilby foreldre-komponenten en måte å sjekke om
   // resultater laster inn, slik at den kan holde brukeren oppdatert via UIX.
   const [isLoading, setIsLoading] = useState(false);
 
   // vi thrower errors fra service-nivå hit, slik at vi kan tilby informasjonen til brukeren i errorMessage variablen
-  // foreldre-komponent kan sjekke om errorMessage er tom, og hvis ikke: skrive ut feilbeskjeden til brukeren.
+  // Når det ikke kommer resultater, kan foreldre-komponenten sjekke om errorMessage er tom, og hvis ikke: skrive ut feilbeskjeden til brukeren.
   const [errorMessage, setErrorMessage] = useState<string>("");
 
   const showAll = async () => {
