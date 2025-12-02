@@ -1,17 +1,4 @@
-import type { IAthlete } from "../interfaces/IAthlete";
-
-// Ville egentlig benytte enum, må bruke noe som ikke genererer et objekt ved runtime for
-// å unngå feilmelding: erasableSyntaxOnly
-// Lager derfor en String Literal Union Type definisjon
-type CardVariant = "view" | "manage" | "sign";
-
-interface AthleteCardProps {
-  athlete: IAthlete;
-  variant: CardVariant;
-  onEdit?: (athlete: IAthlete) => void;
-  onDelete?: (id: number) => void;
-  onSign?: (athlete: IAthlete) => void;
-}
+import type { IAthleteCardProps } from "../interfaces/IAthleteCard.ts";
 
 export const AthleteCard = ({
   athlete,
@@ -19,7 +6,7 @@ export const AthleteCard = ({
   onEdit,
   onDelete,
   onSign,
-}: AthleteCardProps) => {
+}: IAthleteCardProps) => {
   // Endrer bakgrunnsfarge ut ifra om de er kjøpt eller ikke
   const bgColor = athlete.purchased ? "bg-green-100" : "bg-gray-100";
 
@@ -73,7 +60,7 @@ export const AthleteCard = ({
       <p>Price: {athlete.price} kg</p>
       <p>Gender: {athlete.gender}</p>
 
-      {/* Kondisjonelle knapper basert på type parameteret */}
+      {/* Kondisjonelle knapper basert på variant parameteret */}
       <div className="mt-4 flex gap-2">{renderButtons()}</div>
     </div>
   );
