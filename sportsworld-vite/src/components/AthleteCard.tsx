@@ -57,7 +57,7 @@ export const AthleteCard = ({
       />
 
       <h3 className="text-xl font-bold">{athlete.name}</h3>
-      <p>Price: {athlete.price} kg</p>
+      <p>Price: {athlete.price} $</p>
       <p>Gender: {athlete.gender}</p>
 
       {/* Kondisjonelle knapper basert på variant parameteret */}
