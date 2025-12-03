@@ -1,7 +1,7 @@
 import type { IAthlete } from "./IAthlete";
 
-// type CardVariant fugnerer som en enum-fil, en liste med strings som er gyldige alternativer.
-// Forskjellen er at denne kun eksisterer i TypeScript, og ikke ved runtime.
+// type CardVariant fugnerer som en enum, en liste med strings som er gyldige alternativer.
+// Forskjellen er at denne kun eksisterer i TypeScript / ved kompileringstid, og ikke ved runtime.
 // Enum skaper et objekt som kjøres ved runtime, og gir feilmelding.
 
 // Alternativet hadde vært å gi variant type: string.
