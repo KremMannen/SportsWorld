@@ -7,33 +7,34 @@ import type { IFinance } from "../interfaces/IFinance";
 export const FinanceContext = createContext<IFinanceContext | null>(null);
 
 export const FinanceProvider: FC<IProviderProps> = ({ children }) => {
-  const [finance, setFinance] = useState<IFinance | null>(null);
+  const [finance, setFinance] = useState<IFinance[]>([]);
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const showFinance = async () => {
+    setIsLoading(true);
     setErrorMessage("");
-    try {
-      const data = await getFinances();
-      setFinance(data[0] || null);
-    } catch (error) {
-      setErrorMessage(
-        error instanceof Error
-          ? error.message
-          : "Loading failed, unknown reason"
-      );
+    const response = await getFinances();
+
+    if (response.success && response.data) {
+      setFinance(response.data);
+    } else {
+      setErrorMessage(response.error ?? "Failed to load athletes");
     }
+    setIsLoading(false);
   };
 
   const updateFinance = async (updatedFinance: IFinance) => {
+    setIsLoading(true);
     setErrorMessage("");
-    try {
-      await putFinance(updatedFinance);
-      await showFinance();
-    } catch (error) {
-      setErrorMessage(
-        error instanceof Error ? error.message : "Update failed, unknown reason"
-      );
+    const response = await putFinance(updatedFinance);
+
+    if (!response.success) {
+      setErrorMessage(response.error ?? "Failed to update athlete");
+      return;
     }
+    // Trenger ikke sette loading som false enda, da showFinance gjør det til slutt
+    await showFinance();
   };
 
   useEffect(() => {
@@ -45,6 +46,7 @@ export const FinanceProvider: FC<IProviderProps> = ({ children }) => {
       value={{
         finance,
         errorMessage,
+        isLoading,
         showFinance,
         updateFinance,
       }}

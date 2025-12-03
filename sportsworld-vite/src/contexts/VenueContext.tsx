@@ -3,7 +3,7 @@ import type { IProviderProps } from "../interfaces/IProviderProps";
 import {
   deleteVenue,
   getVenueById,
-  getVenueByName,
+  getVenuesByName,
   getVenues,
   postVenue,
   putVenue,
@@ -23,91 +23,86 @@ export const VenueProvider: FC<IProviderProps> = ({ children }) => {
   const showAll = async () => {
     setIsLoading(true);
     setErrorMessage("");
-    try {
-      const data = await getVenues();
-      setVenues(data);
-      setSearchResults([]);
-    } catch (error) {
-      setErrorMessage(
-        error instanceof Error
-          ? error.message
-          : "Loading failed, unknown reason"
-      );
-    } finally {
-      setIsLoading(false);
+    const response = await getVenues();
+
+    if (response.success && response.data) {
+      setVenues(response.data);
+    } else {
+      setErrorMessage(response.error ?? "Failed to load venues");
     }
+    setIsLoading(false);
   };
 
   const searchByID = async (id: number) => {
     setIsLoading(true);
     setErrorMessage("");
-    try {
-      const data = await getVenueById(id);
-      setSearchResults([data]);
-    } catch (error) {
-      setErrorMessage(
-        error instanceof Error
-          ? error.message
-          : "Loading failed, unknown reason"
-      );
-    } finally {
-      setIsLoading(false);
+    const response = await getVenueById(id);
+    if (response.success && response.data) {
+      setSearchResults([response.data]);
+    } else {
+      setErrorMessage(response.error ?? "Venue not found");
     }
   };
 
   const searchByName = async (name: string) => {
     setIsLoading(true);
     setErrorMessage("");
-    try {
-      const data = await getVenueByName(name);
-      setSearchResults(data);
-    } catch (error) {
-      setErrorMessage(
-        error instanceof Error
-          ? error.message
-          : "Loading failed, unknown reason"
-      );
-    } finally {
-      setIsLoading(false);
+
+    const response = await getVenuesByName(name);
+
+    if (response.success && response.data) {
+      setSearchResults(response.data);
+    } else {
+      setErrorMessage(response.error ?? "No venues found");
     }
+
+    setIsLoading(false);
   };
 
   const addVenue = async (newVenue: Omit<IVenue, "id">, img: File) => {
     setErrorMessage("");
-    try {
-      const response = await ImageUploadService.uploadVenueImage(img);
-      const venueWithImage = { ...newVenue, image: response.fileName };
-      await postVenue(venueWithImage);
-      await showAll();
-    } catch (error) {
-      setErrorMessage(
-        error instanceof Error ? error.message : "Add failed, unknown reason"
-      );
+
+    const uploadResponse = await ImageUploadService.uploadVenueImage(img);
+
+    if (!uploadResponse.success) {
+      setErrorMessage(uploadResponse.error ?? "Image upload failed");
+      return;
     }
+
+    const venueWithImage = { ...newVenue, image: uploadResponse.fileName };
+    const postResponse = await postVenue(venueWithImage);
+
+    if (!postResponse.success) {
+      setErrorMessage(postResponse.error ?? "Failed to add athlete");
+      return;
+    }
+    await showAll();
   };
 
   const deleteVenueById = async (id: number) => {
     setErrorMessage("");
-    try {
-      await deleteVenue(id);
-      await showAll();
-    } catch (error) {
-      setErrorMessage(
-        error instanceof Error ? error.message : "Delete failed, unknown reason"
-      );
+
+    const response = await deleteVenue(id);
+
+    if (!response.success) {
+      setErrorMessage(response.error ?? "Failed to delete venue");
+      return;
     }
+
+    await showAll();
   };
 
   const updateVenue = async (updatedVenue: IVenue) => {
     setErrorMessage("");
-    try {
-      await putVenue(updatedVenue);
-      await showAll();
-    } catch (error) {
-      setErrorMessage(
-        error instanceof Error ? error.message : "Update failed, unknown reason"
-      );
+
+    const response = await putVenue(updatedVenue);
+
+    if (!response.success) {
+      setErrorMessage(response.error ?? "Failed to update venue");
+      return;
     }
+
+    await showAll();
   };
 
   useEffect(() => {

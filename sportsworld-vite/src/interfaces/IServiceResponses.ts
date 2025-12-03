@@ -7,7 +7,7 @@ import type { IVenue } from "./IVenue";
 
 export interface IAthleteResponseList {
   success: boolean;
-  data: IAthlete[] | null;
+  data: IAthlete[];
   error?: string;
 }
 
@@ -19,7 +19,7 @@ export interface IAthleteResponseSingle {
 
 export interface IVenueResponseList {
   success: boolean;
-  data: IVenue[] | null;
+  data: IVenue[];
   error?: string;
 }
 
@@ -31,7 +31,7 @@ export interface IVenueResponseSingle {
 
 export interface IFinanceResponseList {
   success: boolean;
-  data: IFinance[] | null;
+  data: IFinance[];
   error?: string;
 }
 

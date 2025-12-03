@@ -18,10 +18,11 @@ const financeEndpoint = "http://localhost:5110/api/finance";
 const getAthletes = async (): Promise<IAthleteResponseList> => {
   try {
     const response = await axios.get<IAthlete[]>(athleteEndpoint);
+
     const validation = validateResponseList(response);
 
     if (!validation.isValid) {
-      return { success: false, data: null, error: validation.error };
+      return { success: false, data: [], error: validation.error };
     }
 
     return {
@@ -32,7 +33,7 @@ const getAthletes = async (): Promise<IAthleteResponseList> => {
     console.error("getAthletes: Failed to fetch athletes:", error);
     return {
       success: false,
-      data: null,
+      data: [],
     };
   }
 };
@@ -67,7 +68,7 @@ const getAthletesByName = async (
     const validation = validateResponseList(response);
 
     if (!validation.isValid) {
-      return { success: false, data: null, error: validation.error };
+      return { success: false, data: [], error: validation.error };
     }
 
     return {
@@ -78,7 +79,7 @@ const getAthletesByName = async (
     console.error("getAthletesByName: Failed to fetch athletes:", error);
     return {
       success: false,
-      data: null,
+      data: [],
     };
   }
 };
@@ -147,7 +148,7 @@ const getVenues = async (): Promise<IVenueResponseList> => {
     const validation = validateResponseList(response);
 
     if (!validation.isValid) {
-      return { success: false, data: null, error: validation.error };
+      return { success: false, data: [], error: validation.error };
     }
 
     return {
@@ -158,7 +159,7 @@ const getVenues = async (): Promise<IVenueResponseList> => {
     console.error("getVenues: Failed to fetch venues:", error);
     return {
       success: false,
-      data: null,
+      data: [],
     };
   }
 };
@@ -183,7 +184,7 @@ const getVenueById = async (id: number): Promise<IVenueResponseSingle> => {
     };
   }
 };
-const getVenueByName = async (query: string): Promise<IVenueResponseList> => {
+const getVenuesByName = async (query: string): Promise<IVenueResponseList> => {
   try {
     const response = await axios.get<IVenue[]>(
       `${venueEndpoint}/byname/${query}`
@@ -191,7 +192,7 @@ const getVenueByName = async (query: string): Promise<IVenueResponseList> => {
     const validation = validateResponseList(response);
 
     if (!validation.isValid) {
-      return { success: false, data: null, error: validation.error };
+      return { success: false, data: [], error: validation.error };
     }
 
     return {
@@ -202,7 +203,7 @@ const getVenueByName = async (query: string): Promise<IVenueResponseList> => {
     console.error("getVenueByName: Failed to fetch venues:", error);
     return {
       success: false,
-      data: null,
+      data: [],
     };
   }
 };
@@ -264,14 +265,14 @@ const putVenue = async (editedVenue: IVenue): Promise<IDefaultResponse> => {
   }
 };
 // Her er det bare 1 objekt som returneres,
-// men vi vedlikeholder mønsteret til get funksjoner og returnerer liste
+// men vi vedlikeholder mønsteret til get funksjoner og bruker liste
 const getFinances = async (): Promise<IFinanceResponseList> => {
   try {
     const response = await axios.get<IFinance[]>(financeEndpoint);
     const validation = validateResponseList(response);
 
     if (!validation.isValid) {
-      return { success: false, data: null, error: validation.error };
+      return { success: false, data: [], error: validation.error };
     }
 
     return {
@@ -282,7 +283,7 @@ const getFinances = async (): Promise<IFinanceResponseList> => {
     console.error("getFinances: Failed to fetch finances:", error);
     return {
       success: false,
-      data: null,
+      data: [],
     };
   }
 };
@@ -305,6 +306,9 @@ const putFinance = async (
     };
   }
 };
+
+// Not implemented for Finances:
+// POST and Delete -- Not necessary in current scope
 
 // Hjelpefunksjoner for å validere outputtet fra Axios kallene
 // Skåner alle andre metoder mange identiske if-checks
@@ -333,7 +337,6 @@ const validateResponseList = (
 
   return { isValid: true, error: "" };
 };
-
 const validateResponseSingle = (
   response: AxiosResponse
 ): { isValid: boolean; error?: string } => {
@@ -341,6 +344,8 @@ const validateResponseSingle = (
   if (response.status !== 200) {
     return { isValid: false, error: "Failed to fetch from server." };
   }
+
+  // Dropper sjekk for isArray, skal ikke være nødvendig.
 
   // Sjekker at dataen eksisterer
   if (!response.data) {
@@ -352,9 +357,6 @@ const validateResponseSingle = (
   return { isValid: true };
 };
 
-// Not implemented
-// POST and Delete -- Not necessary in current scope
-
 export {
   getAthletes,
   getAthleteById,
@@ -364,7 +366,7 @@ export {
   putAthlete,
   getVenues,
   getVenueById,
-  getVenueByName,
+  getVenuesByName,
   postVenue,
   deleteVenue,
   putVenue,
