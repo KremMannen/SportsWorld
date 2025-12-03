@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState, type FC } from "react";
 import type { IProviderProps } from "../interfaces/IProviderProps";
 import { getFinances, putFinance } from "../services/SportsWorldService";
 import type { IFinanceContext } from "../interfaces/IFinanceContext";
@@ -6,7 +6,7 @@ import type { IFinance } from "../interfaces/IFinance";
 
 export const FinanceContext = createContext<IFinanceContext | null>(null);
 
-export const FinanceProvider = ({ children }: IProviderProps) => {
+export const FinanceProvider: FC<IProviderProps> = ({ children }) => {
   const [finance, setFinance] = useState<IFinance | null>(null);
   const [errorMessage, setErrorMessage] = useState<string>("");
 

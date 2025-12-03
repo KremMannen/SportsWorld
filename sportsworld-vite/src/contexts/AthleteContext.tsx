@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState, type FC } from "react";
 import type { IProviderProps } from "../interfaces/IProviderProps";
 import type { IAthlete } from "../interfaces/IAthlete";
 import type { IAthleteContext } from "../interfaces/IAthleteContext";
@@ -14,7 +14,7 @@ import ImageUploadService from "../services/ImageUploadService";
 
 export const AthleteContext = createContext<IAthleteContext | null>(null);
 
-export const AthleteProvider = ({ children }: IProviderProps) => {
+export const AthleteProvider: FC<IProviderProps> = ({ children }) => {
   const [athletes, setAthletes] = useState<IAthlete[]>([]);
   const [searchResults, setSearchResults] = useState<IAthlete[]>([]);
 
@@ -22,95 +22,92 @@ export const AthleteProvider = ({ children }: IProviderProps) => {
   // resultater laster inn, slik at den kan holde brukeren oppdatert via UIX.
   const [isLoading, setIsLoading] = useState(false);
 
-  // vi thrower errors fra service-nivå hit, slik at vi kan tilby informasjonen til brukeren i errorMessage variablen
-  // Når det ikke kommer resultater, kan foreldre-komponenten sjekke om errorMessage er tom, og hvis ikke: skrive ut feilbeskjeden til brukeren.
+  // eventuell feilbeskjed fra error-propertien i IResponse interfaces
   const [errorMessage, setErrorMessage] = useState<string>("");
 
   const showAll = async () => {
     setIsLoading(true);
     setErrorMessage("");
-    try {
-      const data = await getAthletes();
-      setAthletes(data);
-      setSearchResults([]);
-    } catch (error) {
-      // Her må vi bruke tertiary operator for å forsikre typescript om at det er en Error som blir throwa
-      setErrorMessage(
-        error instanceof Error
-          ? error.message
-          : "Loading failed, unknown reason"
-      );
-    } finally {
-      setIsLoading(false);
+    const response = await getAthletes();
+    if (response.success && response.data) {
+      setAthletes(response.data);
+    } else {
+      setErrorMessage(response.error ?? "Failed to load athletes");
     }
+    setIsLoading(false);
   };
 
   const searchByID = async (id: number) => {
     setIsLoading(true);
     setErrorMessage("");
-    try {
-      const data = await getAthleteById(id);
-      setSearchResults([data]);
-    } catch (error) {
-      setErrorMessage(
-        error instanceof Error ? error.message : "Search failed, unknown reason"
-      );
-    } finally {
-      setIsLoading(false);
+    const response = await getAthleteById(id);
+    if (response.success && response.data) {
+      setSearchResults([response.data]);
+    } else {
+      setErrorMessage(response.error ?? "Athlete not found");
     }
   };
 
   const searchByName = async (name: string) => {
     setIsLoading(true);
     setErrorMessage("");
-    try {
-      const data = await getAthletesByName(name);
-      setSearchResults(data);
-    } catch (error) {
-      setErrorMessage(
-        error instanceof Error ? error.message : "Search failed, unknown reason"
-      );
-    } finally {
-      setIsLoading(false);
+
+    const response = await getAthletesByName(name);
+
+    if (response.success && response.data) {
+      setSearchResults(response.data);
+    } else {
+      setErrorMessage(response.error ?? "No athletes found");
     }
+
+    setIsLoading(false);
   };
 
   const addAthlete = async (athlete: Omit<IAthlete, "id">, img: File) => {
     setErrorMessage("");
-    try {
-      const response = await ImageUploadService.uploadAthleteImage(img);
-      const athleteWithImage = { ...athlete, image: response.fileName };
-      await postAthlete(athleteWithImage);
-      await showAll();
-    } catch (error) {
-      setErrorMessage(
-        error instanceof Error ? error.message : "Add failed, unknown reason"
-      );
+
+    const uploadResponse = await ImageUploadService.uploadAthleteImage(img);
+
+    if (!uploadResponse.success) {
+      setErrorMessage(uploadResponse.error ?? "Image upload failed");
+      return;
     }
+
+    const athleteWithImage = { ...athlete, image: uploadResponse.fileName };
+    const postResponse = await postAthlete(athleteWithImage);
+
+    if (!postResponse.success) {
+      setErrorMessage(postResponse.error ?? "Failed to add athlete");
+      return;
+    }
+
+    await showAll();
   };
 
   const deleteAthleteById = async (id: number) => {
     setErrorMessage("");
-    try {
-      await deleteAthlete(id);
-      await showAll();
-    } catch (error) {
-      setErrorMessage(
-        error instanceof Error ? error.message : "Delete failed, unknown reason"
-      );
+
+    const response = await deleteAthlete(id);
+
+    if (!response.success) {
+      setErrorMessage(response.error ?? "Failed to delete athlete");
+      return;
     }
+
+    await showAll();
   };
 
   const updateAthlete = async (athlete: IAthlete) => {
     setErrorMessage("");
-    try {
-      await putAthlete(athlete);
-      await showAll();
-    } catch (error) {
-      setErrorMessage(
-        error instanceof Error ? error.message : "Update failed, unknown reason"
-      );
+
+    const response = await putAthlete(athlete);
+
+    if (!response.success) {
+      setErrorMessage(response.error ?? "Failed to update athlete");
+      return;
     }
+
+    await showAll();
   };
 
   useEffect(() => {

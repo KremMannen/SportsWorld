@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { IUploadResponse } from "../interfaces/IUploadResponse";
+import type { IUploadResponse } from "../interfaces/IServiceResponses";
 
 const venueEndpoint = "http://localhost:5110/api/ImageUpload/venue";
 const athleteEndpoint = "http://localhost:5110/api/ImageUpload/athlete";
@@ -22,16 +22,30 @@ const uploadImage = async (
   formData.append("file", image);
 
   try {
-    const { data } = await axios({
+    const response = await axios({
       url: endpoint,
       method: "POST",
       data: formData,
       headers: { "Content-Type": "multipart/form-data" },
     });
-    return data;
+    if (response.status !== 201) {
+      return {
+        success: false,
+        fileName: null,
+        error: "Failed to upload image.",
+      };
+    }
+
+    return {
+      success: true,
+      fileName: response.data,
+    };
   } catch (error) {
     console.error("Image upload failed:", error);
-    throw error;
+    return {
+      success: false,
+      fileName: null,
+    };
   } finally {
     formData.delete("file");
   }

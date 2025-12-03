@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState, type FC } from "react";
 import type { IProviderProps } from "../interfaces/IProviderProps";
 import {
   deleteVenue,
@@ -14,7 +14,7 @@ import type { IVenue } from "../interfaces/IVenue";
 
 export const VenueContext = createContext<IVenueContext | null>(null);
 
-export const VenueProvider = ({ children }: IProviderProps) => {
+export const VenueProvider: FC<IProviderProps> = ({ children }) => {
   const [venues, setVenues] = useState<IVenue[]>([]);
   const [searchResults, setSearchResults] = useState<IVenue[]>([]);
   const [isLoading, setIsLoading] = useState(false);
