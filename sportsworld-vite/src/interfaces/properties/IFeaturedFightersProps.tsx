@@ -1,4 +1,4 @@
-import type { IAthlete } from "./IAthlete";
+import type { IAthlete } from "../IAthlete";
 
 export interface IFeaturedFightersProps {
   athleteList: IAthlete[];

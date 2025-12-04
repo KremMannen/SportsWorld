@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState, type FC } from "react";
-import type { IProviderProps } from "../interfaces/IProviderProps";
+import type { IProviderProps } from "../interfaces/properties/IProviderProps";
 import type { IAthlete } from "../interfaces/IAthlete";
 import type { IAthleteContext } from "../interfaces/IAthleteContext";
 import {
@@ -110,8 +110,110 @@ export const AthleteProvider: FC<IProviderProps> = ({ children }) => {
     await showAll();
   };
 
+  // Seeding av databasen skal vel egentlig gjøres i backend, men for å holde prosjektet innenfor rammene av pensum gjør vi det her.
+  const initializeAthletes = async () => {
+    setIsLoading(true);
+    // Sjekk om det allerede finnes athletes
+    const existingAthletes = await getAthletes();
+
+    if (!existingAthletes.success) {
+      setErrorMessage(
+        existingAthletes.error ?? "Failed to check number of athletes"
+      );
+      setIsLoading(false);
+      return;
+    }
+
+    if (existingAthletes.data.length === 0) {
+      // Bildene er forhåndsplassert i backend
+      const seedAthletes = [
+        {
+          name: "Jon Jones",
+          price: 5000,
+          gender: "Male",
+          image: "seed-fighter1.jpg",
+          purchased: false,
+        },
+        {
+          name: "Conor McGregor",
+          price: 120,
+          gender: "Male",
+          image: "seed-fighter2.jpg",
+          purchased: false,
+        },
+        {
+          name: "Anderson Silva",
+          price: 130,
+          gender: "Male",
+          image: "seed-fighter3.jpg",
+          purchased: false,
+        },
+        {
+          name: "Khabib Nurmagomedov",
+          price: 160,
+          gender: "Male",
+          image: "seed-fighter4.jpg",
+          purchased: false,
+        },
+        {
+          name: "Ronda Rousey",
+          price: 110,
+          gender: "Female",
+          image: "seed-fighter5.jpg",
+          purchased: false,
+        },
+        {
+          name: "Amanda Nunes",
+          price: 140,
+          gender: "Female",
+          image: "seed-fighter6.jpg",
+          purchased: false,
+        },
+        {
+          name: "Georges St-Pierre",
+          price: 155,
+          gender: "Male",
+          image: "seed-fighter7.jpg",
+          purchased: false,
+        },
+        {
+          name: "Israel Adesanya",
+          price: 125,
+          gender: "Male",
+          image: "seed-fighter8.jpg",
+          purchased: false,
+        },
+        {
+          name: "Valentina Shevchenko",
+          price: 135,
+          gender: "Female",
+          image: "seed-fighter9.jpg",
+          purchased: false,
+        },
+        {
+          name: "Stipe Miocic",
+          price: 115,
+          gender: "Male",
+          image: "seed-fighter10.jpg",
+          purchased: false,
+        },
+      ];
+
+      for (const athlete of seedAthletes) {
+        const result = await postAthlete(athlete);
+        if (!result.success) {
+          setErrorMessage(result.error ?? "Failed to seed athletes");
+          setIsLoading(false);
+          return;
+        }
+      }
+    }
+    // trenger ikke sette isLoading til false her, da showAll kalles og håndterer det
+    await showAll();
+  };
+
   useEffect(() => {
-    showAll();
+    initializeAthletes();
   }, []);
 
   return (

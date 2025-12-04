@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState, type FC } from "react";
-import type { IProviderProps } from "../interfaces/IProviderProps";
+import type { IProviderProps } from "../interfaces/properties/IProviderProps";
 import { getFinances, putFinance } from "../services/SportsWorldService";
 import type { IFinanceContext } from "../interfaces/IFinanceContext";
 import type { IFinance } from "../interfaces/IFinance";

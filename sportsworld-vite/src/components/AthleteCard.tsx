@@ -1,5 +1,5 @@
 import type { FC } from "react";
-import type { IAthleteCardProps } from "../interfaces/IAthleteCardProps.ts";
+import type { IAthleteCardProps } from "../interfaces/properties/IAthleteCardProps.ts";
 
 // Vi ønsker en modulær AthleteCard komponent som kan generere de forskjellige variantene vi
 // skisserte i prototype-fasen.
@@ -61,7 +61,7 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
   return (
     <div className={`${bgColor} rounded-lg p-4 shadow-md`}>
       <img
-        src={`/images/AthleteImages/${athlete.image}`}
+        src={`http://localhost:5110/images/AthleteImages/${athlete.image}`}
         alt={athlete.name}
         className="w-full h-48 object-cover rounded-md mb-3"
       />
