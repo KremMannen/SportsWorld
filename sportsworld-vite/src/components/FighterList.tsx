@@ -38,7 +38,7 @@ export const FighterList: FC<IFighterListProps> = ({
       break;
     case "all":
     default:
-      displayTitle = "Featured Fighters";
+      displayTitle = "All Fighters";
       break;
   }
 
