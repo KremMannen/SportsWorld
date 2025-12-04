@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const Header: FC = () => {
   return (
-    <header className="bg-black shadow-md px-4 py-2 mb-8">
+    <header className="bg-black shadow-md px-4 py-2">
       <nav className="flex justify-between px-4">
         <Link
           to="/"
