@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState, type FC } from "react";
+import { createContext, useEffect, useRef, useState, type FC } from "react";
 import type { IProviderProps } from "../interfaces/properties/IProviderProps";
 import type { IAthlete } from "../interfaces/IAthlete";
 import type { IAthleteContext } from "../interfaces/IAthleteContext";
@@ -24,6 +24,10 @@ export const AthleteProvider: FC<IProviderProps> = ({ children }) => {
 
   // eventuell feilbeskjed fra error-propertien i IResponse interfaces
   const [errorMessage, setErrorMessage] = useState<string>("");
+
+  // Denne forhindrer "race conditions" under initialisering. Foruten blir initializeAthletes kalt to ganger.
+  // Vi bruker useRef, fordi den ikke skal trigge re-render, og vi trenger at den oppdateres med en gang.
+  const isInitializing = useRef(false);
 
   const showAll = async () => {
     setIsLoading(true);
@@ -112,14 +116,20 @@ export const AthleteProvider: FC<IProviderProps> = ({ children }) => {
 
   // Seeding av databasen skal vel egentlig gjøres i backend, men for å holde prosjektet innenfor rammene av pensum gjør vi det her.
   const initializeAthletes = async () => {
+    if (isInitializing.current) {
+      return;
+    }
+    isInitializing.current = true;
+
     setIsLoading(true);
     // Sjekk om det allerede finnes athletes
     const existingAthletes = await getAthletes();
 
     if (!existingAthletes.success) {
       setErrorMessage(
-        existingAthletes.error ?? "Failed to check number of athletes"
+        existingAthletes.error ?? "Failed to connect to database"
       );
+      isInitializing.current = false;
       setIsLoading(false);
       return;
     }
@@ -198,17 +208,20 @@ export const AthleteProvider: FC<IProviderProps> = ({ children }) => {
           purchased: false,
         },
       ];
-
       for (const athlete of seedAthletes) {
         const result = await postAthlete(athlete);
         if (!result.success) {
           setErrorMessage(result.error ?? "Failed to seed athletes");
+          isInitializing.current = false;
           setIsLoading(false);
           return;
         }
       }
+    } else {
+      console.log(
+        `Database already has ${existingAthletes.data.length} athletes, skipping seeding`
+      );
     }
-    // trenger ikke sette isLoading til false her, da showAll kalles og håndterer det
     await showAll();
   };
 
