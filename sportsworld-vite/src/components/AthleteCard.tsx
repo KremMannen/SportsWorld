@@ -61,7 +61,7 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
 
   return (
     <article className={`${bgColor} col-span-12 sm:col-span-6 lg:flex-shrink-0 lg:w-[400px] xl:col-span-3 xl:w-auto rounded-lg shadow-md shadow-black/20 flex overflow-hidden h-32
-    transition-transform duration-200 hover:scale-[1.05] hover:shadow-black/40 `}>
+    transition-transform duration-200 hover:scale-[1.05] hover:shadow-black/40 hover:cursor-pointer `}>
       <div className="w-32 h-32 flex-shrink-0">
         <img
           src={`http://localhost:5110/images/AthleteImages/${athlete.image}`}
