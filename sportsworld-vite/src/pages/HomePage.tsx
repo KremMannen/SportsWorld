@@ -6,10 +6,10 @@ const HomePage = () => {
   return (
     <main>
       <section>
-        <FighterList filterType="owned" />
-        <NavButton destination="/admin" />
         <FighterList filterType="available" />
         <NavButton destination="/finances" />
+        <FighterList filterType="owned" />
+        <NavButton destination="/admin" />
         <FeaturedVenues />
       </section>
     </main>
