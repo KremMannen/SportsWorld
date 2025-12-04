@@ -60,12 +60,14 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
   };
 
   return (
-    <div className={`${bgColor} rounded-lg shadow-md flex overflow-hidden`}>
-      <img
-        src={`http://localhost:5110/images/AthleteImages/${athlete.image}`}
-        alt={athlete.name}
-        className="w-1/3 object-cover"
-      />
+    <article className={`${bgColor} col-span-12 sm:col-span-6 lg:col-span-4 xl:col-span-3 rounded-lg shadow-md flex overflow-hidden h-32`}>
+      <div className="w-32 h-32 flex-shrink-0">
+        <img
+          src={`http://localhost:5110/images/AthleteImages/${athlete.image}`}
+          alt={athlete.name}
+          className="w-full h-full object-cover"
+        />
+      </div>
 
       <div className={`${textColor} p-4 flex-1 flex flex-col justify-between`}>
         <div>
@@ -76,6 +78,6 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
 
         <div className="flex gap-2">{renderButtons()}</div>
       </div>
-    </div>
+    </article>
   );
 };
