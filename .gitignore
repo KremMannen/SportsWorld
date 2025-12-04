@@ -194,3 +194,7 @@ nCrunchTemp_*
 *.user
 *.userosscache
 *.sln.docstates
+
+# SQLite temporary files
+*.db-shm
+*.db-wal

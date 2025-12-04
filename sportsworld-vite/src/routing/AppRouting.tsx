@@ -8,6 +8,7 @@ import {
   VenuePage,
 } from "../pages";
 import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 const AppRouting = () => {
   return (
@@ -23,6 +24,7 @@ const AppRouting = () => {
           <Route path="/venues" element={<VenuePage />} />
         </Routes>
       </main>
+      <Footer />
 
       {/* Footer component*/}
     </BrowserRouter>
