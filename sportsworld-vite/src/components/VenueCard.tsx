@@ -38,7 +38,7 @@ export const VenueCard: FC<IVenueCardProps> = ({
   return (
     <div className={`bg-green-100 rounded-lg p-4 shadow-md`}>
       <img
-        src={`/images/VenueImages/${venue.image}`}
+        src={`http://localhost:5110/images/VenueImages/${venue.image}`}
         alt={venue.name}
         className="w-full h-48 object-cover rounded-md mb-3"
       />
