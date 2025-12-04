@@ -28,7 +28,7 @@ export const FighterList: FC<IFighterListProps> = ({ filterType = "all" }) => {
   let displayTitle;
   switch (filterType) {
     case "owned":
-      displayTitle = "Your Fighters";
+      displayTitle = "Fighters in your arsenal";
       break;
     case "available":
       displayTitle = "Available Fighters";
