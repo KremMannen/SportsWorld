@@ -36,18 +36,25 @@ export const VenueCard: FC<IVenueCardProps> = ({
   };
 
   return (
-    <div className={`bg-green-100 rounded-lg p-4 shadow-md`}>
-      <img
-        src={`http://localhost:5110/images/VenueImages/${venue.image}`}
-        alt={venue.name}
-        className="w-full h-48 object-cover rounded-md mb-3"
-      />
+    <div className={`bg-green-100 col-span-12 sm:col-span-6 lg:col-span-4 xl:col-span-3 rounded-lg shadow-md shadow-black/20 flex overflow-hidden h-32
+    transition-transform duration-200 hover:scale-[1.05] hover:shadow-black/40 `}>
+      <div className="w-32 h-32 flex-shrink-0">
+        <img
+          src={`http://localhost:5110/images/VenueImages/${venue.image}`}
+          alt={venue.name}
+          className="w-full h-full object-cover"
+        />
+      </div>
 
-      <h3 className="text-xl font-bold">{venue.name}</h3>
-      <p>Capacity: {venue.capacity} $</p>
+      <div className="text-black p-4 flex-1 flex flex-col justify-between">
+        <div>
+          <h3 className="text-xl font-bold">{venue.name}</h3>
+          <p>Capacity: {venue.capacity}</p>
+        </div>
 
-      {/* Kondisjonelle knapper basert på variant parameteret */}
-      <div className="mt-4 flex gap-2">{renderButtons()}</div>
-    </div>
+          {/* Kondisjonelle knapper basert på variant parameteret */}
+          <div className="flex gap-2">{renderButtons()}</div>
+        </div>
+      </div>
   );
 };

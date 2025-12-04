@@ -10,7 +10,7 @@ export const FeaturedVenues: FC<IFeaturedVenuesProps> = () => {
   ) as IVenueContext;
 
   return (
-    <div className="container px-4 py-8 max-w-screen-2xl mx-auto">
+    <div className="container px-4 py-8 max-w-[1600px] mx-auto">
       <h2 className="text-3xl font-bold mb-6">Featured venues</h2>
 
       {/* Innhold laster inn */}
