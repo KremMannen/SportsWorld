@@ -1,4 +1,6 @@
+export type ListVariant = "all" | "owned" | "available";
 
 export interface IFeaturedFightersProps {
-  // I Figma vises listen med side-scroll fremfor tile-layout. Introdusere variant property?
+  filterType?: ListVariant;
+  title?: string;
 }
