@@ -5,7 +5,7 @@ const Footer: FC = () => {
     <footer className="bg-black text-white py-8 px-4">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* SportsWorld.com Section */}
-        <div>
+        <div className="text-center">
           <h3 className="text-xl font-bold mb-2">SportsWorld.com</h3>
           <hr className="border-red-600 mb-4" />
           <ul className="space-y-2">
@@ -28,7 +28,7 @@ const Footer: FC = () => {
         </div>
 
         {/* Contact Section */}
-        <div>
+        <div className="text-center">
           <h3 className="text-xl font-bold mb-2">Contact</h3>
           <hr className="border-red-600 mb-4" />
           <ul className="space-y-2">
@@ -50,7 +50,7 @@ const Footer: FC = () => {
         </div>
 
         {/* Follow Us Section */}
-        <div>
+        <div className="text-center">
           <h3 className="text-xl font-bold mb-2">Follow Us</h3>
           <hr className="border-red-600 mb-4" />
           <ul className="space-y-2">
