@@ -4,6 +4,6 @@ export interface IFinanceContext {
   finance: IFinance[];
   errorMessage: string;
   isLoading: boolean;
-  showFinance: () => Promise<void>;
+  showFinances: () => Promise<void>;
   updateFinance: (finance: IFinance) => Promise<void>;
 }

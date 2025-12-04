@@ -7,6 +7,7 @@ import type {
   IAthleteResponseSingle,
   IDefaultResponse,
   IFinanceResponseList,
+  IFinanceResponseSingle,
   IVenueResponseList,
   IVenueResponseSingle,
 } from "../interfaces/IServiceResponses";
@@ -287,6 +288,28 @@ const getFinances = async (): Promise<IFinanceResponseList> => {
     };
   }
 };
+const postFinance = async (
+  newFinance: Omit<IFinance, "id">
+): Promise<IFinanceResponseSingle> => {
+  try {
+    const response = await axios.post<IFinance>(financeEndpoint, newFinance);
+
+    if (response.status !== 201) {
+      return { success: false, data: null, error: "Failed to create venue." };
+    }
+
+    return {
+      success: true,
+      data: response.data,
+    };
+  } catch (error) {
+    console.error("postVenue: Failed to post venue:", error);
+    return {
+      success: false,
+      data: null,
+    };
+  }
+};
 const putFinance = async (
   editedFinance: IFinance
 ): Promise<IDefaultResponse> => {
@@ -308,7 +331,7 @@ const putFinance = async (
 };
 
 // Not implemented for Finances:
-// POST and Delete -- Not necessary in current scope
+// Delete -- Not necessary in current scope
 
 // Hjelpefunksjoner for å validere outputtet fra Axios kallene
 // Skåner alle andre metoder mange identiske if-checks
@@ -371,5 +394,6 @@ export {
   deleteVenue,
   putVenue,
   getFinances,
+  postFinance,
   putFinance,
 };

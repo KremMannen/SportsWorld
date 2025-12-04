@@ -29,9 +29,9 @@ export interface IVenueResponseSingle {
   error?: string;
 }
 
-export interface IFinanceResponseList {
+export interface IFinanceResponseSingle {
   success: boolean;
-  data: IFinance[];
+  data: IFinance | null;
   error?: string;
 }
 
