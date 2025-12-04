@@ -26,7 +26,7 @@ export const AthleteProvider: FC<IProviderProps> = ({ children }) => {
   const [errorMessage, setErrorMessage] = useState<string>("");
 
   // Denne forhindrer "race conditions" under initialisering. Foruten blir initializeAthletes kalt to ganger.
-  // Vi bruker useRef, fordi den ikke skal trigge re-render, og vi trenger at den oppdateres med en gang.
+  // Vi bruker useRef fordi den ikke skal trigge re-render, og vi trenger at den oppdateres med en gang.
   const isInitializing = useRef(false);
 
   const showAll = async () => {
@@ -120,8 +120,8 @@ export const AthleteProvider: FC<IProviderProps> = ({ children }) => {
       return;
     }
     isInitializing.current = true;
-
     setIsLoading(true);
+
     // Sjekk om det allerede finnes athletes
     const existingAthletes = await getAthletes();
 
