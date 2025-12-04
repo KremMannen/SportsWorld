@@ -5,8 +5,8 @@ const HomePage = () => {
   return (
     <main>
       <section>
-        <FighterList filterType="owned" />
         <FighterList filterType="available" />
+        <FighterList filterType="owned" />
         <FeaturedVenues />
       </section>
     </main>
