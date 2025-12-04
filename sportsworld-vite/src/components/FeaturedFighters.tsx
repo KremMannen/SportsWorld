@@ -10,7 +10,7 @@ export const FeaturedFighters: FC<IFeaturedFightersProps> = () => {
   ) as IAthleteContext;
 
   return (
-    <div className="container px-4 py-8 max-w-7xl mx-auto">
+    <div className="container px-4 py-8 max-w-screen-2xl mx-auto">
       <h2 className="text-3xl font-bold mb-6">Featured Fighters</h2>
 
       {/* Innhold laster inn */}
@@ -26,7 +26,7 @@ export const FeaturedFighters: FC<IFeaturedFightersProps> = () => {
         </div>
       ) : (
         /* Viser athlete-cards */
-        <div className=" grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 items-center">
+        <div className=" grid grid-cols-12 gap-6 items-center">
           {athletes.map((athlete) => (
             <AthleteCard key={athlete.id} athlete={athlete} variant="view" />
           ))}
