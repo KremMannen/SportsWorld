@@ -26,7 +26,7 @@ export const FeaturedFighters: FC<IFeaturedFightersProps> = () => {
         </div>
       ) : (
         /* Viser athlete-cards */
-        <div className=" grid grid-cols-12 gap-6 items-center">
+        <div className="grid grid-cols-12 gap-6 lg:flex lg:flex-row lg:overflow-x-auto lg:gap-4 xl:grid xl:overflow-visible">
           {athletes.map((athlete) => (
             <AthleteCard key={athlete.id} athlete={athlete} variant="view" />
           ))}
