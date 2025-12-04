@@ -36,9 +36,9 @@ export const VenueCard: FC<IVenueCardProps> = ({
   };
 
 return (
-    <div className="bg-[#252828] col-span-12 sm:col-span-6 lg:col-span-4 xl:col-span-3 rounded-lg shadow-md shadow-black/20 
-                      overflow-hidden transition-transform duration-200 hover:scale-[1.05] hover:shadow-black/40 hover:cursor-pointer">
-      <div className="w-full h-48">
+    <div className="bg-[#252828] col-span-12 sm:col-span-6 lg:flex-shrink-0 lg:w-[400px] xl:col-span-3 xl:w-auto rounded-lg shadow-md shadow-black/20 
+    overflow-hidden transition-transform duration-200 hover:scale-[1.05] hover:shadow-black/40 hover:cursor-pointer">
+      <div className="w-full h-40">
         <img
           src={`http://localhost:5110/images/VenueImages/${venue.image}`}
           alt={venue.name}
