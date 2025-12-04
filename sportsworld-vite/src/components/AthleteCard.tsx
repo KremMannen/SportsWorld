@@ -60,7 +60,7 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
   };
 
   return (
-    <article className={`${bgColor} col-span-12 sm:col-span-6 lg:col-span-4 xl:col-span-3 rounded-lg shadow-md flex overflow-hidden h-32`}>
+    <article className={`${bgColor} col-span-12 sm:col-span-6 lg:flex-shrink-0 lg:w-[400px] xl:col-span-3 xl:w-auto rounded-lg shadow-md flex overflow-hidden h-32`}>
       <div className="w-32 h-32 flex-shrink-0">
         <img
           src={`http://localhost:5110/images/AthleteImages/${athlete.image}`}
