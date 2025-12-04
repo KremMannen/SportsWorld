@@ -8,7 +8,7 @@ export const FinanceDashboard: FC = () => {
         <div className="rounded-sm shadow-md shadow-black/40 px-4 py-2 bg-black text-black w-full">
           <h3 className="text-md text-white">Account Balance</h3>
         </div>
-        <p className="text-2xl font-bold mt-3 text-black bg-transparent">
+        <p className="text-2xl font-bold mt-3 text-[#4C0000] bg-transparent">
           $12,450
         </p>
       </div>
@@ -18,7 +18,7 @@ export const FinanceDashboard: FC = () => {
         <div className="rounded-sm shadow-md shadow-black/40 px-4 py-2 bg-black text-black w-full">
           <h3 className="text-md text-white">Fighters Owned</h3>
         </div>
-        <p className="text-2xl font-bold mt-3 text-black bg-transparent">18</p>
+        <p className="text-2xl font-bold mt-3 text-[#4C0000] bg-transparent">18</p>
       </div>
 
       {/* Fighters Worth */}
@@ -26,7 +26,7 @@ export const FinanceDashboard: FC = () => {
         <div className="rounded-sm shadow-md shadow-black/40 px-4 py-2 bg-black text-white w-full">
           <h3 className="text-md text-white">Fighters Worth</h3>
         </div>
-        <p className="text-2xl font-bold mt-3 text-black bg-transparent">
+        <p className="text-2xl font-bold mt-3 text-[#4C0000] bg-transparent">
           $34,200
         </p>
       </div>
