@@ -24,11 +24,11 @@ const NavButton: FC<INavButton> = ({ destination }) => {
   }
 
   return (
-    <nav className="flex justify-center px-4">
+    <nav className="flex justify-center">
       <Link
         to={destination}
         // gjør knappene usynlige, utenom på store skjermer
-        className="hidden lg:block bg-[#870000] text-white text-2xl font-bold hover:bg-red-700 px-40 py-3 rounded"
+        className="hidden lg:block bg-[#870000] text-white text-2xl font-bold hover:bg-red-700 px-8 py-3 rounded w-full max-w-xl text-center"
       >
         {displayTitle}
       </Link>
