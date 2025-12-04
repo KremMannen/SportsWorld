@@ -4,7 +4,10 @@ import { AthleteContext } from "../contexts/AthleteContext";
 import type { IAthleteContext } from "../interfaces/IAthleteContext";
 import type { IFighterListProps } from "../interfaces/properties/IFighterListProps";
 
-export const FighterList: FC<IFighterListProps> = ({ filterType = "all" }) => {
+export const FighterList: FC<IFighterListProps> = ({
+  filterType = "all",
+  cardVariant = "view",
+}) => {
   const { athletes, athleteErrorMessage, athleteIsLoading } = useContext(
     AthleteContext
   ) as IAthleteContext;
@@ -63,7 +66,11 @@ export const FighterList: FC<IFighterListProps> = ({ filterType = "all" }) => {
         /* Viser athlete-cards */
         <div className="grid grid-cols-12 gap-6 p-2  lg:flex lg:flex-row lg:overflow-x-auto lg:gap-4 lg:py-2 xl:grid xl:overflow-visible xl:p-2">
           {filteredAthletes.map((athlete) => (
-            <AthleteCard key={athlete.id} athlete={athlete} variant="view" />
+            <AthleteCard
+              key={athlete.id}
+              athlete={athlete}
+              variant={cardVariant}
+            />
           ))}
         </div>
       )}

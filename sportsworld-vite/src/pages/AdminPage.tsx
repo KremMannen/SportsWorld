@@ -1,8 +1,11 @@
+import FighterList from "../components/FighterList";
+import { PageLayout } from "../components/PageLayout";
+
 const AdminPage = () => {
   return (
-    <main>
-      <section></section>
-    </main>
+    <PageLayout>
+      <FighterList filterType="all" cardVariant="manage" />
+    </PageLayout>
   );
 };
 
