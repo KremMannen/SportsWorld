@@ -13,14 +13,6 @@ const Header = () => {
         <ul className="flex items-center space-x-6">
           <li>
             <Link
-              to="/"
-              className="text-white text-2xl hover:text-red-300 font-medium"
-            >
-              Hjem
-            </Link>
-          </li>
-          <li>
-            <Link
               to="/admin"
               className="text-white text-2xl hover:text-red-300 font-medium"
             >
