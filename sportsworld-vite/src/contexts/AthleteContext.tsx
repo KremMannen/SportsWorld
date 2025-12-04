@@ -26,7 +26,7 @@ export const AthleteProvider: FC<IProviderProps> = ({ children }) => {
   const [errorMessage, setErrorMessage] = useState<string>("");
 
   // Denne forhindrer "race conditions" under initialisering. Foruten blir initializeAthletes kalt to ganger.
-  // Vi bruker useRef, fordi den ikke skal trigge re-render, og vi trenger at den oppdateres med en gang.
+  // Vi bruker useRef fordi den ikke skal trigge re-render, og vi trenger at den oppdateres med en gang.
   const isInitializing = useRef(false);
 
   const showAll = async () => {
@@ -120,8 +120,8 @@ export const AthleteProvider: FC<IProviderProps> = ({ children }) => {
       return;
     }
     isInitializing.current = true;
-
     setIsLoading(true);
+
     // Sjekk om det allerede finnes athletes
     const existingAthletes = await getAthletes();
 
@@ -139,70 +139,70 @@ export const AthleteProvider: FC<IProviderProps> = ({ children }) => {
       const seedAthletes = [
         {
           name: "Jon Jones",
-          price: 5000,
+          price: 100000,
           gender: "Male",
           image: "seed-fighter1.jpg",
           purchased: false,
         },
         {
           name: "Conor McGregor",
-          price: 120,
+          price: 120000,
           gender: "Male",
           image: "seed-fighter2.jpg",
           purchased: false,
         },
         {
           name: "Anderson Silva",
-          price: 130,
+          price: 74000,
           gender: "Male",
           image: "seed-fighter3.jpg",
           purchased: false,
         },
         {
           name: "Khabib Nurmagomedov",
-          price: 160,
+          price: 160000,
           gender: "Male",
           image: "seed-fighter4.jpg",
           purchased: false,
         },
         {
           name: "Ronda Rousey",
-          price: 110,
+          price: 50000,
           gender: "Female",
           image: "seed-fighter5.jpg",
           purchased: false,
         },
         {
           name: "Amanda Nunes",
-          price: 140,
+          price: 14000,
           gender: "Female",
           image: "seed-fighter6.jpg",
           purchased: false,
         },
         {
           name: "Georges St-Pierre",
-          price: 155,
+          price: 15500,
           gender: "Male",
           image: "seed-fighter7.jpg",
           purchased: false,
         },
         {
           name: "Israel Adesanya",
-          price: 125,
+          price: 12500,
           gender: "Male",
           image: "seed-fighter8.jpg",
           purchased: false,
         },
         {
           name: "Valentina Shevchenko",
-          price: 135,
+          price: 13500,
           gender: "Female",
           image: "seed-fighter9.jpg",
           purchased: false,
         },
         {
           name: "Stipe Miocic",
-          price: 115,
+          price: 11500,
           gender: "Male",
           image: "seed-fighter10.jpg",
           purchased: false,
