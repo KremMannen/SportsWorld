@@ -40,7 +40,7 @@ export const FighterList: FC<IFighterListProps> = ({ filterType = "all" }) => {
   }
 
   return (
-    <div className="container px-4 py-8 max-w-[1600px] mx-auto">
+    <>
       <h2 className="text-3xl font-bold mb-6">{displayTitle}</h2>
 
       {/* Innhold laster inn */}
@@ -61,13 +61,13 @@ export const FighterList: FC<IFighterListProps> = ({ filterType = "all" }) => {
         </div>
       ) : (
         /* Viser athlete-cards */
-        <div className="grid grid-cols-12 gap-6 p-2 lg:flex lg:flex-row lg:overflow-x-auto lg:gap-4 lg:py-2 xl:grid xl:overflow-visible xl:p-2">
+        <div className="grid grid-cols-12 gap-6 p-2  lg:flex lg:flex-row lg:overflow-x-auto lg:gap-4 lg:py-2 xl:grid xl:overflow-visible xl:p-2">
           {filteredAthletes.map((athlete) => (
             <AthleteCard key={athlete.id} athlete={athlete} variant="view" />
           ))}
         </div>
       )}
-    </div>
+    </>
   );
 };
 

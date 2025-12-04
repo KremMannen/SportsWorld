@@ -24,7 +24,7 @@ const NavButton: FC<INavButton> = ({ destination }) => {
   }
 
   return (
-    <nav className="flex justify-center">
+    <nav className="flex justify-center mt-14 mt-14">
       <Link
         to={destination}
         // gjør knappene usynlige, utenom på store skjermer

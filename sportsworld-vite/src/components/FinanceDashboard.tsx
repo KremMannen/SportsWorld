@@ -16,7 +16,7 @@ export const FinanceDashboard: FC = () => {
   // Sjekker først om innhold laster og viser info til bruker
   if (athleteIsLoading || financeIsLoading) {
     return (
-      <div className="container px-4 py-8 max-w-[1600px] text-center">
+      <div className="text-center">
         <p className="text-xl text-gray-600">Loading dashboard...</p>
       </div>
     );
@@ -25,7 +25,7 @@ export const FinanceDashboard: FC = () => {
   // Sjekker om det er noen feil og viser feilmelding til bruker
   if (athleteErrorMessage || financeErrorMessage) {
     return (
-      <div className="container px-4 py-8 max-w-[1600px] text-center">
+      <div className=" text-center">
         <p className="text-xl text-red-600">
           {athleteErrorMessage || financeErrorMessage}
         </p>
@@ -42,7 +42,7 @@ export const FinanceDashboard: FC = () => {
   );
 
   return (
-    <div className="container px-4 py-8 max-w-[1600px] grid grid-cols-12 gap-6 w-full mx-auto text-center">
+    <div className="py-8 grid grid-cols-12 gap-6 text-center">
       {/* Account Balance */}
       <div className="col-span-12 md:col-span-4">
         <div className="rounded-sm shadow-md shadow-black/40 px-4 py-2 bg-black text-black w-full">
