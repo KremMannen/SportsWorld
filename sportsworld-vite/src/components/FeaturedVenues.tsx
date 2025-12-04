@@ -26,7 +26,7 @@ export const FeaturedVenues: FC<IFeaturedVenuesProps> = () => {
         </div>
       ) : (
         /* Viser venue-cards */
-        <div className=" grid grid-cols-12 gap-6 items-center">
+        <div className="grid grid-cols-12 gap-6 lg:flex lg:flex-row lg:overflow-x-auto lg:gap-4 xl:grid xl:overflow-visible">
           {venues.slice(0, 4).map((venue) => (
             <VenueCard key={venue.id} venue={venue} variant="view" />
           ))}
