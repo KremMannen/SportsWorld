@@ -34,6 +34,11 @@ export interface IFinanceResponseSingle {
   data: IFinance | null;
   error?: string;
 }
+export interface IFinanceResponseList {
+  success: boolean;
+  data: IFinance[];
+  error?: string;
+}
 
 export interface IDefaultResponse {
   success: boolean;

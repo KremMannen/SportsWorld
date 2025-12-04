@@ -1,6 +1,10 @@
 import { createContext, useEffect, useRef, useState, type FC } from "react";
 import type { IProviderProps } from "../interfaces/properties/IProviderProps";
-import { getFinances, putFinance, postFinance } from "../services/SportsWorldService";
+import {
+  getFinances,
+  putFinance,
+  postFinance,
+} from "../services/SportsWorldService";
 import type { IFinanceContext } from "../interfaces/IFinanceContext";
 import type { IFinance } from "../interfaces/IFinance";
 
@@ -58,32 +62,30 @@ export const FinanceProvider: FC<IProviderProps> = ({ children }) => {
     }
 
     if (existingFinances.data.length === 0) {
-      const seedFinances = 
-        {
-          accountBalance: 1000000,
-          fightersOwned: 0,
-          fightersWorth: 0,
-        },
-      ;
-      
+      const seedFinances = {
+        moneyLeft: 1000000,
+        numberOfPurchases: 0,
+        moneySpent: 0,
+        debt: 0,
+      };
+
       const result = await postFinance(seedFinances);
-        if (!result.success) {
-          setErrorMessage(result.error ?? "Failed to seed finances");
-          isInitializing.current = false;
-          setIsLoading(false);
-          return;
-        }
-      
+      if (!result.success) {
+        setErrorMessage(result.error ?? "Failed to seed finances");
+        isInitializing.current = false;
+        setIsLoading(false);
+        return;
+      }
     } else {
       console.log(
-        `Database already has ${existingFinances.data.length} athletes, skipping seeding`
+        `Database already has ${existingFinances.data.length} finances, skipping seeding`
       );
     }
     await showFinances();
   };
 
   useEffect(() => {
-    ();
+    initializeFinances();
   }, []);
 
   return (

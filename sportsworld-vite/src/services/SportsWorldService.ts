@@ -6,8 +6,8 @@ import type {
   IAthleteResponseList,
   IAthleteResponseSingle,
   IDefaultResponse,
-  IFinanceResponseList,
   IFinanceResponseSingle,
+  IFinanceResponseList,
   IVenueResponseList,
   IVenueResponseSingle,
 } from "../interfaces/IServiceResponses";
@@ -265,7 +265,7 @@ const putVenue = async (editedVenue: IVenue): Promise<IDefaultResponse> => {
     };
   }
 };
-// Her er det bare 1 objekt som returneres,
+// Her er det bare 1 objekt som returneres i listen,
 // men vi vedlikeholder mønsteret til get funksjoner og bruker liste
 const getFinances = async (): Promise<IFinanceResponseList> => {
   try {
@@ -295,7 +295,7 @@ const postFinance = async (
     const response = await axios.post<IFinance>(financeEndpoint, newFinance);
 
     if (response.status !== 201) {
-      return { success: false, data: null, error: "Failed to create venue." };
+      return { success: false, data: null, error: "Failed to create finance." };
     }
 
     return {
@@ -303,7 +303,7 @@ const postFinance = async (
       data: response.data,
     };
   } catch (error) {
-    console.error("postVenue: Failed to post venue:", error);
+    console.error("postVenue: Failed to post finance:", error);
     return {
       success: false,
       data: null,
