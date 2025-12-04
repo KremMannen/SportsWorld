@@ -20,60 +20,60 @@ export const AthleteProvider: FC<IProviderProps> = ({ children }) => {
 
   // I funksjoner som laster inn nye athletes kan benytte isLoading for å tilby foreldre-komponenten en måte å sjekke om
   // resultater laster inn, slik at den kan holde brukeren oppdatert via UIX.
-  const [isLoading, setIsLoading] = useState(false);
+  const [athleteIsLoading, setAthleteIsLoading] = useState(false);
 
   // eventuell feilbeskjed fra error-propertien i IResponse interfaces
-  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [athleteErrorMessage, setAthleteErrorMessage] = useState<string>("");
 
   // Denne forhindrer "race conditions" under initialisering. Foruten blir initializeAthletes kalt to ganger.
   // Vi bruker useRef fordi den ikke skal trigge re-render, og vi trenger at den oppdateres med en gang.
   const isInitializing = useRef(false);
 
   const showAll = async () => {
-    setIsLoading(true);
-    setErrorMessage("");
+    setAthleteIsLoading(true);
+    setAthleteErrorMessage("");
     const response = await getAthletes();
     if (response.success && response.data) {
       setAthletes(response.data);
     } else {
-      setErrorMessage(response.error ?? "Failed to load athletes");
+      setAthleteErrorMessage(response.error ?? "Failed to load athletes");
     }
-    setIsLoading(false);
+    setAthleteIsLoading(false);
   };
 
   const searchByID = async (id: number) => {
-    setIsLoading(true);
-    setErrorMessage("");
+    setAthleteIsLoading(true);
+    setAthleteErrorMessage("");
     const response = await getAthleteById(id);
     if (response.success && response.data) {
       setSearchResults([response.data]);
     } else {
-      setErrorMessage(response.error ?? "Athlete not found");
+      setAthleteErrorMessage(response.error ?? "Athlete not found");
     }
   };
 
   const searchByName = async (name: string) => {
-    setIsLoading(true);
-    setErrorMessage("");
+    setAthleteIsLoading(true);
+    setAthleteErrorMessage("");
 
     const response = await getAthletesByName(name);
 
     if (response.success && response.data) {
       setSearchResults(response.data);
     } else {
-      setErrorMessage(response.error ?? "No athletes found");
+      setAthleteErrorMessage(response.error ?? "No athletes found");
     }
 
-    setIsLoading(false);
+    setAthleteIsLoading(false);
   };
 
   const addAthlete = async (athlete: Omit<IAthlete, "id">, img: File) => {
-    setErrorMessage("");
+    setAthleteErrorMessage("");
 
     const uploadResponse = await ImageUploadService.uploadAthleteImage(img);
 
     if (!uploadResponse.success) {
-      setErrorMessage(uploadResponse.error ?? "Image upload failed");
+      setAthleteErrorMessage(uploadResponse.error ?? "Image upload failed");
       return;
     }
 
@@ -81,7 +81,7 @@ export const AthleteProvider: FC<IProviderProps> = ({ children }) => {
     const postResponse = await postAthlete(athleteWithImage);
 
     if (!postResponse.success) {
-      setErrorMessage(postResponse.error ?? "Failed to add athlete");
+      setAthleteErrorMessage(postResponse.error ?? "Failed to add athlete");
       return;
     }
 
@@ -89,12 +89,12 @@ export const AthleteProvider: FC<IProviderProps> = ({ children }) => {
   };
 
   const deleteAthleteById = async (id: number) => {
-    setErrorMessage("");
+    setAthleteErrorMessage("");
 
     const response = await deleteAthlete(id);
 
     if (!response.success) {
-      setErrorMessage(response.error ?? "Failed to delete athlete");
+      setAthleteErrorMessage(response.error ?? "Failed to delete athlete");
       return;
     }
 
@@ -102,12 +102,12 @@ export const AthleteProvider: FC<IProviderProps> = ({ children }) => {
   };
 
   const updateAthlete = async (athlete: IAthlete) => {
-    setErrorMessage("");
+    setAthleteErrorMessage("");
 
     const response = await putAthlete(athlete);
 
     if (!response.success) {
-      setErrorMessage(response.error ?? "Failed to update athlete");
+      setAthleteErrorMessage(response.error ?? "Failed to update athlete");
       return;
     }
 
@@ -120,17 +120,17 @@ export const AthleteProvider: FC<IProviderProps> = ({ children }) => {
       return;
     }
     isInitializing.current = true;
-    setIsLoading(true);
+    setAthleteIsLoading(true);
 
     // Sjekk om det allerede finnes athletes
     const existingAthletes = await getAthletes();
 
     if (!existingAthletes.success) {
-      setErrorMessage(
+      setAthleteErrorMessage(
         existingAthletes.error ?? "Failed to connect to database"
       );
       isInitializing.current = false;
-      setIsLoading(false);
+      setAthleteIsLoading(false);
       return;
     }
 
@@ -211,9 +211,9 @@ export const AthleteProvider: FC<IProviderProps> = ({ children }) => {
       for (const athlete of seedAthletes) {
         const result = await postAthlete(athlete);
         if (!result.success) {
-          setErrorMessage(result.error ?? "Failed to seed athletes");
+          setAthleteErrorMessage(result.error ?? "Failed to seed athletes");
           isInitializing.current = false;
-          setIsLoading(false);
+          setAthleteIsLoading(false);
           return;
         }
       }
@@ -234,8 +234,8 @@ export const AthleteProvider: FC<IProviderProps> = ({ children }) => {
       value={{
         athletes,
         searchResults,
-        isLoading,
-        errorMessage,
+        athleteIsLoading,
+        athleteErrorMessage,
         showAll,
         searchByID,
         searchByName,

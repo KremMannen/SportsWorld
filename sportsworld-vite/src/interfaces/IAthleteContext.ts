@@ -3,8 +3,8 @@ import type { IAthlete } from "./IAthlete";
 export interface IAthleteContext {
   athletes: IAthlete[];
   searchResults: IAthlete[];
-  errorMessage: string;
-  isLoading: boolean;
+  athleteErrorMessage: string;
+  athleteIsLoading: boolean;
   showAll: () => Promise<void>;
   searchByID: (id: number) => Promise<void>;
   searchByName: (name: string) => Promise<void>;

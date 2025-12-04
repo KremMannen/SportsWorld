@@ -5,7 +5,7 @@ import type { IAthleteContext } from "../interfaces/IAthleteContext";
 import type { IFighterListProps } from "../interfaces/properties/IFighterListProps";
 
 export const FighterList: FC<IFighterListProps> = ({ filterType = "all" }) => {
-  const { athletes, errorMessage, isLoading } = useContext(
+  const { athletes, athleteErrorMessage, athleteIsLoading } = useContext(
     AthleteContext
   ) as IAthleteContext;
 
@@ -44,16 +44,16 @@ export const FighterList: FC<IFighterListProps> = ({ filterType = "all" }) => {
       <h2 className="text-3xl font-bold mb-6">{displayTitle}</h2>
 
       {/* Innhold laster inn */}
-      {isLoading ? (
+      {athleteIsLoading ? (
         <div className="flex justify-center items-center py-12">
           <div className="text-gray-500 text-lg">Loading fighters...</div>
         </div>
-      ) : errorMessage || filteredAthletes.length === 0 ? (
+      ) : athleteErrorMessage || filteredAthletes.length === 0 ? (
         /* Dynamisk feilmelding som sjekker om noe gikk galt, og hvis listen bare er tom: bruker filterType for å gi presis beskjed til bruker */
         <div className="bg-red-50 border border-red-400 text-red-700 px-4 py-3 rounded">
           <p>
-            {errorMessage
-              ? errorMessage
+            {athleteErrorMessage
+              ? athleteErrorMessage
               : filterType === "owned"
               ? "No fighters signed yet"
               : "No fighters available"}

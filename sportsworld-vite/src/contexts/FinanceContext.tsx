@@ -11,31 +11,31 @@ import type { IFinance } from "../interfaces/IFinance";
 export const FinanceContext = createContext<IFinanceContext | null>(null);
 
 export const FinanceProvider: FC<IProviderProps> = ({ children }) => {
-  const [finance, setFinance] = useState<IFinance[]>([]);
-  const [errorMessage, setErrorMessage] = useState<string>("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [finances, setFinance] = useState<IFinance[]>([]);
+  const [financeErrorMessage, setFinanceErrorMessage] = useState<string>("");
+  const [financeIsLoading, setFinanceIsLoading] = useState(false);
   const isInitializing = useRef(false);
 
   const showFinances = async () => {
-    setIsLoading(true);
-    setErrorMessage("");
+    setFinanceIsLoading(true);
+    setFinanceErrorMessage("");
     const response = await getFinances();
 
     if (response.success && response.data) {
       setFinance(response.data);
     } else {
-      setErrorMessage(response.error ?? "Failed to load athletes");
+      setFinanceErrorMessage(response.error ?? "Failed to load athletes");
     }
-    setIsLoading(false);
+    setFinanceIsLoading(false);
   };
 
   const updateFinance = async (updatedFinance: IFinance) => {
-    setIsLoading(true);
-    setErrorMessage("");
+    setFinanceIsLoading(true);
+    setFinanceErrorMessage("");
     const response = await putFinance(updatedFinance);
 
     if (!response.success) {
-      setErrorMessage(response.error ?? "Failed to update athlete");
+      setFinanceErrorMessage(response.error ?? "Failed to update athlete");
       return;
     }
     // Trenger ikke sette loading som false enda, da showFinance gjør det til slutt
@@ -47,17 +47,17 @@ export const FinanceProvider: FC<IProviderProps> = ({ children }) => {
       return;
     }
     isInitializing.current = true;
-    setIsLoading(true);
+    setFinanceIsLoading(true);
 
     // Sjekk om det allerede finnes finances
     const existingFinances = await getFinances();
 
     if (!existingFinances.success) {
-      setErrorMessage(
+      setFinanceErrorMessage(
         existingFinances.error ?? "Failed to connect to database"
       );
       isInitializing.current = false;
-      setIsLoading(false);
+      setFinanceIsLoading(false);
       return;
     }
 
@@ -71,9 +71,9 @@ export const FinanceProvider: FC<IProviderProps> = ({ children }) => {
 
       const result = await postFinance(seedFinances);
       if (!result.success) {
-        setErrorMessage(result.error ?? "Failed to seed finances");
+        setFinanceErrorMessage(result.error ?? "Failed to seed finances");
         isInitializing.current = false;
-        setIsLoading(false);
+        setFinanceIsLoading(false);
         return;
       }
     } else {
@@ -91,9 +91,9 @@ export const FinanceProvider: FC<IProviderProps> = ({ children }) => {
   return (
     <FinanceContext.Provider
       value={{
-        finance,
-        errorMessage,
-        isLoading,
+        finances,
+        financeErrorMessage,
+        financeIsLoading,
         showFinances,
         updateFinance,
       }}

@@ -1,6 +1,46 @@
-import type { FC } from "react";
+import { useContext, type FC } from "react";
+import { AthleteContext } from "../contexts/AthleteContext";
+import type { IAthleteContext } from "../interfaces/IAthleteContext";
+import type { IFinanceContext } from "../interfaces/IFinanceContext";
+import { FinanceContext } from "../contexts/FinanceContext";
 
 export const FinanceDashboard: FC = () => {
+  const { athletes, athleteErrorMessage, athleteIsLoading } = useContext(
+    AthleteContext
+  ) as IAthleteContext;
+
+  const { finances, financeErrorMessage, financeIsLoading } = useContext(
+    FinanceContext
+  ) as IFinanceContext;
+
+  // Sjekker først om innhold laster og viser info til bruker
+  if (athleteIsLoading || financeIsLoading) {
+    return (
+      <div className="container px-4 py-8 max-w-[1600px] text-center">
+        <p className="text-xl text-gray-600">Loading dashboard...</p>
+      </div>
+    );
+  }
+
+  // Sjekker om det er noen feil og viser feilmelding til bruker
+  if (athleteErrorMessage || financeErrorMessage) {
+    return (
+      <div className="container px-4 py-8 max-w-[1600px] text-center">
+        <p className="text-xl text-red-600">
+          {athleteErrorMessage || financeErrorMessage}
+        </p>
+      </div>
+    );
+  }
+
+  // Display verdiene til dashboardet
+  const accountBalance = finances.length > 0 ? finances[0].moneyLeft : 0;
+  const fightersOwned = athletes.length;
+  const fightersWorth = athletes.reduce(
+    (total, athlete) => total + athlete.price,
+    0
+  );
+
   return (
     <div className="container px-4 py-8 max-w-[1600px] grid grid-cols-12 gap-6 w-full mx-auto text-center">
       {/* Account Balance */}
@@ -9,7 +49,7 @@ export const FinanceDashboard: FC = () => {
           <h3 className="text-md text-white">Account Balance</h3>
         </div>
         <p className="text-2xl font-bold mt-3 text-[#4C0000] bg-transparent">
-          $12,450
+          ${accountBalance.toLocaleString()}
         </p>
       </div>
 
@@ -18,7 +58,9 @@ export const FinanceDashboard: FC = () => {
         <div className="rounded-sm shadow-md shadow-black/40 px-4 py-2 bg-black text-black w-full">
           <h3 className="text-md text-white">Fighters Owned</h3>
         </div>
-        <p className="text-2xl font-bold mt-3 text-[#4C0000] bg-transparent">18</p>
+        <p className="text-2xl font-bold mt-3 text-[#4C0000] bg-transparent">
+          {fightersOwned}
+        </p>
       </div>
 
       {/* Fighters Worth */}
@@ -27,7 +69,7 @@ export const FinanceDashboard: FC = () => {
           <h3 className="text-md text-white">Fighters Worth</h3>
         </div>
         <p className="text-2xl font-bold mt-3 text-[#4C0000] bg-transparent">
-          $34,200
+          ${fightersWorth.toLocaleString()}
         </p>
       </div>
     </div>
