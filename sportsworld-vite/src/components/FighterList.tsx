@@ -61,7 +61,7 @@ export const FighterList: FC<IFighterListProps> = ({ filterType = "all" }) => {
         </div>
       ) : (
         /* Viser athlete-cards */
-        <div className="grid grid-cols-12 gap-6 lg:flex lg:flex-row lg:overflow-x-auto lg:gap-4 xl:grid xl:overflow-visible">
+        <div className="grid grid-cols-12 gap-6 p-2 lg:flex lg:flex-row lg:overflow-x-auto lg:gap-4 lg:py-2 xl:grid xl:overflow-visible xl:p-2">
           {filteredAthletes.map((athlete) => (
             <AthleteCard key={athlete.id} athlete={athlete} variant="view" />
           ))}
