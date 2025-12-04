@@ -14,11 +14,12 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
   onDelete,
   onSign,
 }) => {
-  // Endrer bakgrunnsfarge ut ifra om de er kjøpt eller ikke
-  const bgColor = athlete.purchased ? "bg-green-100" : "bg-gray-100";
+  // Tailwind tilbyr å bruke egendefinerte farger med syntaxen under.
+  // Dermed kan vi beholde farge palletten fra figma prototypen.
+  const bgColor = athlete.purchased ? "bg-green-100" : "bg-[#3D4645]";
+  const textColor = athlete.purchased ? "text-black" : "text-white";
 
   const renderButtons = () => {
-    // Bruker switch fremfor if. Representerer i større grad at variant skal være 1 av 3 muligheter.
     switch (variant) {
       case "view":
         return null;
@@ -59,19 +60,22 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
   };
 
   return (
-    <div className={`${bgColor} rounded-lg p-4 shadow-md`}>
+    <div className={`${bgColor} rounded-lg shadow-md flex overflow-hidden`}>
       <img
         src={`http://localhost:5110/images/AthleteImages/${athlete.image}`}
         alt={athlete.name}
-        className="w-full h-48 object-cover rounded-md mb-3"
+        className="w-1/3 object-cover"
       />
 
-      <h3 className="text-xl font-bold">{athlete.name}</h3>
-      <p>Price: {athlete.price} $</p>
-      <p>Gender: {athlete.gender}</p>
+      <div className={`${textColor} p-4 flex-1 flex flex-col justify-between`}>
+        <div>
+          <h3 className="text-xl font-bold">{athlete.name}</h3>
+          <p>Price: {athlete.price} $</p>
+          <p>Gender: {athlete.gender}</p>
+        </div>
 
-      {/* Kondisjonelle knapper basert på variant parameteret */}
-      <div className="mt-4 flex gap-2">{renderButtons()}</div>
+        <div className="flex gap-2">{renderButtons()}</div>
+      </div>
     </div>
   );
 };
