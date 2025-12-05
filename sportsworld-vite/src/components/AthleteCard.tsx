@@ -33,13 +33,13 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
           <>
             <button
               onClick={() => onEdit?.(athlete)}
-              className="bg-black text-white px-4 py-1 rounded"
+              className="bg-black text-white px-4 py-2 rounded"
             >
               Edit
             </button>
             <button
               onClick={() => onDelete?.(athlete.id)}
-              className="bg-[#4C0000] text-white px-4 rounded"
+              className="bg-[#4C0000] text-white px-4 py-2 rounded"
             >
               Delete
             </button>
