@@ -188,7 +188,7 @@ export const AthleteProvider: FC<IProviderProps> = ({ children }) => {
         },
         {
           name: "Israel Adesanya",
-          price: 12500,
+          price: 125000,
           gender: "Male",
           image: "seed-fighter8.jpg",
           purchased: false,
