@@ -45,14 +45,18 @@ export const FinanceProvider: FC<IProviderProps> = ({ children }) => {
   const updateFinance = async (updatedFinance: IFinance) => {
     setFinanceIsLoading(true);
     setFinanceErrorMessage("");
-    const response = await putFinance(updatedFinance);
+    try {
+      const response = await putFinance(updatedFinance);
 
-    if (!response.success) {
-      setFinanceErrorMessage(response.error ?? "Failed to update athlete");
-      return;
+      if (!response.success) {
+        setFinanceErrorMessage(response.error ?? "Failed to update athlete");
+        return;
+      }
+      // Trenger ikke sette loading som false enda, da showFinance gjør det til slutt
+      await showFinances();
+    } catch (err) {
+      setFinanceErrorMessage("Unexpected error updating finance");
     }
-    // Trenger ikke sette loading som false enda, da showFinance gjør det til slutt
-    await showFinances();
   };
 
   const initializeFinances = async () => {

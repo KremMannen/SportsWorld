@@ -103,7 +103,7 @@ export const AthleteProvider: FC<IProviderProps> = ({ children }) => {
 
   const updateAthlete = async (athlete: IAthlete) => {
     setAthleteErrorMessage("");
-
+    setAthleteIsLoading(true);
     try {
       const response = await putAthlete(athlete);
 

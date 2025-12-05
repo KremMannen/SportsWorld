@@ -26,7 +26,7 @@ export const FinanceLoanWindow: FC = () => {
     );
   }
 
-  const handleLoanRequest = (e: FormEvent) => {
+  const handleLoanRequest = async (e: FormEvent) => {
     e.preventDefault();
     if (loanAmount.trim() === "" || isNaN(Number(loanAmount))) {
       alert("Please enter a valid loan amount.");
@@ -46,7 +46,7 @@ export const FinanceLoanWindow: FC = () => {
       moneyLeft: currentFinance.moneyLeft + loanValue,
     };
 
-    updateFinance(updatedFinance);
+    await updateFinance(updatedFinance);
 
     setLoanAmount("");
   };

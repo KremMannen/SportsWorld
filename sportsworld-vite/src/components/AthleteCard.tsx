@@ -54,12 +54,13 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
   const buttonHover = "hover:shadow hover:cursor-pointer hover:bg-[#870000]";
 
   // --- Button handlers ---
-  const handleClick = (e: FormEvent) => {
+  const handleClick = async (e: FormEvent) => {
     e.preventDefault();
 
     if (!finances) return;
 
     const updatedFinance = { ...finances };
+    const updatedAthlete = { ...athlete, purchased: !athlete.purchased };
 
     if (updatedFinance.moneyLeft < athlete.price) {
       alert("Insufficient funds to sign this athlete.");
@@ -74,10 +75,9 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
       updatedFinance.moneySpent += athlete.price;
     }
 
-    updateFinance(updatedFinance);
+    await updateAthlete(updatedAthlete);
 
-    const updatedAthlete = { ...athlete, purchased: !athlete.purchased };
-    updateAthlete(updatedAthlete);
+    await updateFinance(updatedFinance);
   };
 
   const renderButtons = () => {
