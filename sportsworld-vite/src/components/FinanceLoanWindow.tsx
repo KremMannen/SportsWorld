@@ -74,7 +74,7 @@ export const FinanceLoanWindow: FC = () => {
             onClick={(e) => {
               handleLoanRequest(e);
             }}
-            className="bg-[#4C0000] text-white px-6 py-2 rounded font-bold hover:bg-[#870000] transition-colors"
+            className="bg-[#4C0000] text-white px-6 py-2 rounded font-bold hover:bg-[#870000]"
           >
             Request Loan
           </button>
