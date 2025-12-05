@@ -4,8 +4,8 @@ import type { IAthleteCardProps } from "../interfaces/properties/IAthleteCardPro
 // Vi ønsker en modulær AthleteCard komponent som kan generere de forskjellige variantene vi
 // skisserte i prototype-fasen.
 // På denne måten slipper vi å skrive 3 veldig like komponenter i henhold til DRY-prinsippet.
-// Vi tar derfor en string som parameter i komponenten som bestemmer hvilke knapper som skal genereres i kortet.
-// Hvordan vi håndterer TypeSafetyen til stringen forklares i IAthleteCard
+// Vi tar derfor en string parameter som bestemmer hvilke knapper som genereres i kortet.
+// Hvordan vi håndterer TypeSafetyen til stringen forklares i IAthleteCardProps.ts
 
 export const AthleteCard: FC<IAthleteCardProps> = ({
   athlete,
@@ -20,16 +20,20 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
   const textColor = athlete.purchased ? "text-black" : "text-white";
 
   // Varierende høyde basert på om kortet skal vise knapper eller ikke.
-  const cardHeight = variant === "manage" || variant === "sign" ? 
-   "h-48" : "h-32";
-  const imageSize = variant === "manage" || variant === "sign" ?
-   "w-32 h-48" : "w-32 h-32";
-  const cardHoverEffect = variant === "manage" || variant === "sign" ? "hover:shadow-black/40" : "hover:scale-[1.05] hover:shadow-black/40 hover:cursor-pointer" ;
+  const cardHeight =
+    variant === "manage" || variant === "sign" ? "h-48" : "h-32";
+  const imageSize =
+    variant === "manage" || variant === "sign" ? "w-32 h-48" : "w-32 h-32";
+  const cardHoverEffect =
+    variant === "manage" || variant === "sign"
+      ? "hover:shadow-black/40"
+      : "hover:scale-[1.05] hover:shadow-black/40 hover:cursor-pointer";
 
   const buttonBase =
     "px-4 py-2 rounded transition-transform transition-shadow duration-200 transform text-white ";
 
-  const buttonHover = "hover:shadow hover:cursor-pointer hover:border border-red-600";
+  const buttonHover =
+    "hover:shadow hover:cursor-pointer hover:border border-red-600";
 
   const renderButtons = () => {
     switch (variant) {
@@ -76,8 +80,10 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
   };
 
   return (
-    <article className={`${bgColor} col-span-12 sm:col-span-6 lg:flex-shrink-0 lg:w-[400px] xl:col-span-3 xl:w-auto rounded-lg shadow-md shadow-black/20 flex overflow-hidden ${cardHeight}
-    transition-transform duration-200 ${cardHoverEffect} `}>
+    <article
+      className={`${bgColor} col-span-12 sm:col-span-6 lg:flex-shrink-0 lg:w-[400px] xl:col-span-3 xl:w-auto rounded-lg shadow-md shadow-black/20 flex overflow-hidden ${cardHeight}
+    transition-transform duration-200 ${cardHoverEffect} `}
+    >
       <div className={`${imageSize} flex-shrink-0`}>
         <img
           src={`http://localhost:5110/images/AthleteImages/${athlete.image}`}
