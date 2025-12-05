@@ -5,6 +5,6 @@ export type destinationVariant =
   | "/venues"
   | "/register";
 
-export interface INavButton {
+export interface INavButtonProps {
   destination: destinationVariant;
 }

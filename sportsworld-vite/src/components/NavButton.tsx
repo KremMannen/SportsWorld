@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
-import type { INavButton } from "../interfaces/properties/INavButton";
+import type { INavButtonProps } from "../interfaces/properties/INavButton";
 import type { FC } from "react";
 
-const NavButton: FC<INavButton> = ({ destination }) => {
+const NavButton: FC<INavButtonProps> = ({ destination }) => {
   // Tekst for knapp-tittel basert på destination
   let displayTitle;
   switch (destination) {
