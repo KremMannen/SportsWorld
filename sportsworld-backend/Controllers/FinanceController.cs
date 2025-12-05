@@ -76,14 +76,6 @@ public class FinanceController (SportsWorldContext _context) : ControllerBase
     {
         try
         {
-            var finance = await _context.Finances.FirstOrDefaultAsync();
-        
-            /* Sjekker først om det finnes noe å redigere. */
-            if (finance == null)
-            {
-                return NotFound("Can't find Finance object to update. Try creating a new one");
-            }
-
             _context.Entry(editedFinance).State = EntityState.Modified;
             await _context.SaveChangesAsync();
             return NoContent();
