@@ -10,8 +10,16 @@ import type { IFinance } from "../interfaces/IFinance";
 
 export const FinanceContext = createContext<IFinanceContext | null>(null);
 
+// Vi bruker denne for å slippe å sette | null i finances, og følgelig overalt i komponentene som bruker den
+const defaultFinance: IFinance = {
+  moneyLeft: 0,
+  numberOfPurchases: 0,
+  moneySpent: 0,
+  debt: 0,
+};
+
 export const FinanceProvider: FC<IProviderProps> = ({ children }) => {
-  const [finances, setFinance] = useState<IFinance[]>([]);
+  const [finances, setFinance] = useState<IFinance>(defaultFinance);
   const [financeErrorMessage, setFinanceErrorMessage] = useState<string>("");
   const [financeIsLoading, setFinanceIsLoading] = useState(false);
   const isInitializing = useRef(false);
@@ -22,7 +30,11 @@ export const FinanceProvider: FC<IProviderProps> = ({ children }) => {
     const response = await getFinances();
 
     if (response.success && response.data) {
-      setFinance(response.data);
+      // Finance kommer i array format, men herfra vil vi konvertere til enkelt objekt
+      // Dette fordi context skal gjøre det enklere for komponenter å hente finance data
+      const financeArray = response.data;
+      const finance = financeArray[0];
+      setFinance(finance);
     } else {
       setFinanceErrorMessage(response.error ?? "Failed to load athletes");
     }

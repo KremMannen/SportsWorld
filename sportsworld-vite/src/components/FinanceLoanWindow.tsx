@@ -26,9 +26,6 @@ export const FinanceLoanWindow: FC = () => {
     );
   }
 
-  // -- Visningsverdiene til portalen
-  const debt = finances.length > 0 ? finances[0].debt : 0;
-
   const handleLoanRequest = (e: FormEvent) => {
     e.preventDefault();
     if (loanAmount.trim() === "" || isNaN(Number(loanAmount))) {
@@ -42,7 +39,7 @@ export const FinanceLoanWindow: FC = () => {
       return;
     }
 
-    const currentFinance = finances[0];
+    const currentFinance = finances;
     const updatedFinance = {
       ...currentFinance,
       debt: currentFinance.debt + loanValue,
@@ -68,7 +65,7 @@ export const FinanceLoanWindow: FC = () => {
         <div className={titleContainerStyling}>
           <h3 className={titleStyling}>Loan Portal</h3>
         </div>
-        <p className={pStyling}>Total debt: {debt}$</p>
+        <p className={pStyling}>Total debt: ${finances.debt}</p>
       </section>
 
       <section className={sectionStyling}>

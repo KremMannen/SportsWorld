@@ -3,6 +3,8 @@ import type { IAthleteCardProps } from "../interfaces/properties/IAthleteCardPro
 import { Link } from "react-router-dom";
 import { AthleteContext } from "../contexts/AthleteContext.tsx";
 import type { IAthleteContext } from "../interfaces/IAthleteContext.ts";
+import { FinanceContext } from "../contexts/FinanceContext.tsx";
+import type { IFinanceContext } from "../interfaces/IFinanceContext.ts";
 
 // Vi ønsker en modulær AthleteCard komponent som kan generere de forskjellige variantene vi
 // skisserte i prototype-fasen.
@@ -20,6 +22,9 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
   // En løsning kunne vært å bruke callback funksjon og la parent komponenten håndtere oppdateringen av athlete.
   // Siden context mønsteret allerede er implementert, unngår vi den "prop drillingen" ved å bruke context direkte.
   const { updateAthlete } = useContext(AthleteContext) as IAthleteContext;
+  const { finances, updateFinance } = useContext(
+    FinanceContext
+  ) as IFinanceContext;
 
   // Tailwind tilbyr å bruke egendefinerte farger med syntaxen under.
   // Dermed kan vi beholde farge palletten fra figma prototypen.
@@ -50,6 +55,21 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
   // --- Button handlers ---
   const handleClick = (e: FormEvent) => {
     e.preventDefault();
+    const updatedFinance = finances;
+
+    if (updatedFinance.moneyLeft < athlete.price) {
+      alert("Insufficient funds to sign this athlete.");
+      return;
+    }
+    if (athlete.purchased) {
+      // Selger athlete
+      updatedFinance.moneyLeft += athlete.price;
+    } else {
+      // Kjøper athlete
+      updatedFinance.moneyLeft -= athlete.price;
+      updatedFinance.moneySpent += athlete.price;
+    }
+
     const updatedAthlete = { ...athlete, purchased: !athlete.purchased };
     updateAthlete(updatedAthlete);
   };
