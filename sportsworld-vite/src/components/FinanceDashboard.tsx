@@ -69,7 +69,7 @@ export const FinanceDashboard: FC<IFinanceDashboardProps> = ({
       </section>
 
       {/* Fighters Owned: hidden on small, visible on md+ */}
-      <section className={`${sectionStyling} hidden md:block`}>
+      <section className={`${sectionStyling}`}>
         <div className={titleContainerStyling}>
           <h3 className={titleStyling}>Fighters Owned</h3>
         </div>
@@ -77,7 +77,7 @@ export const FinanceDashboard: FC<IFinanceDashboardProps> = ({
       </section>
 
       {/* Fighters Worth: hidden on small, visible on md+ */}
-      <section className={`${sectionStyling} hidden md:block`}>
+      <section className={`${sectionStyling}`}>
         <div className={titleContainerStyling}>
           <h3 className={titleStyling}>Fighters Worth</h3>
         </div>
@@ -86,7 +86,7 @@ export const FinanceDashboard: FC<IFinanceDashboardProps> = ({
 
       {/* Total Spending: only visible on large */}
       {!limitedVariant && (
-        <section className={`${sectionStyling} hidden lg:block`}>
+        <section className={`${sectionStyling}`}>
           <div className={titleContainerStyling}>
             <h3 className={titleStyling}>Total Spending</h3>
           </div>
