@@ -77,42 +77,33 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
     }
   };
 
-  const articleJSX = (
-    <article
-      className={`${bgColor} rounded-lg shadow-md shadow-black/20 flex overflow-hidden ${cardHeight} w-full`}
-    >
-      <div className={`${imageSize} flex-shrink-0`}>
-        <img
-          src={`http://localhost:5110/images/AthleteImages/${athlete.image}`}
-          alt={athlete.name}
-          className="w-full h-full object-cover"
-        />
-      </div>
 
-      <div className={`${textColor} p-4 flex-1 flex flex-col justify-between`}>
-        <div>
-          <h3 className="text-xl font-bold">{athlete.name}</h3>
-          <p>Price: {athlete.price} $</p>
-          <p>Gender: {athlete.gender}</p>
-        </div>
-
-        <div className="flex gap-2">{renderButtons()}</div>
-      </div>
-    </article>
-  );
-
-  return variant === "view" ? (
+  return (
     <Link
       to={viewCardHref}
       className={`block col-span-12 sm:col-span-6 lg:flex-shrink-0 lg:w-[400px] xl:col-span-3 xl:w-auto transition-transform duration-200 ${cardHoverEffect}`}
     >
-      {articleJSX}
+      <article
+        className={`${bgColor} rounded-lg shadow-md shadow-black/20 flex overflow-hidden ${cardHeight} w-full`}
+      >
+        <div className={`${imageSize} flex-shrink-0`}>
+          <img
+            src={`http://localhost:5110/images/AthleteImages/${athlete.image}`}
+            alt={athlete.name}
+            className="w-full h-full object-cover"
+          />
+        </div>
+
+        <div className={`${textColor} p-4 flex-1 flex flex-col justify-between`}>
+          <div>
+            <h3 className="text-xl font-bold">{athlete.name}</h3>
+            <p>Price: {athlete.price} $</p>
+            <p>Gender: {athlete.gender}</p>
+          </div>
+
+          <div className="flex gap-2">{renderButtons()}</div>
+        </div>
+      </article>
     </Link>
-  ) : (
-    <div
-      className={`col-span-12 sm:col-span-6 lg:flex-shrink-0 lg:w-[400px] xl:col-span-3 xl:w-auto transition-transform duration-200 ${cardHoverEffect}`}
-    >
-      {articleJSX}
-    </div>
   );
 };
