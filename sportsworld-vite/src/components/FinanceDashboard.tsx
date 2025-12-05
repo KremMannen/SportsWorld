@@ -35,11 +35,10 @@ export const FinanceDashboard: FC = () => {
 
   // Display verdiene til dashboardet
   const accountBalance = finances.length > 0 ? finances[0].moneyLeft : 0;
-  const fightersOwned = athletes.length;
-  const fightersWorth = athletes.reduce(
-    (total, athlete) => total + athlete.price,
-    0
-  );
+  const fightersOwned = athletes.filter(athlete => athlete.purchased).length;
+  const fightersWorth = athletes
+    .filter(athlete => athlete.purchased)
+    .reduce((total, athlete) => total + athlete.price, 0);
 
   return (
     <summary className="py-8 grid grid-cols-12 gap-6 text-center">
