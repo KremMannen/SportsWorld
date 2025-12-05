@@ -80,7 +80,7 @@ export const FinanceProvider: FC<IProviderProps> = ({ children }) => {
 
     if (existingFinances.data.length === 0) {
       const seedFinances = {
-        moneyLeft: 1000000,
+        moneyLeft: 100000,
         numberOfPurchases: 0,
         moneySpent: 0,
         debt: 0,

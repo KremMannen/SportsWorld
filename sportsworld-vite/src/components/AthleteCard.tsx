@@ -60,14 +60,14 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
     const updatedFinance = { ...finances };
     const updatedAthlete = { ...athlete, purchased: !athlete.purchased };
 
-    if (updatedFinance.moneyLeft < athlete.price) {
-      alert("Insufficient funds to sign this athlete.");
-      return;
-    }
     if (athlete.purchased) {
       // Selger athlete
       updatedFinance.moneyLeft += athlete.price;
     } else {
+      if (updatedFinance.moneyLeft < athlete.price) {
+        alert("Insufficient funds to sign this athlete.");
+        return;
+      }
       // Kjøper athlete
       updatedFinance.moneyLeft -= athlete.price;
       updatedFinance.moneySpent += athlete.price;
