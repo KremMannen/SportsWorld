@@ -54,9 +54,7 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
   const buttonHover = "hover:shadow hover:cursor-pointer hover:bg-[#870000]";
 
   // --- Button handlers ---
-  const handleClick = async (e: FormEvent) => {
-    e.preventDefault();
-
+  const handleClick = async () => {
     if (!finances) return;
 
     const updatedFinance = { ...finances };
@@ -110,8 +108,8 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
         return (
           <button
             type="button"
-            onClick={(e) => {
-              handleClick(e);
+            onClick={() => {
+              handleClick();
             }}
             className={`${buttonBase} ${buttonHover} `}
           >
