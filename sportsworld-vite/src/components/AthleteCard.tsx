@@ -55,7 +55,7 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
   // --- Button handlers ---
   const handleClick = (e: FormEvent) => {
     e.preventDefault();
-    const updatedFinance = finances;
+    const updatedFinance = { ...finances };
 
     if (updatedFinance.moneyLeft < athlete.price) {
       alert("Insufficient funds to sign this athlete.");
@@ -69,6 +69,8 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
       updatedFinance.moneyLeft -= athlete.price;
       updatedFinance.moneySpent += athlete.price;
     }
+
+    updateFinance(updatedFinance);
 
     const updatedAthlete = { ...athlete, purchased: !athlete.purchased };
     updateAthlete(updatedAthlete);
