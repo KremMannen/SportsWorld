@@ -1,4 +1,4 @@
-import { useContext, type FC } from "react";
+import { useContext, type FC, type FormEvent } from "react";
 import type { IAthleteCardProps } from "../interfaces/properties/IAthleteCardProps.ts";
 import { Link } from "react-router-dom";
 import { AthleteContext } from "../contexts/AthleteContext.tsx";
@@ -28,13 +28,13 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
 
   // Varierende høyde basert på om kortet skal vise knapper eller ikke.
   const cardHeight =
-    variant === "manage" || variant === "sign" ? "h-48" : "h-32";
+    variant === "manage" || variant === "finance" ? "h-48" : "h-32";
   const imageSize =
-    variant === "manage" || variant === "sign" ? "w-32 h-48" : "w-32 h-32";
+    variant === "manage" || variant === "finance" ? "w-32 h-48" : "w-32 h-32";
 
   // Knappstyling og hover effekt presets for knapper og kort, da kun kort på hovedsiden med viewcase skal ha synlig klikkbar effekt
   const cardHoverEffect =
-    variant === "manage" || variant === "sign"
+    variant === "manage" || variant === "finance"
       ? "hover:shadow-black/40"
       : "hover:scale-[1.05] hover:shadow-black/40 hover:cursor-pointer";
   const buttonBase =
@@ -42,13 +42,15 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
   const buttonHover =
     "hover:shadow hover:cursor-pointer hover:border border-red-600";
 
-  // Linker kort til aktuelle pages
+  // viewCards onclick fører til forskjellige sider basert på om athlete er kjøpt eller ikke
   const viewCardHref = athlete.purchased ? "/admin" : "/finances";
 
+  const buttonText = athlete.purchased ? "Sell Athlete" : "Sign Athlete";
+
   // --- Button handlers ---
-  const handleSign = () => {
-    const updatedAthlete = { ...athlete, purchased: true };
-    console.log("Signing athlete:", updatedAthlete, updatedAthlete.purchased);
+  const handleClick = (e: FormEvent) => {
+    e.preventDefault();
+    const updatedAthlete = { ...athlete, purchased: !athlete.purchased };
     updateAthlete(updatedAthlete);
   };
 
@@ -78,16 +80,16 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
           </>
         );
 
-      case "sign":
-        if (athlete.purchased) return null;
-
+      case "finance":
         return (
           <button
             type="button"
-            onClick={() => handleSign()}
+            onClick={(e) => {
+              handleClick(e);
+            }}
             className={`${buttonBase} ${buttonHover} bg-green-500 w-full`}
           >
-            Sign to Team
+            {buttonText}
           </button>
         );
 

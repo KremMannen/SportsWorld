@@ -1,17 +1,19 @@
-import FighterList from "../components/FighterList";
 import FeaturedVenues from "../components/FeaturedVenues";
-import NavButton from "../components/NavButton";
 import { FinanceDashboard } from "../components/FinanceDashboard";
-import { PageLayout } from "../components/PageLayout";
+import { PageLayout } from "../components/common/PageLayout";
+import { DoubleFighterList } from "../components/DoubleFighterList";
+import FighterList from "../components/FighterList";
+import NavButton from "../components/NavButton";
 
 const HomePage = () => {
   return (
     <PageLayout>
       <FinanceDashboard limitedVariant={true} />
-      <FighterList filterType="available" />
-      <NavButton destination="/finances" />
       <FighterList filterType="owned" />
       <NavButton destination="/admin" />
+
+      <FighterList filterType="available" />
+      <NavButton destination="/finances" />
       <FeaturedVenues />
     </PageLayout>
   );

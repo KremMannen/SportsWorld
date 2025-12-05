@@ -1,15 +1,14 @@
 import FighterList from "../components/FighterList";
-import { FinanceDashboard } from "../components/FinanceDashboard";
+
 import { FinancePortal } from "../components/FinancePortal";
-import { PageLayout } from "../components/PageLayout";
+import { PageLayout } from "../components/common/PageLayout";
 
 const FinancesPage = () => {
   return (
     <PageLayout>
-      <FinanceDashboard />
       <FinancePortal />
-      <FighterList filterType="owned" cardVariant="manage" />
-      <FighterList filterType="available" cardVariant="sign" />
+      <FighterList filterType="owned" cardVariant="finance" />
+      <FighterList filterType="available" cardVariant="finance" />
     </PageLayout>
   );
 };

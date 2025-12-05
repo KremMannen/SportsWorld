@@ -60,33 +60,33 @@ export const FinanceDashboard: FC<IFinanceDashboardProps> = ({
 
   return (
     <section className={containerStyling}>
-      {/* Account Balance */}
-      <section className={sectionStyling}>
+      {/* Account Balance: alltid synlig */}
+      <section className={`${sectionStyling} block`}>
         <div className={titleContainerStyling}>
           <h3 className={titleStyling}>Account Balance</h3>
         </div>
         <p className={pStyling}>${accountBalance.toLocaleString()}</p>
       </section>
 
-      {/* Fighters Owned */}
-      <section className={sectionStyling}>
+      {/* Fighters Owned: hidden on small, visible on md+ */}
+      <section className={`${sectionStyling} hidden md:block`}>
         <div className={titleContainerStyling}>
           <h3 className={titleStyling}>Fighters Owned</h3>
         </div>
         <p className={pStyling}>{fightersOwned}</p>
       </section>
 
-      {/* Fighters Worth */}
-      <section className={sectionStyling}>
+      {/* Fighters Worth: hidden on small, visible on md+ */}
+      <section className={`${sectionStyling} hidden md:block`}>
         <div className={titleContainerStyling}>
           <h3 className={titleStyling}>Fighters Worth</h3>
         </div>
         <p className={pStyling}>${fightersWorth.toLocaleString()}</p>
       </section>
 
-      {/* Hvis limitedVariant er false, vises siste seksjonen */}
+      {/* Total Spending: only visible on large */}
       {!limitedVariant && (
-        <section className={sectionStyling}>
+        <section className={`${sectionStyling} hidden lg:block`}>
           <div className={titleContainerStyling}>
             <h3 className={titleStyling}>Total Spending</h3>
           </div>

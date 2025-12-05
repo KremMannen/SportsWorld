@@ -1,5 +1,5 @@
 import FighterList from "../components/FighterList";
-import { PageLayout } from "../components/PageLayout";
+import { PageLayout } from "../components/common/PageLayout";
 
 const AdminPage = () => {
   return (
