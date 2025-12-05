@@ -19,6 +19,10 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
   const bgColor = athlete.purchased ? "bg-green-100" : "bg-[#3D4645]";
   const textColor = athlete.purchased ? "text-black" : "text-white";
 
+  // Varierende høyde basert på om kortet skal vise knapper eller ikke.
+  const cardHeight = variant === "manage" || variant === "sign" ? "h-40" : "h-32";
+  const imageSize = variant === "manage" || variant === "sign" ? "w-40 h-40" : "w-32 h-32";
+
   const renderButtons = () => {
     switch (variant) {
       case "view":
@@ -29,13 +33,13 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
           <>
             <button
               onClick={() => onEdit?.(athlete)}
-              className="bg-blue-500 text-white px-4 py-2 rounded"
+              className="bg-black text-white px-4 py-1 rounded"
             >
               Edit
             </button>
             <button
               onClick={() => onDelete?.(athlete.id)}
-              className="bg-red-500 text-white px-4 py-2 rounded"
+              className="bg-[#4C0000] text-white px-4 rounded"
             >
               Delete
             </button>
@@ -60,9 +64,9 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
   };
 
   return (
-    <article className={`${bgColor} col-span-12 sm:col-span-6 lg:flex-shrink-0 lg:w-[400px] xl:col-span-3 xl:w-auto rounded-lg shadow-md shadow-black/20 flex overflow-hidden h-32
+    <article className={`${bgColor} col-span-12 sm:col-span-6 lg:flex-shrink-0 lg:w-[400px] xl:col-span-3 xl:w-auto rounded-lg shadow-md shadow-black/20 flex overflow-hidden ${cardHeight}
     transition-transform duration-200 hover:scale-[1.05] hover:shadow-black/40 hover:cursor-pointer `}>
-      <div className="w-32 h-32 flex-shrink-0">
+      <div className={`${imageSize} flex-shrink-0`}>
         <img
           src={`http://localhost:5110/images/AthleteImages/${athlete.image}`}
           alt={athlete.name}
