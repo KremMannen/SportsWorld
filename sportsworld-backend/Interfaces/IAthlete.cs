@@ -7,5 +7,5 @@ interface IAthlete
     string Gender { get; set; }
     int Price { get; set; }
     string Image { get; set; }
-    bool PurchaseStatus { get; set;}
+    bool Purchased { get; set;}
 }

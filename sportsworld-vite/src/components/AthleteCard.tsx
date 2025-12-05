@@ -1,6 +1,8 @@
-import type { FC } from "react";
+import { useContext, type FC } from "react";
 import type { IAthleteCardProps } from "../interfaces/properties/IAthleteCardProps.ts";
 import { Link } from "react-router-dom";
+import { AthleteContext } from "../contexts/AthleteContext.tsx";
+import type { IAthleteContext } from "../interfaces/IAthleteContext.ts";
 
 // Vi ønsker en modulær AthleteCard komponent som kan generere de forskjellige variantene vi
 // skisserte i prototype-fasen.
@@ -15,6 +17,10 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
   onDelete,
   onSign,
 }) => {
+  // En løsning kunne vært å bruke callback funksjon og la parent komponenten håndtere oppdateringen av athlete.
+  // Siden context mønsteret allerede er implementert, unngår vi den "prop drillingen" ved å bruke context direkte.
+  const { updateAthlete } = useContext(AthleteContext) as IAthleteContext;
+
   // Tailwind tilbyr å bruke egendefinerte farger med syntaxen under.
   // Dermed kan vi beholde farge palletten fra figma prototypen.
   const bgColor = athlete.purchased ? "bg-green-100" : "bg-[#3D4645]";
@@ -26,7 +32,7 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
   const imageSize =
     variant === "manage" || variant === "sign" ? "w-32 h-48" : "w-32 h-32";
 
-  //Knappstyling og hover effekt presets for knapper og kort, da kun kort på hovedsiden med viewcase skal ha synlig klikkbar effekt
+  // Knappstyling og hover effekt presets for knapper og kort, da kun kort på hovedsiden med viewcase skal ha synlig klikkbar effekt
   const cardHoverEffect =
     variant === "manage" || variant === "sign"
       ? "hover:shadow-black/40"
@@ -36,8 +42,15 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
   const buttonHover =
     "hover:shadow hover:cursor-pointer hover:border border-red-600";
 
-  // Linker kort til aktuelle pages. Your fighters sender deg til admin og available fighters sender deg til finances for å kjøpe
+  // Linker kort til aktuelle pages
   const viewCardHref = athlete.purchased ? "/admin" : "/finances";
+
+  // --- Button handlers ---
+  const handleSign = () => {
+    const updatedAthlete = { ...athlete, purchased: true };
+    console.log("Signing athlete:", updatedAthlete, updatedAthlete.purchased);
+    updateAthlete(updatedAthlete);
+  };
 
   const renderButtons = () => {
     switch (variant) {
@@ -71,7 +84,7 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
         return (
           <button
             type="button"
-            onClick={() => onSign?.(athlete)}
+            onClick={() => handleSign()}
             className={`${buttonBase} ${buttonHover} bg-green-500 w-full`}
           >
             Sign to Team
@@ -83,13 +96,44 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
     }
   };
 
-  return (
-    <Link
-      to={viewCardHref}
-      className={`block col-span-12 sm:col-span-6 lg:flex-shrink-0 lg:w-[400px] xl:col-span-3 xl:w-auto transition-transform duration-200 ${cardHoverEffect}`}
-    >
+  const renderJsx = () => {
+    // Vi ønker kun en Link wrapper for view varianten, de andre kortene er ikke klikkbare
+    if (variant === "view") {
+      return (
+        <Link
+          to={viewCardHref}
+          className={`block col-span-12 sm:col-span-6 lg:flex-shrink-0 lg:w-[400px] xl:col-span-3 xl:w-auto transition-transform duration-200 ${cardHoverEffect}`}
+        >
+          <article
+            className={`${bgColor} rounded-lg shadow-md shadow-black/20 flex overflow-hidden ${cardHeight} w-full`}
+          >
+            <div className={`${imageSize} flex-shrink-0`}>
+              <img
+                src={`http://localhost:5110/images/AthleteImages/${athlete.image}`}
+                alt={athlete.name}
+                className="w-full h-full object-cover"
+              />
+            </div>
+
+            <div
+              className={`${textColor} p-4 flex-1 flex flex-col justify-between`}
+            >
+              <div>
+                <h3 className="text-xl font-bold">{athlete.name}</h3>
+                <p>Price: {athlete.price} $</p>
+                <p>Gender: {athlete.gender}</p>
+              </div>
+
+              <div className="flex gap-2">{renderButtons()}</div>
+            </div>
+          </article>
+        </Link>
+      );
+    }
+
+    return (
       <article
-        className={`${bgColor} rounded-lg shadow-md shadow-black/20 flex overflow-hidden ${cardHeight} w-full`}
+        className={`block col-span-12 sm:col-span-6 lg:flex-shrink-0 lg:w-[400px] xl:col-span-3 xl:w-auto transition-transform duration-200 ${cardHoverEffect} ${bgColor} rounded-lg shadow-md shadow-black/20 flex overflow-hidden ${cardHeight} w-full`}
       >
         <div className={`${imageSize} flex-shrink-0`}>
           <img
@@ -111,6 +155,8 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
           <div className="flex gap-2">{renderButtons()}</div>
         </div>
       </article>
-    </Link>
-  );
+    );
+  };
+
+  return renderJsx();
 };

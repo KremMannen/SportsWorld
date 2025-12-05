@@ -103,18 +103,18 @@ public class AthleteController (SportsWorldContext _context) : ControllerBase
         }
     }
 
-    [HttpPut] // Endre atlet-info
-    public async Task<ActionResult<Athlete>> Put(Athlete editedAthlete)
-    {
-        try
+        [HttpPut] // Endre atlet-info
+        public async Task<ActionResult<Athlete>> Put(Athlete editedAthlete)
         {
-            _context.Entry(editedAthlete).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-            return NoContent();
+            try
+            {
+                _context.Entry(editedAthlete).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                return NoContent();
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, $"Error: {e.Message}");
+            }
         }
-        catch (Exception e)
-        {
-            return StatusCode(500, $"Error: {e.Message}");
-        }
-    }
 }

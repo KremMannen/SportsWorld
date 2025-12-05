@@ -102,16 +102,27 @@ export const AthleteProvider: FC<IProviderProps> = ({ children }) => {
   };
 
   const updateAthlete = async (athlete: IAthlete) => {
+    console.log("updateAthlete called for:", athlete.name, athlete.id);
     setAthleteErrorMessage("");
 
-    const response = await putAthlete(athlete);
+    try {
+      console.log("Sending update to backend...");
+      const response = await putAthlete(athlete);
+      console.log("Backend response:", response);
 
-    if (!response.success) {
-      setAthleteErrorMessage(response.error ?? "Failed to update athlete");
-      return;
+      if (!response.success) {
+        console.error("Failed to update athlete:", response.error);
+        setAthleteErrorMessage(response.error ?? "Failed to update athlete");
+        return;
+      }
+
+      console.log("Update successful, refreshing athlete list...");
+      await showAll();
+      console.log("Athlete list refreshed successfully");
+    } catch (err) {
+      console.error("Exception in updateAthlete:", err);
+      setAthleteErrorMessage("Unexpected error updating athlete");
     }
-
-    await showAll();
   };
 
   // Seeding av databasen skal vel egentlig gjøres i backend, men for å holde prosjektet innenfor rammene av pensum gjør vi det her.
