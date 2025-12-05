@@ -36,7 +36,7 @@ export const FinanceDashboard: FC<IFinanceDashboardProps> = ({
     );
   }
 
-  // -- Visningsverdier til dashboardet
+  // -- Visningsverdiene til dashboardet
   const fightersOwned = athletes.filter((athlete) => athlete.purchased).length;
   const fightersWorth = athletes
     .filter((athlete) => athlete.purchased)

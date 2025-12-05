@@ -31,6 +31,11 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
   const bgColor = athlete.purchased ? "bg-white" : "bg-[#3D4645]";
   const textColor = athlete.purchased ? "text-black" : "text-white";
 
+  // viewCards onclick fører til forskjellige sider basert på om athlete er kjøpt eller ikke
+  const viewCardHref = athlete.purchased ? "/admin" : "/finances";
+
+  const buttonText = athlete.purchased ? "Sell Athlete" : "Sign Athlete";
+
   // Varierende høyde basert på om kortet skal vise knapper eller ikke.
   const cardHeight =
     variant === "manage" || variant === "finance" ? "h-48" : "h-32";
@@ -48,16 +53,11 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
       : "bg-[#000000] w-full px-4 py-2 rounded transition-transform transition-shadow duration-200 transform text-white ";
   const buttonHover = "hover:shadow hover:cursor-pointer hover:bg-[#870000]";
 
-  // viewCards onclick fører til forskjellige sider basert på om athlete er kjøpt eller ikke
-  const viewCardHref = athlete.purchased ? "/admin" : "/finances";
-
-  const buttonText = athlete.purchased ? "Sell Athlete" : "Sign Athlete";
-
   // --- Button handlers ---
   const handleClick = (e: FormEvent) => {
     e.preventDefault();
 
-    if (!finances) return; // safety check
+    if (!finances) return;
 
     const updatedFinance = { ...finances };
 
