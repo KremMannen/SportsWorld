@@ -20,8 +20,8 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
   const textColor = athlete.purchased ? "text-black" : "text-white";
 
   // Varierende høyde basert på om kortet skal vise knapper eller ikke.
-  const cardHeight = variant === "manage" || variant === "sign" ? "h-40" : "h-32";
-  const imageSize = variant === "manage" || variant === "sign" ? "w-40 h-40" : "w-32 h-32";
+  const cardHeight = variant === "manage" || variant === "sign" ? "h-48" : "h-32";
+  const imageSize = variant === "manage" || variant === "sign" ? "w-32 h-48" : "w-32 h-32";
 
   const renderButtons = () => {
     switch (variant) {
