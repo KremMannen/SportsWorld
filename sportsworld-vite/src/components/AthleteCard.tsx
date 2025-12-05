@@ -28,7 +28,7 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
 
   // Tailwind tilbyr å bruke egendefinerte farger med syntaxen under.
   // Dermed kan vi beholde farge palletten fra figma prototypen.
-  const bgColor = athlete.purchased ? "bg-green-100" : "bg-[#3D4645]";
+  const bgColor = athlete.purchased ? "bg-white" : "bg-[#3D4645]";
   const textColor = athlete.purchased ? "text-black" : "text-white";
 
   // Varierende høyde basert på om kortet skal vise knapper eller ikke.
@@ -43,9 +43,10 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
       ? "hover:shadow-black/40"
       : "hover:scale-[1.05] hover:shadow-black/40 hover:cursor-pointer";
   const buttonBase =
-    "px-4 py-2 rounded transition-transform transition-shadow duration-200 transform text-white ";
-  const buttonHover =
-    "hover:shadow hover:cursor-pointer hover:border border-red-600";
+    athlete.purchased && variant === "finance"
+      ? "bg-[#4C0000] w-full px-4 py-2 rounded transition-transform transition-shadow duration-200 transform text-white "
+      : "bg-[#000000] w-full px-4 py-2 rounded transition-transform transition-shadow duration-200 transform text-white ";
+  const buttonHover = "hover:shadow hover:cursor-pointer hover:bg-[#870000]";
 
   // viewCards onclick fører til forskjellige sider basert på om athlete er kjøpt eller ikke
   const viewCardHref = athlete.purchased ? "/admin" : "/finances";
@@ -55,7 +56,10 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
   // --- Button handlers ---
   const handleClick = (e: FormEvent) => {
     e.preventDefault();
-    const updatedFinance = finances;
+
+    if (!finances) return; // safety check
+
+    const updatedFinance = { ...finances };
 
     if (updatedFinance.moneyLeft < athlete.price) {
       alert("Insufficient funds to sign this athlete.");
@@ -69,6 +73,8 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
       updatedFinance.moneyLeft -= athlete.price;
       updatedFinance.moneySpent += athlete.price;
     }
+
+    updateFinance(updatedFinance);
 
     const updatedAthlete = { ...athlete, purchased: !athlete.purchased };
     updateAthlete(updatedAthlete);
@@ -85,7 +91,7 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
             <button
               type="button"
               onClick={() => onEdit?.(athlete)}
-              className={`${buttonBase} ${buttonHover} bg-black`}
+              className={`${buttonBase} ${buttonHover}`}
             >
               Edit
             </button>
@@ -93,7 +99,7 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
             <button
               type="button"
               onClick={() => onDelete?.(athlete.id)}
-              className={`${buttonBase} ${buttonHover} bg-[#4C0000]`}
+              className={`${buttonBase} ${buttonHover}`}
             >
               Delete
             </button>
@@ -107,7 +113,7 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
             onClick={(e) => {
               handleClick(e);
             }}
-            className={`${buttonBase} ${buttonHover} bg-green-500 w-full`}
+            className={`${buttonBase} ${buttonHover} `}
           >
             {buttonText}
           </button>

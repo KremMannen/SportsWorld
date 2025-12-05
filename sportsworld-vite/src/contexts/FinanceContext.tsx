@@ -8,8 +8,6 @@ import {
 import type { IFinanceContext } from "../interfaces/IFinanceContext";
 import type { IFinance } from "../interfaces/IFinance";
 
-export const FinanceContext = createContext<IFinanceContext | null>(null);
-
 // Vi bruker denne for å slippe å sette | null i finances, og følgelig overalt i komponentene som bruker den
 const defaultFinance: IFinance = {
   moneyLeft: 0,
@@ -17,6 +15,8 @@ const defaultFinance: IFinance = {
   moneySpent: 0,
   debt: 0,
 };
+
+export const FinanceContext = createContext<IFinanceContext | null>(null);
 
 export const FinanceProvider: FC<IProviderProps> = ({ children }) => {
   const [finances, setFinance] = useState<IFinance>(defaultFinance);
@@ -33,6 +33,7 @@ export const FinanceProvider: FC<IProviderProps> = ({ children }) => {
       // Finance kommer i array format, men herfra vil vi konvertere til enkelt objekt
       // Dette fordi context skal gjøre det enklere for komponenter å hente finance data
       const financeArray = response.data;
+      // Denne linjen er litt stygg, men vi vet at det kun er ett finance objekt i arrayet
       const finance = financeArray[0];
       setFinance(finance);
     } else {
