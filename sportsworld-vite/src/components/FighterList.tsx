@@ -12,7 +12,6 @@ export const FighterList: FC<IFighterListProps> = ({
     AthleteContext
   ) as IAthleteContext;
 
-  // Todo: flytte filtrering til context?
   let filteredAthletes;
   switch (filterType) {
     case "owned":

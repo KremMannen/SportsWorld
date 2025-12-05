@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import type { INavButtonProps } from "../interfaces/properties/INavButton";
+import type { INavButtonProps } from "../interfaces/properties/INavButtonProps";
 import type { FC } from "react";
 
 const NavButton: FC<INavButtonProps> = ({ destination }) => {

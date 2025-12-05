@@ -7,7 +7,7 @@ import { PageLayout } from "../components/PageLayout";
 const HomePage = () => {
   return (
     <PageLayout>
-      <FinanceDashboard />
+      <FinanceDashboard limitedVariant={true} />
       <FighterList filterType="available" />
       <NavButton destination="/finances" />
       <FighterList filterType="owned" />

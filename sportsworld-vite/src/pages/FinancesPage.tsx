@@ -1,8 +1,13 @@
+import { FinanceDashboard } from "../components/FinanceDashboard";
+import { FinancePortal } from "../components/FinancePortal";
+import { PageLayout } from "../components/PageLayout";
+
 const FinancesPage = () => {
   return (
-    <main>
-      <section></section>
-    </main>
+    <PageLayout>
+      <FinanceDashboard />
+      <FinancePortal />
+    </PageLayout>
   );
 };
 
