@@ -20,8 +20,16 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
   const textColor = athlete.purchased ? "text-black" : "text-white";
 
   // Varierende høyde basert på om kortet skal vise knapper eller ikke.
-  const cardHeight = variant === "manage" || variant === "sign" ? "h-48" : "h-32";
-  const imageSize = variant === "manage" || variant === "sign" ? "w-32 h-48" : "w-32 h-32";
+  const cardHeight = variant === "manage" || variant === "sign" ? 
+   "h-48" : "h-32";
+  const imageSize = variant === "manage" || variant === "sign" ?
+   "w-32 h-48" : "w-32 h-32";
+  const cardHoverEffect = variant === "manage" || variant === "sign" ? "hover:shadow-black/40" : "hover:scale-[1.05] hover:shadow-black/40 hover:cursor-pointer" ;
+
+  const buttonBase =
+    "px-4 py-2 rounded transition-transform transition-shadow duration-200 transform text-white ";
+
+  const buttonHover = "hover:shadow hover:cursor-pointer hover:border border-red-600";
 
   const renderButtons = () => {
     switch (variant) {
@@ -32,14 +40,17 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
         return (
           <>
             <button
+              type="button"
               onClick={() => onEdit?.(athlete)}
-              className="bg-black text-white px-4 py-2 rounded"
+              className={`${buttonBase} ${buttonHover} bg-black`}
             >
               Edit
             </button>
+
             <button
+              type="button"
               onClick={() => onDelete?.(athlete.id)}
-              className="bg-[#4C0000] text-white px-4 py-2 rounded"
+              className={`${buttonBase} ${buttonHover} bg-[#4C0000]`}
             >
               Delete
             </button>
@@ -51,8 +62,9 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
 
         return (
           <button
+            type="button"
             onClick={() => onSign?.(athlete)}
-            className="bg-green-500 text-white px-4 py-2 rounded w-full"
+            className={`${buttonBase} ${buttonHover} bg-green-500 w-full`}
           >
             Sign to Team
           </button>
@@ -65,7 +77,7 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
 
   return (
     <article className={`${bgColor} col-span-12 sm:col-span-6 lg:flex-shrink-0 lg:w-[400px] xl:col-span-3 xl:w-auto rounded-lg shadow-md shadow-black/20 flex overflow-hidden ${cardHeight}
-    transition-transform duration-200 hover:scale-[1.05] hover:shadow-black/40 hover:cursor-pointer `}>
+    transition-transform duration-200 ${cardHoverEffect} `}>
       <div className={`${imageSize} flex-shrink-0`}>
         <img
           src={`http://localhost:5110/images/AthleteImages/${athlete.image}`}
