@@ -11,40 +11,56 @@ const Header: FC = () => {
         >
           SportsWorld
         </Link>
-        <ul className="flex items-center space-x-6">
+         <ul className="flex items-center space-x-6">
+
+          {/* Admin */}
           <li>
             <Link
               to="/admin"
-              className="text-white text-2xl hover:text-red-300 font-medium"
+              className="text-white text-2xl hover:text-red-300 font-medium flex items-center"
             >
-              Admin
+              {/* Icon on small screens */}
+              <i className="fas fa-user-shield !inline lg:!hidden"></i>
+              {/* Text on large screens */}
+              <span className="!hidden lg:!inline">Admin</span>
             </Link>
           </li>
+
+          {/* Register */}
           <li>
             <Link
               to="/register"
-              className="text-white text-2xl hover:text-red-300 font-medium"
+              className="text-white text-2xl hover:text-red-300 font-medium flex items-center"
             >
-              Register
+              <i className="fas fa-user-plus !inline lg:!hidden"></i>
+              <span className="!hidden lg:!inline">Register</span>
             </Link>
           </li>
+
+          {/* Finances */}
           <li>
             <Link
               to="/finances"
-              className="text-white text-2xl hover:text-red-300 font-medium"
+              className="text-white text-2xl hover:text-red-300 font-medium flex items-center"
             >
-              Finances
+              <i className="fas fa-coins !inline lg:!hidden"></i>
+              <span className="!hidden lg:!inline">Finances</span>
             </Link>
           </li>
+
+          {/* Venues */}
           <li>
             <Link
               to="/venues"
-              className="text-white text-2xl hover:text-red-300 font-medium"
+              className="text-white text-2xl hover:text-red-300 font-medium flex items-center"
             >
-              Venues
+              <i className="fas fa-building !inline lg:!hidden"></i>
+              <span className="!hidden lg:!inline">Venues</span>
             </Link>
           </li>
+
         </ul>
+
       </nav>
     </header>
   );
