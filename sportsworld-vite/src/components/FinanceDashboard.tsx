@@ -78,7 +78,7 @@ export const FinanceDashboard: FC<IFinanceDashboardProps> = ({
       {!limitedVariant && (
         <FinanceCard 
           title="Total Spending" 
-          value={`$${finances.moneySpent}`} 
+          value={`$${finances.moneySpent.toLocaleString()}`} 
         />
       )}
     </>

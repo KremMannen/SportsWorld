@@ -64,7 +64,8 @@ export const FinanceLoanWindow: FC = () => {
         <div className={titleContainerStyling}>
           <h3 className={titleStyling}>Loan Portal</h3>
         </div>
-        <p className={pStyling}>Total debt: ${finances.debt}</p>
+        {/*Bruker .toLocaleString() for å få pen formattering på store tall */}
+        <p className={pStyling}>Total debt: ${finances.debt.toLocaleString()}</p>
       </section>
 
       <section className="col-span-12 sm:col-span-6 lg:col-span-4">
