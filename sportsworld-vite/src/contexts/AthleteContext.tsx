@@ -32,73 +32,89 @@ export const AthleteProvider: FC<IProviderProps> = ({ children }) => {
   const showAll = async () => {
     setAthleteIsLoading(true);
     setAthleteErrorMessage("");
-    const response = await getAthletes();
-    if (response.success && response.data) {
-      setAthletes(response.data);
-    } else {
-      setAthleteErrorMessage(response.error ?? "Failed to load athletes");
+    try {
+      const response = await getAthletes();
+      if (response.success && response.data) {
+        setAthletes(response.data);
+      } else {
+        setAthleteErrorMessage(response.error ?? "Failed to load athletes");
+      }
+    } catch (err) {
+      setAthleteErrorMessage("Unexpected error fetching athletes");
+    } finally {
+      setAthleteIsLoading(false);
     }
-    setAthleteIsLoading(false);
   };
 
   const searchByID = async (id: number) => {
     setAthleteIsLoading(true);
     setAthleteErrorMessage("");
-    const response = await getAthleteById(id);
-    if (response.success && response.data) {
-      setSearchResults([response.data]);
-    } else {
-      setAthleteErrorMessage(response.error ?? "Athlete not found");
+    try {
+      const response = await getAthleteById(id);
+      if (response.success && response.data) {
+        setSearchResults([response.data]);
+      } else {
+        setAthleteErrorMessage(response.error ?? "Athlete not found");
+      }
+    } catch (err) {
+      setAthleteErrorMessage("Unexpected error searching athlete by ID");
+    } finally {
+      setAthleteIsLoading(false);
     }
   };
 
   const searchByName = async (name: string) => {
     setAthleteIsLoading(true);
     setAthleteErrorMessage("");
-
-    const response = await getAthletesByName(name);
-
-    if (response.success && response.data) {
-      setSearchResults(response.data);
-    } else {
-      setAthleteErrorMessage(response.error ?? "No athletes found");
+    try {
+      const response = await getAthletesByName(name);
+      if (response.success && response.data) {
+        setSearchResults(response.data);
+      } else {
+        setAthleteErrorMessage(response.error ?? "No athletes found");
+      }
+    } catch (err) {
+      setAthleteErrorMessage("Unexpected error searching athletes by name");
+    } finally {
+      setAthleteIsLoading(false);
     }
-
-    setAthleteIsLoading(false);
   };
 
   const addAthlete = async (athlete: Omit<IAthlete, "id">, img: File) => {
     setAthleteErrorMessage("");
+    try {
+      const uploadResponse = await ImageUploadService.uploadAthleteImage(img);
+      if (!uploadResponse.success) {
+        setAthleteErrorMessage(uploadResponse.error ?? "Image upload failed");
+        return;
+      }
 
-    const uploadResponse = await ImageUploadService.uploadAthleteImage(img);
+      const athleteWithImage = { ...athlete, image: uploadResponse.fileName };
+      const postResponse = await postAthlete(athleteWithImage);
+      if (!postResponse.success) {
+        setAthleteErrorMessage(postResponse.error ?? "Failed to add athlete");
+        return;
+      }
 
-    if (!uploadResponse.success) {
-      setAthleteErrorMessage(uploadResponse.error ?? "Image upload failed");
-      return;
+      await showAll();
+    } catch (err) {
+      setAthleteErrorMessage("Unexpected error adding athlete");
     }
-
-    const athleteWithImage = { ...athlete, image: uploadResponse.fileName };
-    const postResponse = await postAthlete(athleteWithImage);
-
-    if (!postResponse.success) {
-      setAthleteErrorMessage(postResponse.error ?? "Failed to add athlete");
-      return;
-    }
-
-    await showAll();
   };
 
   const deleteAthleteById = async (id: number) => {
     setAthleteErrorMessage("");
+    try {
+      const response = await deleteAthlete(id);
+      if (!response.success) {
+        setAthleteErrorMessage(response.error ?? "Failed to delete athlete");
+        return;
+      }
 
-    const response = await deleteAthlete(id);
-
-    if (!response.success) {
-      setAthleteErrorMessage(response.error ?? "Failed to delete athlete");
-      return;
+      await showAll();
+    } catch (err) {
+      setAthleteErrorMessage("Unexpected error deleting athlete");
     }
-
-    await showAll();
   };
 
   const updateAthlete = async (athlete: IAthlete) => {
@@ -120,113 +136,119 @@ export const AthleteProvider: FC<IProviderProps> = ({ children }) => {
 
   // Seeding av databasen skal vel egentlig gjøres i backend, men for å holde prosjektet innenfor rammene av pensum gjør vi det her.
   const initializeAthletes = async () => {
-    if (isInitializing.current) {
-      return;
-    }
+    if (isInitializing.current) return;
     isInitializing.current = true;
     setAthleteIsLoading(true);
+    setAthleteErrorMessage("");
 
-    // Sjekk om det allerede finnes athletes
-    const existingAthletes = await getAthletes();
+    try {
+      const existingAthletes = await getAthletes();
+      if (!existingAthletes.success) {
+        setAthleteErrorMessage(
+          existingAthletes.error ?? "Failed to connect to database"
+        );
+        return;
+      }
 
-    if (!existingAthletes.success) {
-      setAthleteErrorMessage(
-        existingAthletes.error ?? "Failed to connect to database"
-      );
+      if (existingAthletes.data.length === 0) {
+        const seedAthletes = [
+          {
+            name: "Jon Jones",
+            price: 100000,
+            gender: "Male",
+            image: "seed-fighter1.jpg",
+            purchased: false,
+          },
+          {
+            name: "Conor McGregor",
+            price: 120000,
+            gender: "Male",
+            image: "seed-fighter2.jpg",
+            purchased: false,
+          },
+          {
+            name: "Anderson Silva",
+            price: 74000,
+            gender: "Male",
+            image: "seed-fighter3.jpg",
+            purchased: false,
+          },
+          {
+            name: "Khabib Nurmagomedov",
+            price: 160000,
+            gender: "Male",
+            image: "seed-fighter4.jpg",
+            purchased: false,
+          },
+          {
+            name: "Ronda Rousey",
+            price: 50000,
+            gender: "Female",
+            image: "seed-fighter5.jpg",
+            purchased: false,
+          },
+          {
+            name: "Amanda Nunes",
+            price: 14000,
+            gender: "Female",
+            image: "seed-fighter6.jpg",
+            purchased: false,
+          },
+          {
+            name: "Georges St-Pierre",
+            price: 15500,
+            gender: "Male",
+            image: "seed-fighter7.jpg",
+            purchased: false,
+          },
+          {
+            name: "Israel Adesanya",
+            price: 125000,
+            gender: "Male",
+            image: "seed-fighter8.jpg",
+            purchased: false,
+          },
+          {
+            name: "Valentina Shevchenko",
+            price: 13500,
+            gender: "Female",
+            image: "seed-fighter9.jpg",
+            purchased: false,
+          },
+          {
+            name: "Stipe Miocic",
+            price: 11500,
+            gender: "Male",
+            image: "seed-fighter10.jpg",
+            purchased: false,
+          },
+        ];
+
+        for (const athlete of seedAthletes) {
+          try {
+            const result = await postAthlete(athlete);
+            if (!result.success) {
+              setAthleteErrorMessage(result.error ?? "Failed to seed athletes");
+              return;
+            }
+          } catch (err) {
+            setAthleteErrorMessage("Unexpected error seeding athletes");
+            return;
+          }
+        }
+      } else {
+        console.log(
+          `Database already has ${existingAthletes.data.length} athletes, skipping seeding`
+        );
+      }
+
+      await showAll();
+    } catch (err) {
+      setAthleteErrorMessage("Unexpected error initializing athletes");
+    } finally {
       isInitializing.current = false;
       setAthleteIsLoading(false);
-      return;
     }
-
-    if (existingAthletes.data.length === 0) {
-      // Bildene er forhåndsplassert i backend
-      const seedAthletes = [
-        {
-          name: "Jon Jones",
-          price: 100000,
-          gender: "Male",
-          image: "seed-fighter1.jpg",
-          purchased: false,
-        },
-        {
-          name: "Conor McGregor",
-          price: 120000,
-          gender: "Male",
-          image: "seed-fighter2.jpg",
-          purchased: false,
-        },
-        {
-          name: "Anderson Silva",
-          price: 74000,
-          gender: "Male",
-          image: "seed-fighter3.jpg",
-          purchased: false,
-        },
-        {
-          name: "Khabib Nurmagomedov",
-          price: 160000,
-          gender: "Male",
-          image: "seed-fighter4.jpg",
-          purchased: false,
-        },
-        {
-          name: "Ronda Rousey",
-          price: 50000,
-          gender: "Female",
-          image: "seed-fighter5.jpg",
-          purchased: false,
-        },
-        {
-          name: "Amanda Nunes",
-          price: 14000,
-          gender: "Female",
-          image: "seed-fighter6.jpg",
-          purchased: false,
-        },
-        {
-          name: "Georges St-Pierre",
-          price: 15500,
-          gender: "Male",
-          image: "seed-fighter7.jpg",
-          purchased: false,
-        },
-        {
-          name: "Israel Adesanya",
-          price: 125000,
-          gender: "Male",
-          image: "seed-fighter8.jpg",
-          purchased: false,
-        },
-        {
-          name: "Valentina Shevchenko",
-          price: 13500,
-          gender: "Female",
-          image: "seed-fighter9.jpg",
-          purchased: false,
-        },
-        {
-          name: "Stipe Miocic",
-          price: 11500,
-          gender: "Male",
-          image: "seed-fighter10.jpg",
-          purchased: false,
-        },
-      ];
-      for (const athlete of seedAthletes) {
-        const result = await postAthlete(athlete);
-        if (!result.success) {
-          setAthleteErrorMessage(result.error ?? "Failed to seed athletes");
-          isInitializing.current = false;
-          setAthleteIsLoading(false);
-          return;
-        }
-      }
-    } else {
-      console.log(
-        `Database already has ${existingAthletes.data.length} athletes, skipping seeding`
-      );
-    }
-    await showAll();
   };
 
   useEffect(() => {

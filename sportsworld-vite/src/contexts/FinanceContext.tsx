@@ -27,19 +27,23 @@ export const FinanceProvider: FC<IProviderProps> = ({ children }) => {
   const showFinances = async () => {
     setFinanceIsLoading(true);
     setFinanceErrorMessage("");
-    const response = await getFinances();
+    try {
+      const response = await getFinances();
 
-    if (response.success && response.data) {
-      // Finance kommer i array format, men herfra vil vi konvertere til enkelt objekt
-      // Dette fordi context skal gjøre det enklere for komponenter å hente finance data
-      const financeArray = response.data;
-      // Denne linjen er litt stygg, men vi vet at det kun er ett finance objekt i arrayet
-      const finance = financeArray[0];
-      setFinance(finance);
-    } else {
-      setFinanceErrorMessage(response.error ?? "Failed to load athletes");
+      if (response.success && response.data) {
+        // Finance kommer i array format, men herfra vil vi konvertere til enkelt objekt
+        // Dette fordi context skal gjøre det enklere for komponenter å hente finance data
+        const financeArray = response.data;
+        // Denne linjen er litt stygg, men vi vet at det kun er ett finance objekt i arrayet
+        const finance = financeArray[0];
+        setFinance(finance);
+      } else {
+        setFinanceErrorMessage(response.error ?? "Failed to load finances");
+      }
+      setFinanceIsLoading(false);
+    } catch (err) {
+      setFinanceErrorMessage("Unexpected error updating finance");
     }
-    setFinanceIsLoading(false);
   };
 
   const updateFinance = async (updatedFinance: IFinance) => {
@@ -49,7 +53,7 @@ export const FinanceProvider: FC<IProviderProps> = ({ children }) => {
       const response = await putFinance(updatedFinance);
 
       if (!response.success) {
-        setFinanceErrorMessage(response.error ?? "Failed to update athlete");
+        setFinanceErrorMessage(response.error ?? "Failed to update finances");
         return;
       }
       // Trenger ikke sette loading som false enda, da showFinance gjør det til slutt
