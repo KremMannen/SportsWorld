@@ -1,7 +1,7 @@
 import type { IFinance } from "./IFinance";
 
 export interface IFinanceContext {
-  finances: IFinance[];
+  finances: IFinance;
   financeErrorMessage: string;
   financeIsLoading: boolean;
   showFinances: () => Promise<void>;

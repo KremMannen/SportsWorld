@@ -37,14 +37,10 @@ export const FinanceDashboard: FC<IFinanceDashboardProps> = ({
   }
 
   // -- Visningsverdiene til dashboardet
-  // Beholder disse kalkuleringene på component nivå, siden de er spesifikke for denne modulen
-  // Må ta høyde for at finances kan være tom, hvis ikke kræsjer appen
-  const accountBalance = finances.length > 0 ? finances[0].moneyLeft : 0;
   const fightersOwned = athletes.filter((athlete) => athlete.purchased).length;
   const fightersWorth = athletes
     .filter((athlete) => athlete.purchased)
     .reduce((total, athlete) => total + athlete.price, 0);
-  const moneySpent = finances.length > 0 ? finances[0].moneySpent : 0;
 
   // -- Tailwind verdier for dashboardet --
   const containerStyling = "py-8 grid grid-cols-12 gap-6 text-center";
@@ -65,7 +61,7 @@ export const FinanceDashboard: FC<IFinanceDashboardProps> = ({
         <div className={titleContainerStyling}>
           <h3 className={titleStyling}>Account Balance</h3>
         </div>
-        <p className={pStyling}>${accountBalance.toLocaleString()}</p>
+        <p className={pStyling}>${finances.moneyLeft.toLocaleString()}</p>
       </section>
 
       {/* Fighters Owned: hidden on small, visible on md+ */}
@@ -90,7 +86,7 @@ export const FinanceDashboard: FC<IFinanceDashboardProps> = ({
           <div className={titleContainerStyling}>
             <h3 className={titleStyling}>Total Spending</h3>
           </div>
-          <p className={pStyling}>${moneySpent}</p>
+          <p className={pStyling}>${finances.moneySpent}</p>
         </section>
       )}
     </section>

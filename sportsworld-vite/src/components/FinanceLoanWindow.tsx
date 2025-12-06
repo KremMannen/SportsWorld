@@ -26,10 +26,7 @@ export const FinanceLoanWindow: FC = () => {
     );
   }
 
-  // -- Visningsverdiene til portalen
-  const debt = finances.length > 0 ? finances[0].debt : 0;
-
-  const handleLoanRequest = (e: FormEvent) => {
+  const handleLoanRequest = async (e: FormEvent) => {
     e.preventDefault();
     if (loanAmount.trim() === "" || isNaN(Number(loanAmount))) {
       alert("Please enter a valid loan amount.");
@@ -42,14 +39,14 @@ export const FinanceLoanWindow: FC = () => {
       return;
     }
 
-    const currentFinance = finances[0];
+    const currentFinance = finances;
     const updatedFinance = {
       ...currentFinance,
       debt: currentFinance.debt + loanValue,
       moneyLeft: currentFinance.moneyLeft + loanValue,
     };
 
-    updateFinance(updatedFinance);
+    await updateFinance(updatedFinance);
 
     setLoanAmount("");
   };
@@ -68,7 +65,7 @@ export const FinanceLoanWindow: FC = () => {
         <div className={titleContainerStyling}>
           <h3 className={titleStyling}>Loan Portal</h3>
         </div>
-        <p className={pStyling}>Total debt: {debt}$</p>
+        <p className={pStyling}>Total debt: ${finances.debt}</p>
       </section>
 
       <section className={sectionStyling}>
@@ -77,7 +74,7 @@ export const FinanceLoanWindow: FC = () => {
             onClick={(e) => {
               handleLoanRequest(e);
             }}
-            className="bg-[#4C0000] text-white px-6 py-2 rounded font-bold hover:bg-[#870000] transition-colors"
+            className="bg-[#4C0000] text-white px-6 py-2 rounded font-bold hover:bg-[#870000]"
           >
             Request Loan
           </button>

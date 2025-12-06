@@ -8,10 +8,18 @@ import {
 import type { IFinanceContext } from "../interfaces/IFinanceContext";
 import type { IFinance } from "../interfaces/IFinance";
 
+// Vi bruker denne for å slippe å sette | null i finances, og følgelig overalt i komponentene som bruker den
+const defaultFinance: IFinance = {
+  moneyLeft: 0,
+  numberOfPurchases: 0,
+  moneySpent: 0,
+  debt: 0,
+};
+
 export const FinanceContext = createContext<IFinanceContext | null>(null);
 
 export const FinanceProvider: FC<IProviderProps> = ({ children }) => {
-  const [finances, setFinance] = useState<IFinance[]>([]);
+  const [finances, setFinance] = useState<IFinance>(defaultFinance);
   const [financeErrorMessage, setFinanceErrorMessage] = useState<string>("");
   const [financeIsLoading, setFinanceIsLoading] = useState(false);
   const isInitializing = useRef(false);
@@ -19,27 +27,40 @@ export const FinanceProvider: FC<IProviderProps> = ({ children }) => {
   const showFinances = async () => {
     setFinanceIsLoading(true);
     setFinanceErrorMessage("");
-    const response = await getFinances();
+    try {
+      const response = await getFinances();
 
-    if (response.success && response.data) {
-      setFinance(response.data);
-    } else {
-      setFinanceErrorMessage(response.error ?? "Failed to load athletes");
+      if (response.success && response.data) {
+        // Finance kommer i array format, men herfra vil vi konvertere til enkelt objekt
+        // Dette fordi context skal gjøre det enklere for komponenter å hente finance data
+        const financeArray = response.data;
+        // Denne linjen er litt stygg, men vi vet at det kun er ett finance objekt i arrayet
+        const finance = financeArray[0];
+        setFinance(finance);
+      } else {
+        setFinanceErrorMessage(response.error ?? "Failed to load finances");
+      }
+      setFinanceIsLoading(false);
+    } catch (err) {
+      setFinanceErrorMessage("Unexpected error updating finance");
     }
-    setFinanceIsLoading(false);
   };
 
   const updateFinance = async (updatedFinance: IFinance) => {
     setFinanceIsLoading(true);
     setFinanceErrorMessage("");
-    const response = await putFinance(updatedFinance);
+    try {
+      const response = await putFinance(updatedFinance);
 
-    if (!response.success) {
-      setFinanceErrorMessage(response.error ?? "Failed to update athlete");
-      return;
+      if (!response.success) {
+        setFinanceErrorMessage(response.error ?? "Failed to update finances");
+        return;
+      }
+      // Trenger ikke sette loading som false enda, da showFinance gjør det til slutt
+      await showFinances();
+    } catch (err) {
+      setFinanceErrorMessage("Unexpected error updating finance");
     }
-    // Trenger ikke sette loading som false enda, da showFinance gjør det til slutt
-    await showFinances();
   };
 
   const initializeFinances = async () => {
@@ -63,7 +84,7 @@ export const FinanceProvider: FC<IProviderProps> = ({ children }) => {
 
     if (existingFinances.data.length === 0) {
       const seedFinances = {
-        moneyLeft: 1000000,
+        moneyLeft: 100000,
         numberOfPurchases: 0,
         moneySpent: 0,
         debt: 0,
