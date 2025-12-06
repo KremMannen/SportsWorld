@@ -7,6 +7,21 @@ export const VenueCard: FC<IVenueCardProps> = ({
   onEdit,
   onDelete,
 }) => {
+  // --- Knappstyling ---
+  const buttonBase =
+    "px-4 py-2 rounded text-white transition-colors duration-200";
+  const editButtonStyling = `${buttonBase} bg-blue-500 hover:bg-blue-600`;
+  const deleteButtonStyling = `${buttonBase} bg-red-500 hover:bg-red-600`;
+
+  // --- Kortstyling ---
+  const cardContainerStyling =
+    "bg-[#252828] col-span-12 sm:col-span-6 lg:flex-shrink-0 lg:w-[400px] xl:col-span-3 xl:w-auto rounded-lg shadow-md shadow-black/20 overflow-hidden transition-transform duration-200 hover:scale-[1.05] hover:shadow-black/40 hover:cursor-pointer";
+  const imageContainerStyling = "w-full h-40";
+  const imageStyling = "w-full h-full object-cover";
+  const textContainerStyling = "text-white p-4 flex flex-col justify-between";
+  const titleStyling = "text-xl font-bold";
+  const buttonContainerStyling = "flex gap-2 mt-4";
+
   const renderButtons = () => {
     switch (variant) {
       case "view":
@@ -17,13 +32,13 @@ export const VenueCard: FC<IVenueCardProps> = ({
           <>
             <button
               onClick={() => onEdit?.(venue)}
-              className="bg-blue-500 text-white px-4 py-2 rounded"
+              className={editButtonStyling}
             >
               Edit
             </button>
             <button
               onClick={() => onDelete?.(venue.id)}
-              className="bg-red-500 text-white px-4 py-2 rounded"
+              className={deleteButtonStyling}
             >
               Delete
             </button>
@@ -35,28 +50,27 @@ export const VenueCard: FC<IVenueCardProps> = ({
     }
   };
 
-  return (
-    <div
-      className="bg-[#252828] col-span-12 sm:col-span-6 lg:flex-shrink-0 lg:w-[400px] xl:col-span-3 xl:w-auto rounded-lg shadow-md shadow-black/20 
-    overflow-hidden transition-transform duration-200 hover:scale-[1.05] hover:shadow-black/40 hover:cursor-pointer"
-    >
-      <div className="w-full h-40">
+  const renderJsx = () => (
+    <div className={cardContainerStyling}>
+      <div className={imageContainerStyling}>
         <img
           src={`http://localhost:5110/images/VenueImages/${venue.image}`}
           alt={venue.name}
-          className="w-full h-full object-cover"
+          className={imageStyling}
         />
       </div>
 
-      <div className="text-white p-4 flex flex-col justify-between">
+      <div className={textContainerStyling}>
         <div>
-          <h3 className="text-xl font-bold">{venue.name}</h3>
+          <h3 className={titleStyling}>{venue.name}</h3>
           <p>Capacity: {venue.capacity}</p>
         </div>
 
         {/* Kondisjonelle knapper basert på variant parameteret */}
-        <div className="flex gap-2 mt-4">{renderButtons()}</div>
+        <div className={buttonContainerStyling}>{renderButtons()}</div>
       </div>
     </div>
   );
+
+  return renderJsx();
 };

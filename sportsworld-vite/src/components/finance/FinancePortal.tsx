@@ -3,10 +3,18 @@ import { FinanceDashboard } from "./FinanceDashboard";
 import { FinanceLoanWindow } from "./FinanceLoanWindow";
 
 export const FinancePortal: FC = () => {
-  return (
-    <section className="w-full px-4 py-8 grid grid-cols-12 gap-6 text-center">
-      <FinanceDashboard />
-      <FinanceLoanWindow />
-    </section>
-  );
+  // --- Tailwind styling variables ---
+  const portalContainerStyling =
+    "w-full px-4 py-8 grid grid-cols-12 gap-6 text-center";
+
+  const renderJsx = () => {
+    return (
+      <section className={portalContainerStyling}>
+        <FinanceDashboard />
+        <FinanceLoanWindow />
+      </section>
+    );
+  };
+
+  return renderJsx();
 };

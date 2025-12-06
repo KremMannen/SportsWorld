@@ -17,33 +17,21 @@ export const FinanceDashboard: FC<IFinanceDashboardProps> = ({
     FinanceContext
   ) as IFinanceContext;
 
-  // Sjekker først om innhold laster og isåfall informerer bruker
-  if (athleteIsLoading || financeIsLoading) {
-    return (
-      <div className="text-center">
-        <p className="text-xl text-gray-600">Loading dashboard...</p>
-      </div>
-    );
-  }
+  // --- Styling ---
+  const loadingContainer = "text-center";
+  const loadingText = "text-xl text-gray-600";
 
-  // Sjekker om det er noen feil og viser eventuell feilmelding til bruker
-  if (athleteErrorMessage || financeErrorMessage) {
-    return (
-      <div className=" text-center">
-        <p className="text-xl text-red-600">
-          {athleteErrorMessage || financeErrorMessage}
-        </p>
-      </div>
-    );
-  }
-  // -- Visningsverdiene til dashboardet
+  const errorContainer = "text-center";
+  const errorText = "text-xl text-red-600";
+
+  const limitedSectionBase =
+    "w-full px-4 py-8 grid grid-cols-12 gap-6 text-center";
+
+  // --- Kalkulerte visningsverdier ---
   const purchasedAthletes = athletes.filter((a) => a.purchased);
-
   const fightersOwned = purchasedAthletes.length;
   const fightersWorth = purchasedAthletes.reduce((t, a) => t + a.price, 0);
 
-  // alle kort
-  // Bruker .toLocaleString() for å få pen formattering på store tall
   const renderCards = () => (
     <>
       <FinanceCard
@@ -51,19 +39,16 @@ export const FinanceDashboard: FC<IFinanceDashboardProps> = ({
         value={`$${finances.moneyLeft.toLocaleString()}`}
         limitedVariant={limitedVariant}
       />
-
       <FinanceCard
         title="Fighters Owned"
         value={fightersOwned}
         limitedVariant={limitedVariant}
       />
-
       <FinanceCard
         title="Fighters Worth"
         value={`$${fightersWorth.toLocaleString()}`}
         limitedVariant={limitedVariant}
       />
-
       {!limitedVariant && (
         <FinanceCard
           title="Total Spending"
@@ -75,18 +60,20 @@ export const FinanceDashboard: FC<IFinanceDashboardProps> = ({
   );
 
   const renderJsx = () => {
+    // Loading
     if (athleteIsLoading || financeIsLoading) {
       return (
-        <div className="text-center">
-          <p className="text-xl text-gray-600">Loading dashboard...</p>
+        <div className={loadingContainer}>
+          <p className={loadingText}>Loading dashboard...</p>
         </div>
       );
     }
 
+    // Error
     if (athleteErrorMessage || financeErrorMessage) {
       return (
-        <div className="text-center">
-          <p className="text-xl text-red-600">
+        <div className={errorContainer}>
+          <p className={errorText}>
             {athleteErrorMessage || financeErrorMessage}
           </p>
         </div>
@@ -95,16 +82,12 @@ export const FinanceDashboard: FC<IFinanceDashboardProps> = ({
 
     // Limited layout
     if (limitedVariant) {
-      return (
-        <section className="w-full px-4 py-8 grid grid-cols-12 gap-6 text-center">
-          {renderCards()}
-        </section>
-      );
+      return <section className={limitedSectionBase}>{renderCards()}</section>;
     }
 
     // Default layout
-    return <>{renderCards()}</>;
+    return renderCards();
   };
 
-  return <>{renderJsx()}</>;
+  return renderJsx();
 };
