@@ -117,19 +117,37 @@ export const AthleteProvider: FC<IProviderProps> = ({ children }) => {
     }
   };
 
-  const updateAthlete = async (athlete: IAthlete) => {
+  // Skriver denne slik at man kan enkelt bruke den med og uten bildeoppdatering
+  const updateAthlete = async (athlete: IAthlete, img?: File) => {
     setAthleteErrorMessage("");
     setAthleteIsLoading(true);
-    try {
-      const response = await putAthlete(athlete);
 
+    let fileName = athlete.image;
+
+    if (img) {
+      try {
+        const uploadResponse = await ImageUploadService.uploadAthleteImage(img);
+        if (!uploadResponse.success) {
+          setAthleteErrorMessage(uploadResponse.error ?? "Image upload failed");
+          return;
+        }
+        fileName = uploadResponse.fileName;
+      } catch {
+        setAthleteErrorMessage("Unexpected error updating athlete");
+        return;
+      }
+    }
+
+    const athleteWithImage = { ...athlete, image: fileName };
+
+    try {
+      const response = await putAthlete(athleteWithImage);
       if (!response.success) {
         setAthleteErrorMessage(response.error ?? "Failed to update athlete");
         return;
       }
-
       await showAll();
-    } catch (err) {
+    } catch {
       setAthleteErrorMessage("Unexpected error updating athlete");
     }
   };

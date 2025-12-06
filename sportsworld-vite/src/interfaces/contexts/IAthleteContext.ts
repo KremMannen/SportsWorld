@@ -10,5 +10,5 @@ export interface IAthleteContext {
   searchByName: (name: string) => Promise<void>;
   addAthlete: (athlete: Omit<IAthlete, "id">, img: File) => Promise<void>;
   deleteAthleteById: (id: number) => Promise<void>;
-  updateAthlete: (athlete: IAthlete) => Promise<void>;
+  updateAthlete: (athlete: IAthlete, img?: File) => Promise<void>;
 }
