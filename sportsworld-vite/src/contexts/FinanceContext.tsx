@@ -83,6 +83,7 @@ export const FinanceProvider: FC<IProviderProps> = ({ children }) => {
     }
 
     if (existingFinances.data.length === 0) {
+      console.log(`Seeding database with finances`);
       const seedFinances = {
         moneyLeft: 100000,
         numberOfPurchases: 0,

@@ -126,6 +126,7 @@ export const VenueProvider: FC<IProviderProps> = ({ children }) => {
 
     if (existingVenues.data.length === 0) {
       // Bildene er forhåndsplassert i backend
+      console.log(`Seeding database with venues`);
       const seedVenues = [
         {
           name: "Madison Square Garden",

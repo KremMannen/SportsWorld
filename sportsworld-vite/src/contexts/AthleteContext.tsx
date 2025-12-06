@@ -173,6 +173,7 @@ export const AthleteProvider: FC<IProviderProps> = ({ children }) => {
       }
 
       if (existingAthletes.data.length === 0) {
+        console.log(`Seeding database with athletes`);
         const seedAthletes = [
           {
             name: "Jon Jones",

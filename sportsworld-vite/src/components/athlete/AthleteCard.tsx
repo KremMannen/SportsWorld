@@ -15,7 +15,9 @@ import type { IFinanceContext } from "../../interfaces/contexts/IFinanceContext.
 export const AthleteCard: FC<IAthleteCardProps> = ({ athlete, variant }) => {
   // En løsning kunne vært å bruke callback funksjon og la parent komponenten håndtere oppdateringen av athlete.
   // Siden context mønsteret allerede er implementert, unngår vi "prop drilling" ved å bruke context direkte.
-  const { updateAthlete } = useContext(AthleteContext) as IAthleteContext;
+  const { updateAthlete, deleteAthleteById } = useContext(
+    AthleteContext
+  ) as IAthleteContext;
   const { finances, updateFinance } = useContext(
     FinanceContext
   ) as IFinanceContext;
@@ -82,9 +84,9 @@ export const AthleteCard: FC<IAthleteCardProps> = ({ athlete, variant }) => {
     await updateFinance(updatedFinance);
   };
 
-  const handleEditClick = () => {};
-
-  const handleDeleteClick = () => {};
+  const handleDeleteClick = () => {
+    deleteAthleteById(athlete.id);
+  };
 
   const renderButtons = () => {
     switch (variant) {
