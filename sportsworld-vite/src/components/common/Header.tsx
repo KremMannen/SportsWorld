@@ -12,21 +12,19 @@ const Header: FC = () => {
           SportsWorld
         </Link>
          <ul className="flex items-center space-x-6">
-
-          {/* Admin */}
           <li>
             <Link
               to="/admin"
               className="text-white text-2xl hover:text-red-300 font-medium flex items-center"
             >
-              {/* Icon on small screens */}
+              {/* Viser ikon på små skjermer */}
+              {/* Må bruke !inline osv for å force endringene i tailwind. Hvis ikke forsvinner ikke ikonene, vises heller sammen med ordet. */}
               <i className="fas fa-user-shield !inline lg:!hidden"></i>
-              {/* Text on large screens */}
+              {/* Viser tekst på store skjermer */}
               <span className="!hidden lg:!inline">Admin</span>
             </Link>
           </li>
 
-          {/* Register */}
           <li>
             <Link
               to="/register"
@@ -37,7 +35,6 @@ const Header: FC = () => {
             </Link>
           </li>
 
-          {/* Finances */}
           <li>
             <Link
               to="/finances"
@@ -48,7 +45,6 @@ const Header: FC = () => {
             </Link>
           </li>
 
-          {/* Venues */}
           <li>
             <Link
               to="/venues"
