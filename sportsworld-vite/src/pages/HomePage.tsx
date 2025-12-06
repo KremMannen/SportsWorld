@@ -1,7 +1,6 @@
 import FeaturedVenues from "../components/FeaturedVenues";
 import { FinanceDashboard } from "../components/FinanceDashboard";
 import { PageLayout } from "../components/common/PageLayout";
-import { DoubleFighterList } from "../components/DoubleFighterList";
 import FighterList from "../components/FighterList";
 import NavButton from "../components/NavButton";
 
@@ -11,7 +10,6 @@ const HomePage = () => {
       <FinanceDashboard limitedVariant={true} />
       <FighterList filterType="owned" />
       <NavButton destination="/admin" />
-
       <FighterList filterType="available" />
       <NavButton destination="/finances" />
       <FeaturedVenues />

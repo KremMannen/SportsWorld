@@ -23,7 +23,7 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
 
   // Tailwind tilbyr å bruke egendefinerte farger med syntaxen under.
   // Dermed kan vi beholde farge palletten fra figma prototypen.
-  const bgColor = athlete.purchased ? "bg-green-100" : "bg-[#3D4645]";
+  const bgColor = athlete.purchased ? "bg-white" : "bg-[#3D4645]";
   const textColor = athlete.purchased ? "text-black" : "text-white";
 
   // Varierende høyde basert på om kortet skal vise knapper eller ikke.
