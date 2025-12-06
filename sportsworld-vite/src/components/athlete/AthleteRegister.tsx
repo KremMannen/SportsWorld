@@ -60,15 +60,28 @@ export const AthleteRegister: FC = () => {
         alert("Please fill in all fields.");
         return;
       }
-      const updatedAthlete = {
-        id: athlete.id,
-        name,
-        price: Number(price),
-        gender,
-        image: athlete.image,
-        purchased: false,
-      };
-      await updateAthlete(updatedAthlete);
+
+      if (image) {
+        const updatedAthlete = {
+          id: athlete.id,
+          name,
+          price: Number(price),
+          gender,
+          image: athlete.image,
+          purchased: false,
+        };
+        await updateAthlete(updatedAthlete, image);
+      } else {
+        const updatedAthlete = {
+          id: athlete.id,
+          name,
+          price: Number(price),
+          gender,
+          image: athlete.image,
+          purchased: false,
+        };
+        await updateAthlete(updatedAthlete);
+      }
     }
 
     setName("");
