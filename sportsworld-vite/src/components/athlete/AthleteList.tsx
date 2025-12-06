@@ -1,10 +1,10 @@
 import { useContext, type FC } from "react";
 import { AthleteCard } from "./AthleteCard";
-import { AthleteContext } from "../contexts/AthleteContext";
-import type { IAthleteContext } from "../interfaces/IAthleteContext";
-import type { IFighterListProps } from "../interfaces/properties/IFighterListProps";
+import { AthleteContext } from "../../contexts/AthleteContext";
+import type { IAthleteContext } from "../../interfaces/IAthleteContext";
+import type { IAthleteListProps } from "../../interfaces/properties/IAthleteListProps";
 
-export const FighterList: FC<IFighterListProps> = ({
+export const AthleteList: FC<IAthleteListProps> = ({
   filterType = "all",
   cardVariant = "view",
 }) => {
@@ -77,4 +77,4 @@ export const FighterList: FC<IFighterListProps> = ({
   );
 };
 
-export default FighterList;
+export default AthleteList;

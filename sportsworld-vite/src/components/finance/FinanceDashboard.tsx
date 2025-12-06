@@ -1,9 +1,9 @@
 import { useContext, type FC } from "react";
-import { AthleteContext } from "../contexts/AthleteContext";
-import type { IAthleteContext } from "../interfaces/IAthleteContext";
-import type { IFinanceContext } from "../interfaces/IFinanceContext";
-import { FinanceContext } from "../contexts/FinanceContext";
-import type { IFinanceDashboardProps } from "../interfaces/properties/IFinanceDashboardProps";
+import { AthleteContext } from "../../contexts/AthleteContext";
+import type { IAthleteContext } from "../../interfaces/IAthleteContext";
+import type { IFinanceContext } from "../../interfaces/IFinanceContext";
+import { FinanceContext } from "../../contexts/FinanceContext";
+import type { IFinanceDashboardProps } from "../../interfaces/properties/IFinanceDashboardProps";
 
 export const FinanceDashboard: FC<IFinanceDashboardProps> = ({
   limitedVariant = false,
@@ -42,17 +42,27 @@ export const FinanceDashboard: FC<IFinanceDashboardProps> = ({
     .reduce((total, athlete) => total + athlete.price, 0);
 
   // -- Tailwind verdier for dashboardet --
-    // Setter span basert på limitedVariant
+  // Setter span basert på limitedVariant
   const titleContainerStyling =
     "rounded-sm shadow-md shadow-black/40 px-4 py-2 bg-black text-black w-full";
   const titleStyling = "text-md text-white";
   const pStyling = "text-2xl font-bold mt-3 text-[#4C0000] bg-transparent";
 
-
-
   // Modulær card-component for innhold i finance dashboard.
-  const FinanceCard = ({ title, value }: { title: string; value: string | number }) => (
-    <section className={limitedVariant ? "col-span-12 sm:col-span-4 w-full max-w-lg mx-auto" : "col-span-12 sm:col-span-6 lg:col-span-4"}>
+  const FinanceCard = ({
+    title,
+    value,
+  }: {
+    title: string;
+    value: string | number;
+  }) => (
+    <section
+      className={
+        limitedVariant
+          ? "col-span-12 sm:col-span-4 w-full max-w-lg mx-auto"
+          : "col-span-12 sm:col-span-6 lg:col-span-4"
+      }
+    >
       <div className={titleContainerStyling}>
         <h3 className={titleStyling}>{title}</h3>
       </div>
@@ -60,26 +70,23 @@ export const FinanceDashboard: FC<IFinanceDashboardProps> = ({
     </section>
   );
 
-  // alle kort 
+  // alle kort
   // Bruker .toLocaleString() for å få pen formattering på store tall
   const financeCards = (
     <>
-      <FinanceCard 
-        title="Account Balance" 
-        value={`$${finances.moneyLeft.toLocaleString()}`} 
+      <FinanceCard
+        title="Account Balance"
+        value={`$${finances.moneyLeft.toLocaleString()}`}
       />
-      <FinanceCard 
-        title="Fighters Owned" 
-        value={fightersOwned} 
-      />
-      <FinanceCard 
-        title="Fighters Worth" 
-        value={`$${fightersWorth.toLocaleString()}`} 
+      <FinanceCard title="Fighters Owned" value={fightersOwned} />
+      <FinanceCard
+        title="Fighters Worth"
+        value={`$${fightersWorth.toLocaleString()}`}
       />
       {!limitedVariant && (
-        <FinanceCard 
-          title="Total Spending" 
-          value={`$${finances.moneySpent.toLocaleString()}`} 
+        <FinanceCard
+          title="Total Spending"
+          value={`$${finances.moneySpent.toLocaleString()}`}
         />
       )}
     </>

@@ -1,14 +1,14 @@
-import FighterList from "../components/FighterList";
+import AthleteList from "../components/athlete/AthleteList";
 
-import { FinancePortal } from "../components/FinancePortal";
+import { FinancePortal } from "../components/finance/FinancePortal";
 import { PageLayout } from "../components/common/PageLayout";
 
 const FinancesPage = () => {
   return (
     <PageLayout>
       <FinancePortal />
-      <FighterList filterType="owned" cardVariant="finance" />
-      <FighterList filterType="available" cardVariant="finance" />
+      <AthleteList filterType="owned" cardVariant="finance" />
+      <AthleteList filterType="available" cardVariant="finance" />
     </PageLayout>
   );
 };

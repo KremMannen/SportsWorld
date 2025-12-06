@@ -1,10 +1,10 @@
 import { useContext, type FC } from "react";
-import type { IAthleteCardProps } from "../interfaces/properties/IAthleteCardProps.ts";
+import type { IAthleteCardProps } from "../../interfaces/properties/IAthleteCardProps.ts";
 import { Link } from "react-router-dom";
-import { AthleteContext } from "../contexts/AthleteContext.tsx";
-import type { IAthleteContext } from "../interfaces/IAthleteContext.ts";
-import { FinanceContext } from "../contexts/FinanceContext.tsx";
-import type { IFinanceContext } from "../interfaces/IFinanceContext.ts";
+import { AthleteContext } from "../../contexts/AthleteContext.tsx";
+import type { IAthleteContext } from "../../interfaces/IAthleteContext.ts";
+import { FinanceContext } from "../../contexts/FinanceContext.tsx";
+import type { IFinanceContext } from "../../interfaces/IFinanceContext.ts";
 
 // Vi ønsker en modulær AthleteCard komponent som kan generere de forskjellige variantene vi
 // skisserte i prototype-fasen.
@@ -158,4 +158,3 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
 
   return cardContent;
 };
-

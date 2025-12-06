@@ -1,6 +1,6 @@
 import { useContext, useState, type FC, type FormEvent } from "react";
-import type { IFinanceContext } from "../interfaces/IFinanceContext";
-import { FinanceContext } from "../contexts/FinanceContext";
+import type { IFinanceContext } from "../../interfaces/IFinanceContext";
+import { FinanceContext } from "../../contexts/FinanceContext";
 
 export const FinanceLoanWindow: FC = () => {
   const { finances, financeErrorMessage, financeIsLoading, updateFinance } =
@@ -51,7 +51,7 @@ export const FinanceLoanWindow: FC = () => {
     setLoanAmount("");
   };
 
- // -- Tailwind verdier for FinanceLoanWindowen --
+  // -- Tailwind verdier for FinanceLoanWindowen --
   const sectionStyling = "col-span-12 sm:col-span-6 lg:col-span-4";
   const titleContainerStyling =
     "rounded-sm shadow-md shadow-black/40 px-4 py-2 bg-black text-black w-full";
@@ -65,7 +65,9 @@ export const FinanceLoanWindow: FC = () => {
           <h3 className={titleStyling}>Loan Portal</h3>
         </div>
         {/*Bruker .toLocaleString() for å få pen formattering på store tall */}
-        <p className={pStyling}>Total debt: ${finances.debt.toLocaleString()}</p>
+        <p className={pStyling}>
+          Total debt: ${finances.debt.toLocaleString()}
+        </p>
       </section>
 
       <section className="col-span-12 sm:col-span-6 lg:col-span-4">

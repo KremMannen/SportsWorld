@@ -1,10 +1,10 @@
 import { useContext, type FC } from "react";
-import { VenueContext } from "../contexts/VenueContext";
-import type { IVenueContext } from "../interfaces/IVenueContext";
-import type { IFeaturedVenuesProps } from "../interfaces/properties/IFeaturedVenuesProps";
+import { VenueContext } from "../../contexts/VenueContext";
+import type { IVenueContext } from "../../interfaces/IVenueContext";
+import type { IVenueListProps } from "../../interfaces/properties/IVenueListProps";
 import { VenueCard } from "./VenueCard";
 
-export const FeaturedVenues: FC<IFeaturedVenuesProps> = () => {
+export const VenueList: FC<IVenueListProps> = () => {
   const { venues, errorMessage, isLoading } = useContext(
     VenueContext
   ) as IVenueContext;
@@ -36,4 +36,4 @@ export const FeaturedVenues: FC<IFeaturedVenuesProps> = () => {
   );
 };
 
-export default FeaturedVenues;
+export default VenueList;

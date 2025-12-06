@@ -1,10 +1,10 @@
-import FighterList from "../components/FighterList";
+import AthleteList from "../components/athlete/AthleteList";
 import { PageLayout } from "../components/common/PageLayout";
 
 const AdminPage = () => {
   return (
     <PageLayout>
-      <FighterList filterType="all" cardVariant="manage" />
+      <AthleteList filterType="all" cardVariant="manage" />
     </PageLayout>
   );
 };

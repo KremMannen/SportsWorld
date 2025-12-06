@@ -2,9 +2,7 @@
 
 // Grunn:
 // Reflekterer at enhver atlet skal ha en ID assosiert med seg.
-// På komponent nivå, tillater det f.eks:
-//    onClick={() => onDelete?.(athlete.id)}
-// Uten at man trenger å kontrollere at athlete.id eksisterer med f.eks if check, eller bruk non-null assertion.
+// På komponent nivå tillater det å bruke athlete.id direkt, uten at man trenger å kontrollere eller bruk non-null assertion.
 // I praksis når man genererer komponenter på page-nivå vil enhver atlet som bearbeides ha en id.
 // Nå reflekterer koden også det.
 
