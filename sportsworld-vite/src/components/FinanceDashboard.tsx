@@ -46,8 +46,8 @@ export const FinanceDashboard: FC<IFinanceDashboardProps> = ({
   const containerStyling = "py-8 grid grid-cols-12 gap-6 text-center";
   // Setter span basert på limitedVariant
   const sectionStyling = limitedVariant
-    ? "col-span-12 md:col-span-6 lg:col-span-4"
-    : "col-span-6";
+    ? "col-span-12 md:col-span-6 lg:col-span-4 block"
+    : "col-span-6 block";
 
   const titleContainerStyling =
     "rounded-sm shadow-md shadow-black/40 px-4 py-2 bg-black text-black w-full";
@@ -57,7 +57,7 @@ export const FinanceDashboard: FC<IFinanceDashboardProps> = ({
   return (
     <section className={containerStyling}>
       {/* Account Balance: alltid synlig */}
-      <section className={`${sectionStyling} block`}>
+      <section className={`${sectionStyling}`}>
         <div className={titleContainerStyling}>
           <h3 className={titleStyling}>Account Balance</h3>
         </div>

@@ -10,7 +10,7 @@ import type { IFinanceContext } from "../interfaces/IFinanceContext.ts";
 // skisserte i prototype-fasen.
 // På denne måten slipper vi å skrive 3 veldig like komponenter i henhold til DRY-prinsippet.
 // Vi tar derfor en string som parameter i komponenten som bestemmer hvilke knapper som skal genereres i kortet.
-// Hvordan vi håndterer TypeSafetyen til stringen forklares i IAthleteCard
+// Hvordan vi håndterer TypeSafetyen til stringen forklares i IAthleteCardProps
 
 export const AthleteCard: FC<IAthleteCardProps> = ({
   athlete,
