@@ -8,7 +8,6 @@ import {
 } from "react";
 import { AthleteContext } from "../../contexts/AthleteContext";
 import type { IAthleteContext } from "../../interfaces/contexts/IAthleteContext";
-import type { IAthleteRegisterProps } from "../../interfaces/components/IAthleteRegisterProps";
 import { Link, useParams } from "react-router-dom";
 
 // Denne komponenten registrerer nye atleter om parameteret er undefined
@@ -27,8 +26,6 @@ export const AthleteRegister: FC = () => {
 
   // Vi sjekker kun etter id- og athlete- relaterte feil når ID er passert og komponenten skal være i redigeringsmodus
   const isEditMode = athleteId !== undefined;
-
-  console.log(isEditMode);
 
   const athlete = isEditMode
     ? athletes.find((a) => a.id === Number(athleteId))
@@ -98,7 +95,7 @@ export const AthleteRegister: FC = () => {
   const inputStyling =
     "flex-1 px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#4C0000] min-w-0";
   const buttonStyling =
-    "bg-[#4C0000] text-white px-6 py-2 rounded font-bold hover:shadow hover:cursor-pointer hover:bg-[#870000] transition-colors whitespace-nowrap";
+    "bg-[#4C0000] text-white px-6 py-2 rounded font-bold hover:shadow hover:cursor-pointer hover:bg-[#870000]";
   const formContainerStyling = "flex flex-col gap-4 mt-4";
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -111,12 +108,10 @@ export const AthleteRegister: FC = () => {
 
   useEffect(() => {
     if (athlete) {
-      console.log("filled fields");
       setName(athlete.name);
       setPrice(athlete.price.toString());
       setGender(athlete.gender);
     } else if (!isEditMode) {
-      console.log("cleared fields");
       setName("");
       setPrice("");
       setGender("");
@@ -192,8 +187,12 @@ export const AthleteRegister: FC = () => {
             onChange={(e) => setGender(e.target.value)}
           />
 
-          <h3 className="text-gray-800 font-medium mb-2">Upload image</h3>
-          <input type="file" onChange={handleImageChange} />
+          <input
+            type="file"
+            onChange={handleImageChange}
+            className="px-4 py-2 border border-gray-300 rounded cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-[#4C0000] file:text-white file:cursor-pointer hover:file:bg-[#870000]"
+            accept="image/*"
+          />
 
           <button type="submit" className={buttonStyling}>
             {isEditMode ? "Update Athlete" : "Register Athlete"}
