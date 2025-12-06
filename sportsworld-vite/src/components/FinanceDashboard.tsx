@@ -43,9 +43,6 @@ export const FinanceDashboard: FC<IFinanceDashboardProps> = ({
 
   // -- Tailwind verdier for dashboardet --
     // Setter span basert på limitedVariant
-  const sectionStyling = limitedVariant
-    ? "col-span-12 sm:col-span-4 w-full max-w-lg mx-auto"
-    : "col-span-12 sm:col-span-6 lg:col-span-4";
   const titleContainerStyling =
     "rounded-sm shadow-md shadow-black/40 px-4 py-2 bg-black text-black w-full";
   const titleStyling = "text-md text-white";
@@ -87,7 +84,7 @@ export const FinanceDashboard: FC<IFinanceDashboardProps> = ({
     </>
   );
 
-  // Limited variant wraps cards in its own grid
+  // LimitedVariant kort får sin egen grid
   if (limitedVariant) {
     return (
       <section className="w-full px-4 py-8 grid grid-cols-12 gap-6 text-center">
@@ -96,6 +93,5 @@ export const FinanceDashboard: FC<IFinanceDashboardProps> = ({
     );
   }
 
-  // Full variant returns cards as fragments for parent grid
   return financeCards;
 };
