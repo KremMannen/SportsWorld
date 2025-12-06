@@ -24,7 +24,6 @@ export const AthleteRegister: FC = () => {
 
   const { athleteId } = useParams<{ athleteId: string }>();
 
-  // Vi sjekker kun etter id- og athlete- relaterte feil når ID er passert og komponenten skal være i redigeringsmodus
   const isEditMode = athleteId !== undefined;
 
   const athlete = isEditMode
@@ -87,7 +86,7 @@ export const AthleteRegister: FC = () => {
     setImage(null);
   };
 
-  // --- Tailwind styling variables ---
+  // --- Tailwind styling variabler ---
   const sectionStyling = "col-span-9 col-start-3 sm:col-span-6 lg:col-span-4";
   const titleContainerStyling =
     "rounded-sm shadow-md shadow-black/40 px-4 py-2 bg-black text-black w-full";
@@ -119,27 +118,28 @@ export const AthleteRegister: FC = () => {
     }
   }, [athlete, isEditMode]);
 
-  if (isEditMode) {
-    const idNumber = Number(athleteId);
-    if (isNaN(idNumber)) {
-      return (
-        <article>
-          <p>Invalid id</p>
-          <Link to="/register">Back</Link>
-        </article>
-      );
-    }
-    if (!athlete || athlete === undefined) {
-      return (
-        <article>
-          <p>Athlete not found</p>
-          <Link to="/register">Back</Link>
-        </article>
-      );
-    }
-  }
-
   const renderJsx = () => {
+    // Vi sjekker kun etter id- og athlete- relaterte feil når ID er passert og komponenten skal være i redigeringsmodus
+    if (isEditMode) {
+      const idNumber = Number(athleteId);
+      if (isNaN(idNumber)) {
+        return (
+          <article>
+            <p>Invalid id</p>
+            <Link to="/register">Back</Link>
+          </article>
+        );
+      }
+      if (!athlete || athlete === undefined) {
+        return (
+          <article>
+            <p>Athlete not found</p>
+            <Link to="/register">Back</Link>
+          </article>
+        );
+      }
+    }
+
     if (athleteIsLoading) {
       return (
         <div className="text-center">
