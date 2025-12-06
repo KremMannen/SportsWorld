@@ -35,5 +35,3 @@ export const VenueList: FC<IVenueListProps> = () => {
     </>
   );
 };
-
-export default VenueList;

@@ -1,4 +1,4 @@
-import FeaturedVenues from "../components/venue/FeaturedVenues";
+import { VenueList } from "../components/venue/VenueList";
 import { FinanceDashboard } from "../components/finance/FinanceDashboard";
 import { PageLayout } from "../components/common/PageLayout";
 import AthleteList from "../components/athlete/AthleteList";
@@ -12,7 +12,7 @@ const HomePage = () => {
       <NavButton destination="/admin" />
       <AthleteList filterType="available" />
       <NavButton destination="/finances" />
-      <FeaturedVenues />
+      <VenueList />
     </PageLayout>
   );
 };

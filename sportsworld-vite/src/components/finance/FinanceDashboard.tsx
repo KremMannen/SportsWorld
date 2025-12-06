@@ -4,6 +4,7 @@ import type { IAthleteContext } from "../../interfaces/IAthleteContext";
 import type { IFinanceContext } from "../../interfaces/IFinanceContext";
 import { FinanceContext } from "../../contexts/FinanceContext";
 import type { IFinanceDashboardProps } from "../../interfaces/properties/IFinanceDashboardProps";
+import { FinanceCard } from "./FinanceCard";
 
 export const FinanceDashboard: FC<IFinanceDashboardProps> = ({
   limitedVariant = false,
@@ -36,70 +37,74 @@ export const FinanceDashboard: FC<IFinanceDashboardProps> = ({
     );
   }
   // -- Visningsverdiene til dashboardet
-  const fightersOwned = athletes.filter((athlete) => athlete.purchased).length;
-  const fightersWorth = athletes
-    .filter((athlete) => athlete.purchased)
-    .reduce((total, athlete) => total + athlete.price, 0);
+  const purchasedAthletes = athletes.filter((a) => a.purchased);
 
-  // -- Tailwind verdier for dashboardet --
-  // Setter span basert på limitedVariant
-  const titleContainerStyling =
-    "rounded-sm shadow-md shadow-black/40 px-4 py-2 bg-black text-black w-full";
-  const titleStyling = "text-md text-white";
-  const pStyling = "text-2xl font-bold mt-3 text-[#4C0000] bg-transparent";
-
-  // Modulær card-component for innhold i finance dashboard.
-  const FinanceCard = ({
-    title,
-    value,
-  }: {
-    title: string;
-    value: string | number;
-  }) => (
-    <section
-      className={
-        limitedVariant
-          ? "col-span-12 sm:col-span-4 w-full max-w-lg mx-auto"
-          : "col-span-12 sm:col-span-6 lg:col-span-4"
-      }
-    >
-      <div className={titleContainerStyling}>
-        <h3 className={titleStyling}>{title}</h3>
-      </div>
-      <p className={pStyling}>{value}</p>
-    </section>
-  );
+  const fightersOwned = purchasedAthletes.length;
+  const fightersWorth = purchasedAthletes.reduce((t, a) => t + a.price, 0);
 
   // alle kort
   // Bruker .toLocaleString() for å få pen formattering på store tall
-  const financeCards = (
+  const renderCards = () => (
     <>
       <FinanceCard
         title="Account Balance"
         value={`$${finances.moneyLeft.toLocaleString()}`}
+        limitedVariant={limitedVariant}
       />
-      <FinanceCard title="Fighters Owned" value={fightersOwned} />
+
+      <FinanceCard
+        title="Fighters Owned"
+        value={fightersOwned}
+        limitedVariant={limitedVariant}
+      />
+
       <FinanceCard
         title="Fighters Worth"
         value={`$${fightersWorth.toLocaleString()}`}
+        limitedVariant={limitedVariant}
       />
+
       {!limitedVariant && (
         <FinanceCard
           title="Total Spending"
           value={`$${finances.moneySpent.toLocaleString()}`}
+          limitedVariant={limitedVariant}
         />
       )}
     </>
   );
 
-  // LimitedVariant kort får sin egen grid
-  if (limitedVariant) {
-    return (
-      <section className="w-full px-4 py-8 grid grid-cols-12 gap-6 text-center">
-        {financeCards}
-      </section>
-    );
-  }
+  const renderJsx = () => {
+    if (athleteIsLoading || financeIsLoading) {
+      return (
+        <div className="text-center">
+          <p className="text-xl text-gray-600">Loading dashboard...</p>
+        </div>
+      );
+    }
 
-  return financeCards;
+    if (athleteErrorMessage || financeErrorMessage) {
+      return (
+        <div className="text-center">
+          <p className="text-xl text-red-600">
+            {athleteErrorMessage || financeErrorMessage}
+          </p>
+        </div>
+      );
+    }
+
+    // Limited layout
+    if (limitedVariant) {
+      return (
+        <section className="w-full px-4 py-8 grid grid-cols-12 gap-6 text-center">
+          {renderCards()}
+        </section>
+      );
+    }
+
+    // Default layout
+    return <>{renderCards()}</>;
+  };
+
+  return <>{renderJsx()}</>;
 };
