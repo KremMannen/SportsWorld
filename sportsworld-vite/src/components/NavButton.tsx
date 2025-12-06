@@ -29,7 +29,7 @@ const NavButton: FC<INavButtonProps> = ({ destination }) => {
         to={destination}
         // gjør knappene usynlige, utenom på store skjermer
         className="hidden lg:block bg-[#4C0000] text-white lg:text-xl xl:text-2xl font-bold hover:bg-[#870000] lg:px-4 lg:py-2 xl:px-8 xl:py-3 rounded w-full 
-        lg:max-w-md xl:max-w-xl text-center hover:shadow-md hover:shadow-black/40 hover:scale-[1.05]"
+        lg:max-w-md xl:max-w-xl text-center hover:shadow-md hover:shadow-black/40 hover:scale-[1.05] -mt-8"
       >
         {displayTitle}
       </Link>

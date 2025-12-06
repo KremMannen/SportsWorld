@@ -5,7 +5,7 @@ import type { IProviderProps } from "../../interfaces/properties/IProviderProps"
 
 export const PageLayout: FC<IProviderProps> = ({ children }) => {
   return (
-    <main className="w-full bg-[#F6F8F7]">
+    <main className="w-full bg-[#F2F2F2]">
       <div className="max-w-[1600px] mx-auto p-12">{children}</div>
     </main>
   );
