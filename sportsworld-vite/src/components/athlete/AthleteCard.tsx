@@ -14,40 +14,50 @@ import type { IFinanceContext } from "../../interfaces/IFinanceContext.ts";
 
 export const AthleteCard: FC<IAthleteCardProps> = ({ athlete, variant }) => {
   // En løsning kunne vært å bruke callback funksjon og la parent komponenten håndtere oppdateringen av athlete.
-  // Siden context mønsteret allerede er implementert, unngår vi den "prop drillingen" ved å bruke context direkte.
+  // Siden context mønsteret allerede er implementert, unngår vi "prop drilling" ved å bruke context direkte.
   const { updateAthlete } = useContext(AthleteContext) as IAthleteContext;
   const { finances, updateFinance } = useContext(
     FinanceContext
   ) as IFinanceContext;
 
+  // -------- Kort styling --------
   // Tailwind tilbyr å bruke egendefinerte farger med syntaxen under.
   // Dermed kan vi beholde farge palletten fra figma prototypen.
-  const bgColor = athlete.purchased ? "bg-white" : "bg-[#3D4645]";
-  const textColor = athlete.purchased ? "text-black" : "text-white";
-
-  // viewCards onclick fører til forskjellige sider basert på om athlete er kjøpt eller ikke
-  const viewCardHref = athlete.purchased ? "/admin" : "/finances";
-
-  const buttonText = athlete.purchased ? "Sell Athlete" : "Sign Athlete";
-
-  // Varierende høyde basert på om kortet skal vise knapper eller ikke.
-  const cardHeight =
-    variant === "manage" || variant === "finance" ? "h-48" : "h-32";
-  const imageSize =
-    variant === "manage" || variant === "finance" ? "w-32 h-48" : "w-32 h-32";
-
-  // Knappstyling og hover effekt presets for knapper og kort, da kun kort på hovedsiden med viewcase skal ha synlig klikkbar effekt
+  const cardColor = athlete.purchased ? "bg-white" : "bg-[#3D4645]";
+  const cardTextColor = athlete.purchased ? "text-black" : "text-white";
   const cardHoverEffect =
     variant === "manage" || variant === "finance"
       ? "hover:shadow-black/40"
       : "hover:scale-[1.05] hover:shadow-black/40 hover:cursor-pointer";
-  const buttonBase =
-    athlete.purchased && variant === "finance"
-      ? "bg-[#4C0000] w-full px-4 py-2 rounded transition-transform transition-shadow duration-200 transform text-white "
-      : "bg-[#000000] w-full px-4 py-2 rounded transition-transform transition-shadow duration-200 transform text-white ";
-  const buttonHover = "hover:shadow hover:cursor-pointer hover:bg-[#870000]";
 
-  // --- Button handlers ---
+  // Varierende høyde basert på om kortet skal vise knapper eller ikke.
+  const cardHeightStyling =
+    variant === "manage" || variant === "finance" ? "h-48" : "h-32";
+  const cardImageContainerStyling =
+    variant === "manage" || variant === "finance" ? "w-32 h-48" : "w-32 h-32";
+
+  const cardContainerStyling = `block col-span-12 sm:col-span-6 lg:flex-shrink-0 lg:w-[400px] xl:col-span-3 xl:w-auto transition-transform duration-200 ${cardHoverEffect} ${cardColor} rounded-lg shadow-md shadow-black/20 flex overflow-hidden ${cardHeightStyling} w-full`;
+  const cardImageStyling = "w-full h-full object-cover";
+  const cardContentContainerStyling =
+    "p-4 flex-1 flex flex-col justify-between";
+
+  const cardTitleStyling = "text-xl font-bold";
+
+  // viewCards onclick fører til forskjellige sider basert på om athlete er kjøpt eller ikke
+  const viewCardHref = athlete.purchased ? "/admin" : "/finances";
+
+  // -------- Knappstyling --------
+  const buttonBase =
+    "w-full px-4 py-2 rounded transition-transform transition-shadow duration-200 transform text-white ";
+  const buttonColor =
+    athlete.purchased && variant === "finance"
+      ? "bg-[#4C0000]"
+      : "bg-[#000000]";
+  const buttonHover = "hover:shadow hover:cursor-pointer hover:bg-[#870000]";
+  const buttonText = athlete.purchased ? "Sell Athlete" : "Sign Athlete";
+  const buttonContainerStyling = "flex gap-2";
+
+  // -------- Knapp handlers --------
   const handleFinanceClick = async () => {
     if (!finances) return;
 
@@ -87,7 +97,7 @@ export const AthleteCard: FC<IAthleteCardProps> = ({ athlete, variant }) => {
             <button
               type="button"
               onClick={() => handleEditClick()}
-              className={`${buttonBase} ${buttonHover}`}
+              className={`${buttonBase} ${buttonHover} ${buttonColor}`}
             >
               Edit
             </button>
@@ -95,7 +105,7 @@ export const AthleteCard: FC<IAthleteCardProps> = ({ athlete, variant }) => {
             <button
               type="button"
               onClick={() => handleDeleteClick()}
-              className={`${buttonBase} ${buttonHover}`}
+              className={`${buttonBase} ${buttonHover} ${buttonColor}`}
             >
               Delete
             </button>
@@ -109,7 +119,7 @@ export const AthleteCard: FC<IAthleteCardProps> = ({ athlete, variant }) => {
             onClick={() => {
               handleFinanceClick();
             }}
-            className={`${buttonBase} ${buttonHover} `}
+            className={`${buttonBase} ${buttonHover} ${buttonColor}`}
           >
             {buttonText}
           </button>
@@ -120,40 +130,39 @@ export const AthleteCard: FC<IAthleteCardProps> = ({ athlete, variant }) => {
     }
   };
 
-  const cardContent = (
-    <article
-      className={`block col-span-12 sm:col-span-6 lg:flex-shrink-0 lg:w-[400px] xl:col-span-3 xl:w-auto transition-transform duration-200 ${cardHoverEffect} ${bgColor} rounded-lg shadow-md shadow-black/20 flex overflow-hidden ${cardHeight} w-full`}
-    >
-      <div className={`${imageSize} flex-shrink-0`}>
-        <img
-          src={`http://localhost:5110/images/AthleteImages/${athlete.image}`}
-          alt={athlete.name}
-          className="w-full h-full object-cover"
-        />
-      </div>
-
-      <div className={`${textColor} p-4 flex-1 flex flex-col justify-between`}>
-        <div>
-          <h3 className="text-xl font-bold">{athlete.name}</h3>
-          <p>Price: {athlete.price} $</p>
-          <p>Gender: {athlete.gender}</p>
+  const renderJsx = () => {
+    const content = (
+      <article className={cardContainerStyling}>
+        <div className={`${cardImageContainerStyling}`}>
+          <img
+            src={`http://localhost:5110/images/AthleteImages/${athlete.image}`}
+            alt={athlete.name}
+            className={cardImageStyling}
+          />
         </div>
 
-        <div className="flex gap-2">{renderButtons()}</div>
-      </div>
-    </article>
-  );
+        <div className={`${cardTextColor} ${cardContentContainerStyling}`}>
+          <div>
+            <h3 className={cardTitleStyling}>{athlete.name}</h3>
+            <p>Price: {athlete.price} $</p>
+            <p>Gender: {athlete.gender}</p>
+          </div>
 
-  if (variant === "view") {
-    return (
-      <Link
-        to={viewCardHref}
-        className={`block col-span-12 sm:col-span-6 lg:flex-shrink-0 lg:w-[400px] xl:col-span-3 xl:w-auto transition-transform duration-200 ${cardHoverEffect}`}
-      >
-        {cardContent}
-      </Link>
+          <div className={buttonContainerStyling}>{renderButtons()}</div>
+        </div>
+      </article>
     );
-  }
 
-  return cardContent;
+    if (variant === "view") {
+      return (
+        <Link to={viewCardHref} className={cardContainerStyling}>
+          {content}
+        </Link>
+      );
+    }
+
+    return content;
+  };
+
+  return renderJsx();
 };
