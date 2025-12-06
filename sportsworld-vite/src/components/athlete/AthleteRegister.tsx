@@ -96,6 +96,10 @@ export const AthleteRegister: FC = () => {
   const buttonStyling =
     "bg-[#4C0000] text-white px-6 py-2 rounded font-bold hover:shadow hover:cursor-pointer hover:bg-[#870000]";
   const formContainerStyling = "flex flex-col gap-4 mt-4";
+  const errorContainerStyling =
+    "bg-red-50 border border-red-400 text-red-700 px-4 py-3 mb-10 rounded";
+  const loadingContainerStyling = "flex justify-center items-center py-12";
+  const loadingTextStyling = "text-gray-500 text-lg";
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { files } = e.target;
@@ -124,7 +128,7 @@ export const AthleteRegister: FC = () => {
       const idNumber = Number(athleteId);
       if (isNaN(idNumber)) {
         return (
-          <article>
+          <article className={errorContainerStyling}>
             <p>Invalid id</p>
             <Link to="/register">Back</Link>
           </article>
@@ -132,7 +136,7 @@ export const AthleteRegister: FC = () => {
       }
       if (!athlete || athlete === undefined) {
         return (
-          <article>
+          <article className={errorContainerStyling}>
             <p>Athlete not found</p>
             <Link to="/register">Back</Link>
           </article>
@@ -142,16 +146,16 @@ export const AthleteRegister: FC = () => {
 
     if (athleteIsLoading) {
       return (
-        <div className="text-center">
-          <p className="text-xl text-gray-600">Loading athletes...</p>
+        <div className={loadingContainerStyling}>
+          <p className={loadingTextStyling}>Loading athletes...</p>
         </div>
       );
     }
 
     if (athleteErrorMessage) {
       return (
-        <div className="text-center">
-          <p className="text-xl text-red-600">{athleteErrorMessage}</p>
+        <div className={errorContainerStyling}>
+          <p>{athleteErrorMessage}</p>
         </div>
       );
     }

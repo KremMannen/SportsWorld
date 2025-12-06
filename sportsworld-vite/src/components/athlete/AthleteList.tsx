@@ -17,7 +17,7 @@ export const AthleteList: FC<IAthleteListProps> = ({
   const loadingContainerStyling = "flex justify-center items-center py-12";
   const loadingTextStyling = "text-gray-500 text-lg";
   const errorContainerStyling =
-    "bg-red-50 border border-red-400 text-red-700 px-4 py-3 rounded";
+    "bg-red-50 border border-red-400 text-red-700 px-4 py-3 mb-10 rounded";
   const cardsContainerBaseStyling = "grid grid-cols-12 gap-6 p-2 mb-8";
   const cardsContainerLgStyling =
     "lg:flex lg:flex-row lg:overflow-x-auto lg:gap-4 lg:py-2";
