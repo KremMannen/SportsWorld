@@ -51,16 +51,15 @@ export const FinanceLoanWindow: FC = () => {
     setLoanAmount("");
   };
 
-  // -- Tailwind verdier for FinanceLoanWindowen --
-  const containerStyling = "py-8 gap-6 text-center grid grid-cols-12";
-  const sectionStyling = "col-span-12";
+ // -- Tailwind verdier for FinanceLoanWindowen --
+  const sectionStyling = "col-span-12 sm:col-span-6 lg:col-span-4";
   const titleContainerStyling =
     "rounded-sm shadow-md shadow-black/40 px-4 py-2 bg-black text-black w-full";
   const titleStyling = "text-md text-white";
   const pStyling = "text-2xl font-bold mt-3 text-[#4C0000] bg-transparent";
 
   return (
-    <section className={containerStyling}>
+    <>
       <section className={sectionStyling}>
         <div className={titleContainerStyling}>
           <h3 className={titleStyling}>Loan Portal</h3>
@@ -68,25 +67,25 @@ export const FinanceLoanWindow: FC = () => {
         <p className={pStyling}>Total debt: ${finances.debt}</p>
       </section>
 
-      <section className={sectionStyling}>
-        <div className="flex gap-4 items-center">
-          <button
-            onClick={(e) => {
-              handleLoanRequest(e);
-            }}
-            className="bg-[#4C0000] text-white px-6 py-2 rounded font-bold hover:shadow hover:cursor-pointer hover:bg-[#870000]"
-          >
-            Request Loan
-          </button>
+      <section className="col-span-12 sm:col-span-6 lg:col-span-4">
+        <div className="flex flex-col sm:flex-row gap-4 items-stretch sm:items-center">
           <input
             type="number"
             value={loanAmount}
             onChange={(e) => setLoanAmount(e.target.value)}
             placeholder="Enter amount"
-            className="flex-1 px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#4C0000]"
+            className="flex-1 px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#4C0000] min-w-0"
           />
+          <button
+            onClick={(e) => {
+              handleLoanRequest(e);
+            }}
+            className="bg-[#4C0000] text-white px-6 py-2 rounded font-bold hover:shadow hover:cursor-pointer hover:bg-[#870000] transition-colors whitespace-nowrap"
+          >
+            Request Loan
+          </button>
         </div>
       </section>
-    </section>
+    </>
   );
 };
