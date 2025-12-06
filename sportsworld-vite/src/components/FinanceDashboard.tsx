@@ -61,6 +61,7 @@ export const FinanceDashboard: FC<IFinanceDashboardProps> = ({
   );
 
   // alle kort 
+  // Bruker .toLocaleString() for å få pen formattering på store tall
   const financeCards = (
     <>
       <FinanceCard 
