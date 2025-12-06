@@ -94,13 +94,12 @@ export const AthleteCard: FC<IAthleteCardProps> = ({ athlete, variant }) => {
       case "manage":
         return (
           <>
-            <button
-              type="button"
-              onClick={() => handleEditClick()}
-              className={`${buttonBase} ${buttonHover} ${buttonColor}`}
+            <Link
+              to={`/register/${athlete.id}`}
+              className={`${buttonBase} ${buttonHover} ${buttonColor} inline-block text-center`}
             >
               Edit
-            </button>
+            </Link>
 
             <button
               type="button"

@@ -20,6 +20,7 @@ const AppRouting = () => {
           <Route path="*" element={<NotFoundPage />} />
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/register/:athleteId" element={<RegisterPage />} />
           <Route path="/finances" element={<FinancesPage />} />
           <Route path="/venues" element={<VenuePage />} />
         </Routes>

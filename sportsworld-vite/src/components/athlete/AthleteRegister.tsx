@@ -1,5 +1,6 @@
 import {
   useContext,
+  useEffect,
   useState,
   type ChangeEvent,
   type FC,
@@ -8,12 +9,30 @@ import {
 import { AthleteContext } from "../../contexts/AthleteContext";
 import type { IAthleteContext } from "../../interfaces/contexts/IAthleteContext";
 import type { IAthleteRegisterProps } from "../../interfaces/components/IAthleteRegisterProps";
+import { Link, useParams } from "react-router-dom";
 
-// Denne komponenten registrerer nye atleter, eller om man bruker den med athlet som prop: oppdaterer den athleten.
+// Denne komponenten registrerer nye atleter om parameteret er undefined
+// Om id er passert som parameter, oppdaterer den tilhørende athlete istedet
 
-export const AthleteRegister: FC<IAthleteRegisterProps> = ({ athlete }) => {
-  const { updateAthlete, addAthlete, athleteIsLoading, athleteErrorMessage } =
-    useContext(AthleteContext) as IAthleteContext;
+export const AthleteRegister: FC = () => {
+  const {
+    athletes,
+    updateAthlete,
+    addAthlete,
+    athleteIsLoading,
+    athleteErrorMessage,
+  } = useContext(AthleteContext) as IAthleteContext;
+
+  const { athleteId } = useParams<{ athleteId: string }>();
+
+  // Vi sjekker kun etter id- og athlete- relaterte feil når ID er passert og komponenten skal være i redigeringsmodus
+  const isEditMode = athleteId !== undefined;
+
+  console.log(isEditMode);
+
+  const athlete = isEditMode
+    ? athletes.find((a) => a.id === Number(athleteId))
+    : undefined;
 
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
@@ -23,30 +42,33 @@ export const AthleteRegister: FC<IAthleteRegisterProps> = ({ athlete }) => {
   const handleRegister = async (e: FormEvent) => {
     e.preventDefault();
 
-    if (!name || !price || !gender || !image) {
-      alert("Please fill in all fields.");
-      return;
-    }
-
     if (athlete === undefined) {
+      if (!name || !price || !gender || !image) {
+        alert("Please fill in all fields.");
+        return;
+      }
       const newAthlete = {
         name,
         price: Number(price),
         gender,
-        image: null,
         purchased: false,
       };
       await addAthlete(newAthlete, image);
     } else {
+      // image kan være tom, da beholder bare gamle bildet
+      if (!name || !price || !gender) {
+        alert("Please fill in all fields.");
+        return;
+      }
       const updatedAthlete = {
         id: athlete.id,
         name,
         price: Number(price),
         gender,
-        image: null,
+        image: athlete.image,
         purchased: false,
       };
-      await updateAthlete(updatedAthlete, image);
+      await updateAthlete(updatedAthlete);
     }
 
     setName("");
@@ -56,7 +78,7 @@ export const AthleteRegister: FC<IAthleteRegisterProps> = ({ athlete }) => {
   };
 
   // --- Tailwind styling variables ---
-  const sectionStyling = "col-span-12 sm:col-span-6 lg:col-span-4";
+  const sectionStyling = "col-span-9 col-start-3 sm:col-span-6 lg:col-span-4";
   const titleContainerStyling =
     "rounded-sm shadow-md shadow-black/40 px-4 py-2 bg-black text-black w-full";
   const titleStyling = "text-md text-white";
@@ -74,7 +96,41 @@ export const AthleteRegister: FC<IAthleteRegisterProps> = ({ athlete }) => {
     }
   };
 
-  // --- Render function ---
+  useEffect(() => {
+    if (athlete) {
+      console.log("filled fields");
+      setName(athlete.name);
+      setPrice(athlete.price.toString());
+      setGender(athlete.gender);
+    } else if (!isEditMode) {
+      console.log("cleared fields");
+      setName("");
+      setPrice("");
+      setGender("");
+      setImage(null);
+    }
+  }, [athlete, isEditMode]);
+
+  if (isEditMode) {
+    const idNumber = Number(athleteId);
+    if (isNaN(idNumber)) {
+      return (
+        <article>
+          <p>Invalid id</p>
+          <Link to="/register">Back</Link>
+        </article>
+      );
+    }
+    if (!athlete || athlete === undefined) {
+      return (
+        <article>
+          <p>Athlete not found</p>
+          <Link to="/register">Back</Link>
+        </article>
+      );
+    }
+  }
+
   const renderJsx = () => {
     if (athleteIsLoading) {
       return (
@@ -95,7 +151,9 @@ export const AthleteRegister: FC<IAthleteRegisterProps> = ({ athlete }) => {
     return (
       <section className={sectionStyling}>
         <div className={titleContainerStyling}>
-          <h3 className={titleStyling}>Register New Athlete</h3>
+          <h3 className={titleStyling}>
+            {isEditMode ? "Edit Athlete" : "Register New Athlete"}
+          </h3>
         </div>
 
         <form className={formContainerStyling} onSubmit={handleRegister}>
@@ -103,29 +161,29 @@ export const AthleteRegister: FC<IAthleteRegisterProps> = ({ athlete }) => {
             type="text"
             placeholder="Name"
             value={name}
-            onChange={(e) => setName(e.target.value)}
             className={inputStyling}
+            onChange={(e) => setName(e.target.value)}
           />
           <input
             type="number"
             placeholder="Price"
             value={price}
-            onChange={(e) => setPrice(e.target.value)}
             className={inputStyling}
+            onChange={(e) => setPrice(e.target.value)}
           />
           <input
             type="text"
             placeholder="Gender"
             value={gender}
-            onChange={(e) => setGender(e.target.value)}
             className={inputStyling}
+            onChange={(e) => setGender(e.target.value)}
           />
+
           <h3 className="text-gray-800 font-medium mb-2">Upload image</h3>
-          <label>
-            <input onChange={handleImageChange} type="file" />
-          </label>
+          <input type="file" onChange={handleImageChange} />
+
           <button type="submit" className={buttonStyling}>
-            Register Athlete
+            {isEditMode ? "Update Athlete" : "Register Athlete"}
           </button>
         </form>
       </section>

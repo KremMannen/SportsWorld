@@ -8,7 +8,10 @@ export interface IAthleteContext {
   showAll: () => Promise<void>;
   searchByID: (id: number) => Promise<void>;
   searchByName: (name: string) => Promise<void>;
-  addAthlete: (athlete: Omit<IAthlete, "id">, img: File) => Promise<void>;
+  addAthlete: (
+    athlete: Omit<IAthlete, "image" | "id">,
+    img: File
+  ) => Promise<void>;
   deleteAthleteById: (id: number) => Promise<void>;
   updateAthlete: (athlete: IAthlete, img?: File) => Promise<void>;
 }

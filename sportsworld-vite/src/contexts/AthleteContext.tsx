@@ -80,11 +80,14 @@ export const AthleteProvider: FC<IProviderProps> = ({ children }) => {
     }
   };
 
-  const addAthlete = async (athlete: Omit<IAthlete, "id">, img: File) => {
+  const addAthlete = async (
+    athlete: Omit<IAthlete, "image" | "id">,
+    img: File
+  ) => {
     setAthleteErrorMessage("");
     try {
       const uploadResponse = await ImageUploadService.uploadAthleteImage(img);
-      if (!uploadResponse.success) {
+      if (!uploadResponse.success || uploadResponse.fileName === null) {
         setAthleteErrorMessage(uploadResponse.error ?? "Image upload failed");
         return;
       }
@@ -117,17 +120,18 @@ export const AthleteProvider: FC<IProviderProps> = ({ children }) => {
     }
   };
 
-  // Skriver denne slik at man kan enkelt bruke den med og uten bildeoppdatering
+  // Skriver denne slik at man kan enkelt bruke den med og uten bilde
   const updateAthlete = async (athlete: IAthlete, img?: File) => {
     setAthleteErrorMessage("");
     setAthleteIsLoading(true);
 
+    // Beholder gamle bildet om det er ingen img parameter
     let fileName = athlete.image;
 
     if (img) {
       try {
         const uploadResponse = await ImageUploadService.uploadAthleteImage(img);
-        if (!uploadResponse.success) {
+        if (!uploadResponse.success || uploadResponse.fileName === null) {
           setAthleteErrorMessage(uploadResponse.error ?? "Image upload failed");
           return;
         }
