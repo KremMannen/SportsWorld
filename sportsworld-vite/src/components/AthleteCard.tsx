@@ -1,4 +1,4 @@
-import { useContext, type FC, type FormEvent } from "react";
+import { useContext, type FC } from "react";
 import type { IAthleteCardProps } from "../interfaces/properties/IAthleteCardProps.ts";
 import { Link } from "react-router-dom";
 import { AthleteContext } from "../contexts/AthleteContext.tsx";
@@ -17,7 +17,6 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
   variant,
   onEdit,
   onDelete,
-  onSign,
 }) => {
   // En løsning kunne vært å bruke callback funksjon og la parent komponenten håndtere oppdateringen av athlete.
   // Siden context mønsteret allerede er implementert, unngår vi den "prop drillingen" ved å bruke context direkte.
@@ -54,7 +53,7 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
   const buttonHover = "hover:shadow hover:cursor-pointer hover:bg-[#870000]";
 
   // --- Button handlers ---
-  const handleClick = async () => {
+  const handleFinanceClick = async () => {
     if (!finances) return;
 
     const updatedFinance = { ...finances };
@@ -109,7 +108,7 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
           <button
             type="button"
             onClick={() => {
-              handleClick();
+              handleFinanceClick();
             }}
             className={`${buttonBase} ${buttonHover} `}
           >
