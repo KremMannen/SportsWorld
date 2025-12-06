@@ -1,4 +1,4 @@
-import AthleteList from "../components/athlete/AthleteList";
+import { AthleteList } from "../components/athlete/AthleteList";
 import { PageLayout } from "../components/common/PageLayout";
 
 const AdminPage = () => {

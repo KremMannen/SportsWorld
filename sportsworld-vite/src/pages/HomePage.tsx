@@ -1,7 +1,7 @@
 import { VenueList } from "../components/venue/VenueList";
 import { FinanceDashboard } from "../components/finance/FinanceDashboard";
 import { PageLayout } from "../components/common/PageLayout";
-import AthleteList from "../components/athlete/AthleteList";
+import { AthleteList } from "../components/athlete/AthleteList";
 import NavButton from "../components/common/NavButton";
 
 const HomePage = () => {
