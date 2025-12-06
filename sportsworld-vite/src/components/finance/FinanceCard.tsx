@@ -1,5 +1,5 @@
 import type { FC } from "react";
-import type { IFinanceCardProps } from "../../interfaces/properties/IFinanceCardProps";
+import type { IFinanceCardProps } from "../../interfaces/components/IFinanceCardProps";
 
 export const FinanceCard: FC<IFinanceCardProps> = ({
   title,

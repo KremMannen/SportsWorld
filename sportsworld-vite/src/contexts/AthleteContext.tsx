@@ -1,7 +1,7 @@
 import { createContext, useEffect, useRef, useState, type FC } from "react";
-import type { IProviderProps } from "../interfaces/properties/IProviderProps";
-import type { IAthlete } from "../interfaces/IAthlete";
-import type { IAthleteContext } from "../interfaces/IAthleteContext";
+import type { IProviderProps } from "../interfaces/components/IProviderProps";
+import type { IAthlete } from "../interfaces/objects/IAthlete";
+import type { IAthleteContext } from "../interfaces/contexts/IAthleteContext";
 import {
   deleteAthlete,
   getAthleteById,

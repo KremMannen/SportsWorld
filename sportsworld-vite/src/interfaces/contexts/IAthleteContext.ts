@@ -1,4 +1,4 @@
-import type { IAthlete } from "./IAthlete";
+import type { IAthlete } from "../objects/IAthlete";
 
 export interface IAthleteContext {
   athletes: IAthlete[];

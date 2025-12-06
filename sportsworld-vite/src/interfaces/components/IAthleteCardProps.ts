@@ -1,4 +1,4 @@
-import type { IAthlete } from "../IAthlete";
+import type { IAthlete } from "../objects/IAthlete";
 
 // type CardVariant fungerer litt som en enum: en liste med strings som er gyldige alternativer.
 // Forskjellen er at denne kun eksisterer i TypeScript / ved kompileringstid, og ikke ved runtime.

@@ -1,7 +1,7 @@
 import { useContext, type FC } from "react";
 import { VenueContext } from "../../contexts/VenueContext";
-import type { IVenueContext } from "../../interfaces/IVenueContext";
-import type { IVenueListProps } from "../../interfaces/properties/IVenueListProps";
+import type { IVenueContext } from "../../interfaces/contexts/IVenueContext";
+import type { IVenueListProps } from "../../interfaces/components/IVenueListProps";
 import { VenueCard } from "./VenueCard";
 
 export const VenueList: FC<IVenueListProps> = () => {

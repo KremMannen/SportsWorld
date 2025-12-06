@@ -1,8 +1,8 @@
 import { useContext, type FC } from "react";
 import { AthleteCard } from "./AthleteCard";
 import { AthleteContext } from "../../contexts/AthleteContext";
-import type { IAthleteContext } from "../../interfaces/IAthleteContext";
-import type { IAthleteListProps } from "../../interfaces/properties/IAthleteListProps";
+import type { IAthleteContext } from "../../interfaces/contexts/IAthleteContext";
+import type { IAthleteListProps } from "../../interfaces/components/IAthleteListProps";
 
 export const AthleteList: FC<IAthleteListProps> = ({
   filterType = "all",

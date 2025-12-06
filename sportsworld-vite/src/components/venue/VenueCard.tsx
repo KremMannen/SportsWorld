@@ -1,5 +1,5 @@
 import type { FC } from "react";
-import type { IVenueCardProps } from "../../interfaces/properties/IVenueCardProps.ts";
+import type { IVenueCardProps } from "../../interfaces/components/IVenueCardProps.ts";
 
 export const VenueCard: FC<IVenueCardProps> = ({
   venue,

@@ -1,4 +1,4 @@
-import type { IFinance } from "./IFinance";
+import type { IFinance } from "../objects/IFinance";
 
 export interface IFinanceContext {
   finances: IFinance;

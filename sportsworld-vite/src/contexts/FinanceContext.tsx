@@ -1,12 +1,12 @@
 import { createContext, useEffect, useRef, useState, type FC } from "react";
-import type { IProviderProps } from "../interfaces/properties/IProviderProps";
+import type { IProviderProps } from "../interfaces/components/IProviderProps";
 import {
   getFinances,
   putFinance,
   postFinance,
 } from "../services/SportsWorldService";
-import type { IFinanceContext } from "../interfaces/IFinanceContext";
-import type { IFinance } from "../interfaces/IFinance";
+import type { IFinanceContext } from "../interfaces/contexts/IFinanceContext";
+import type { IFinance } from "../interfaces/objects/IFinance";
 
 // Vi bruker denne for å slippe å sette | null i finances, og følgelig overalt i komponentene som bruker den
 const defaultFinance: IFinance = {

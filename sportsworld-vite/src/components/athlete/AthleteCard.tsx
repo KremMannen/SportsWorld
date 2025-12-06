@@ -1,10 +1,10 @@
 import { useContext, type FC } from "react";
-import type { IAthleteCardProps } from "../../interfaces/properties/IAthleteCardProps.ts";
+import type { IAthleteCardProps } from "../../interfaces/components/IAthleteCardProps.ts";
 import { Link } from "react-router-dom";
 import { AthleteContext } from "../../contexts/AthleteContext.tsx";
-import type { IAthleteContext } from "../../interfaces/IAthleteContext.ts";
+import type { IAthleteContext } from "../../interfaces/contexts/IAthleteContext.ts";
 import { FinanceContext } from "../../contexts/FinanceContext.tsx";
-import type { IFinanceContext } from "../../interfaces/IFinanceContext.ts";
+import type { IFinanceContext } from "../../interfaces/contexts/IFinanceContext.ts";
 
 // Vi ønsker en modulær AthleteCard komponent som kan generere de forskjellige variantene vi
 // skisserte i prototype-fasen.
@@ -31,12 +31,12 @@ export const AthleteCard: FC<IAthleteCardProps> = ({ athlete, variant }) => {
       : "hover:scale-[1.05] hover:shadow-black/40 hover:cursor-pointer";
 
   // Varierende høyde basert på om kortet skal vise knapper eller ikke.
-  const cardHeightStyling =
+  const cardHeight =
     variant === "manage" || variant === "finance" ? "h-48" : "h-32";
-  const cardImageContainerStyling =
+  const cardImageContainer =
     variant === "manage" || variant === "finance" ? "w-32 h-48" : "w-32 h-32";
 
-  const cardContainerStyling = `block col-span-12 sm:col-span-6 lg:flex-shrink-0 lg:w-[400px] xl:col-span-3 xl:w-auto transition-transform duration-200 ${cardHoverEffect} ${cardColor} rounded-lg shadow-md shadow-black/20 flex overflow-hidden ${cardHeightStyling} w-full`;
+  const cardContainerStyling = `block col-span-12 sm:col-span-6 lg:flex-shrink-0 lg:w-[400px] xl:col-span-3 xl:w-auto transition-transform duration-200 ${cardHoverEffect} ${cardColor} rounded-lg shadow-md shadow-black/20 flex overflow-hidden ${cardHeight} w-full`;
   const cardImageStyling = "w-full h-full object-cover";
   const cardContentContainerStyling =
     "p-4 flex-1 flex flex-col justify-between";
@@ -133,7 +133,7 @@ export const AthleteCard: FC<IAthleteCardProps> = ({ athlete, variant }) => {
   const renderJsx = () => {
     const content = (
       <article className={cardContainerStyling}>
-        <div className={`${cardImageContainerStyling}`}>
+        <div className={`${cardImageContainer}`}>
           <img
             src={`http://localhost:5110/images/AthleteImages/${athlete.image}`}
             alt={athlete.name}

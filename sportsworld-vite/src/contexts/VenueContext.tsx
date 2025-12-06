@@ -1,5 +1,5 @@
 import { createContext, useEffect, useRef, useState, type FC } from "react";
-import type { IProviderProps } from "../interfaces/properties/IProviderProps";
+import type { IProviderProps } from "../interfaces/components/IProviderProps";
 import {
   deleteVenue,
   getVenueById,
@@ -9,8 +9,8 @@ import {
   putVenue,
 } from "../services/SportsWorldService";
 import ImageUploadService from "../services/ImageUploadService";
-import type { IVenueContext } from "../interfaces/IVenueContext";
-import type { IVenue } from "../interfaces/IVenue";
+import type { IVenueContext } from "../interfaces/contexts/IVenueContext";
+import type { IVenue } from "../interfaces/objects/IVenue";
 
 export const VenueContext = createContext<IVenueContext | null>(null);
 

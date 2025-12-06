@@ -1,4 +1,4 @@
-import type { IVenue } from "../IVenue";
+import type { IVenue } from "../objects/IVenue";
 
 export type CardVariant = "view" | "manage";
 

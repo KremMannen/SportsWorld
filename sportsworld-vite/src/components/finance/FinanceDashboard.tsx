@@ -1,9 +1,9 @@
 import { useContext, type FC } from "react";
 import { AthleteContext } from "../../contexts/AthleteContext";
-import type { IAthleteContext } from "../../interfaces/IAthleteContext";
-import type { IFinanceContext } from "../../interfaces/IFinanceContext";
+import type { IAthleteContext } from "../../interfaces/contexts/IAthleteContext";
+import type { IFinanceContext } from "../../interfaces/contexts/IFinanceContext";
 import { FinanceContext } from "../../contexts/FinanceContext";
-import type { IFinanceDashboardProps } from "../../interfaces/properties/IFinanceDashboardProps";
+import type { IFinanceDashboardProps } from "../../interfaces/components/IFinanceDashboardProps";
 import { FinanceCard } from "./FinanceCard";
 
 export const FinanceDashboard: FC<IFinanceDashboardProps> = ({

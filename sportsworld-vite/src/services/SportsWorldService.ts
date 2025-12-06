@@ -1,7 +1,7 @@
 import axios, { type AxiosResponse } from "axios";
-import type { IAthlete } from "../interfaces/IAthlete";
-import type { IVenue } from "../interfaces/IVenue";
-import type { IFinance } from "../interfaces/IFinance";
+import type { IAthlete } from "../interfaces/objects/IAthlete";
+import type { IVenue } from "../interfaces/objects/IVenue";
+import type { IFinance } from "../interfaces/objects/IFinance";
 import type {
   IAthleteResponseList,
   IAthleteResponseSingle,

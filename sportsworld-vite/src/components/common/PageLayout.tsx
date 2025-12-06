@@ -1,5 +1,5 @@
 import type { FC } from "react";
-import type { IProviderProps } from "../../interfaces/properties/IProviderProps";
+import type { IProviderProps } from "../../interfaces/components/IProviderProps";
 
 // En enkel layout-komponent som sentrerer definering av padding og maks-bredde for innholdet.
 

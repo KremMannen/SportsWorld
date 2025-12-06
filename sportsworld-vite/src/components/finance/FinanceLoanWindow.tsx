@@ -1,5 +1,5 @@
 import { useContext, useState, type FC, type FormEvent } from "react";
-import type { IFinanceContext } from "../../interfaces/IFinanceContext";
+import type { IFinanceContext } from "../../interfaces/contexts/IFinanceContext";
 import { FinanceContext } from "../../contexts/FinanceContext";
 
 export const FinanceLoanWindow: FC = () => {

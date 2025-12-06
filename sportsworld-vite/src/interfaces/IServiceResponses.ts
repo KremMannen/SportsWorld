@@ -1,9 +1,9 @@
 // Her kunne vi brukt feks data: T[]; for å få interfaces som kan brukes på alle contexts
 // Usikker på om det er innenfor pensum, så lager heller individuelle interfaces.
 
-import type { IAthlete } from "./IAthlete";
-import type { IFinance } from "./IFinance";
-import type { IVenue } from "./IVenue";
+import type { IAthlete } from "./objects/IAthlete";
+import type { IFinance } from "./objects/IFinance";
+import type { IVenue } from "./objects/IVenue";
 
 export interface IAthleteResponseList {
   success: boolean;
