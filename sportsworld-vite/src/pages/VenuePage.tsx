@@ -1,8 +1,11 @@
+import { PageLayout } from "../components/common/PageLayout";
+import { VenueList } from "../components/venue/VenueList";
+
 const VenuePage = () => {
   return (
-    <main>
-      <section></section>
-    </main>
+    <PageLayout>
+      <VenueList cardVariant="manage" />
+    </PageLayout>
   );
 };
 

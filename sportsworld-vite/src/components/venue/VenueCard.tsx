@@ -1,12 +1,7 @@
 import type { FC } from "react";
 import type { IVenueCardProps } from "../../interfaces/components/IVenueCardProps.ts";
 
-export const VenueCard: FC<IVenueCardProps> = ({
-  venue,
-  variant,
-  onEdit,
-  onDelete,
-}) => {
+export const VenueCard: FC<IVenueCardProps> = ({ venue, variant }) => {
   // --- Knappstyling ---
   const buttonBase =
     "px-4 py-2 rounded text-white transition-colors duration-200";
@@ -22,6 +17,10 @@ export const VenueCard: FC<IVenueCardProps> = ({
   const titleStyling = "text-xl font-bold";
   const buttonContainerStyling = "flex gap-2 mt-4";
 
+  // --- Knapp handlers ---
+  const handleEditClick = () => {};
+  const handleDeleteClick = () => {};
+
   const renderButtons = () => {
     switch (variant) {
       case "view":
@@ -31,13 +30,13 @@ export const VenueCard: FC<IVenueCardProps> = ({
         return (
           <>
             <button
-              onClick={() => onEdit?.(venue)}
+              onClick={() => handleEditClick}
               className={editButtonStyling}
             >
               Edit
             </button>
             <button
-              onClick={() => onDelete?.(venue.id)}
+              onClick={() => handleDeleteClick}
               className={deleteButtonStyling}
             >
               Delete

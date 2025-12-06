@@ -1,8 +1,11 @@
+import { AthleteList } from "../components/athlete/AthleteList";
+import { PageLayout } from "../components/common/PageLayout";
+
 const RegisterPage = () => {
   return (
-    <main>
-      <section></section>
-    </main>
+    <PageLayout>
+      <AthleteList filterType="all" cardVariant="manage" />
+    </PageLayout>
   );
 };
 
