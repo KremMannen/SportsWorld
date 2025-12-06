@@ -51,70 +51,51 @@ export const FinanceDashboard: FC<IFinanceDashboardProps> = ({
   const titleStyling = "text-md text-white";
   const pStyling = "text-2xl font-bold mt-3 text-[#4C0000] bg-transparent";
 
-    if (limitedVariant) {
+
+
+  // Modulær card-component for innhold i finance dashboard.
+  const FinanceCard = ({ title, value }: { title: string; value: string | number }) => (
+    <section className={limitedVariant ? "col-span-12 sm:col-span-4 w-full max-w-lg mx-auto" : "col-span-12 sm:col-span-6 lg:col-span-4"}>
+      <div className={titleContainerStyling}>
+        <h3 className={titleStyling}>{title}</h3>
+      </div>
+      <p className={pStyling}>{value}</p>
+    </section>
+  );
+
+  // alle kort 
+  const financeCards = (
+    <>
+      <FinanceCard 
+        title="Account Balance" 
+        value={`$${finances.moneyLeft.toLocaleString()}`} 
+      />
+      <FinanceCard 
+        title="Fighters Owned" 
+        value={fightersOwned} 
+      />
+      <FinanceCard 
+        title="Fighters Worth" 
+        value={`$${fightersWorth.toLocaleString()}`} 
+      />
+      {!limitedVariant && (
+        <FinanceCard 
+          title="Total Spending" 
+          value={`$${finances.moneySpent}`} 
+        />
+      )}
+    </>
+  );
+
+  // Limited variant wraps cards in its own grid
+  if (limitedVariant) {
     return (
       <section className="w-full px-4 py-8 grid grid-cols-12 gap-6 text-center">
-        {/* Account Balance */}
-        <section className="col-span-12 sm:col-span-4 w-full max-w-lg mx-auto">
-          <div className={titleContainerStyling}>
-            <h3 className={titleStyling}>Account Balance</h3>
-          </div>
-          <p className={pStyling}>${finances.moneyLeft.toLocaleString()}</p>
-        </section>
-
-        {/* Fighters Owned */}
-        <section className="col-span-12 sm:col-span-4 w-full max-w-lg mx-auto">
-          <div className={titleContainerStyling}>
-            <h3 className={titleStyling}>Fighters Owned</h3>
-          </div>
-          <p className={pStyling}>{fightersOwned}</p>
-        </section>
-
-        {/* Fighters Worth */}
-        <section className="col-span-12 sm:col-span-4 w-full max-w-lg mx-auto">
-          <div className={titleContainerStyling}>
-            <h3 className={titleStyling}>Fighters Worth</h3>
-          </div>
-          <p className={pStyling}>${fightersWorth.toLocaleString()}</p>
-        </section>
+        {financeCards}
       </section>
     );
   }
 
-
-   return (
-    <>
-      {/* Account Balance */}
-      <section className={sectionStyling}>
-        <div className={titleContainerStyling}>
-          <h3 className={titleStyling}>Account Balance</h3>
-        </div>
-        <p className={pStyling}>${finances.moneyLeft.toLocaleString()}</p>
-      </section>
-
-      {/* Fighters Owned */}
-      <section className={sectionStyling}>
-        <div className={titleContainerStyling}>
-          <h3 className={titleStyling}>Fighters Owned</h3>
-        </div>
-        <p className={pStyling}>{fightersOwned}</p>
-      </section>
-
-      {/* Fighters Worth */}
-      <section className={sectionStyling}>
-        <div className={titleContainerStyling}>
-          <h3 className={titleStyling}>Fighters Worth</h3>
-        </div>
-        <p className={pStyling}>${fightersWorth.toLocaleString()}</p>
-      </section>
-
-      {/* Total Spending */}
-      <section className={sectionStyling}>
-        <div className={titleContainerStyling}>
-          <h3 className={titleStyling}>Total Spending</h3>
-        </div>
-        <p className={pStyling}>${finances.moneySpent}</p>
-      </section>
-    </>
-  );
+  // Full variant returns cards as fragments for parent grid
+  return financeCards;
 };
