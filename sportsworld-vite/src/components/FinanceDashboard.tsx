@@ -46,7 +46,7 @@ export const FinanceDashboard: FC<IFinanceDashboardProps> = ({
   const containerStyling = "py-8 grid grid-cols-12 gap-6 text-center";
   // Setter span basert på limitedVariant
   const sectionStyling = limitedVariant
-    ? "col-span-12 xl:col-span-4 w-full max-w-lg mx-auto"
+    ? "col-span-12 sm:col-span-4 w-full max-w-lg mx-auto"
     : "col-span-6";
 
   const titleContainerStyling =
