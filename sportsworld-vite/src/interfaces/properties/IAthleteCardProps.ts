@@ -15,7 +15,4 @@ export type CardVariant = "view" | "manage" | "finance";
 export interface IAthleteCardProps {
   athlete: IAthlete;
   variant: CardVariant;
-  onEdit?: (athlete: IAthlete) => void;
-  onDelete?: (id: number) => void;
-  onSign?: (athlete: IAthlete) => void;
 }

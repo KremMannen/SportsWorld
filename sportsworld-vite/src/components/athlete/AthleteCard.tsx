@@ -12,12 +12,7 @@ import type { IFinanceContext } from "../../interfaces/IFinanceContext.ts";
 // Vi tar derfor en string som parameter i komponenten som bestemmer hvilke knapper som skal genereres i kortet.
 // Hvordan vi håndterer TypeSafetyen til stringen forklares i IAthleteCardProps
 
-export const AthleteCard: FC<IAthleteCardProps> = ({
-  athlete,
-  variant,
-  onEdit,
-  onDelete,
-}) => {
+export const AthleteCard: FC<IAthleteCardProps> = ({ athlete, variant }) => {
   // En løsning kunne vært å bruke callback funksjon og la parent komponenten håndtere oppdateringen av athlete.
   // Siden context mønsteret allerede er implementert, unngår vi den "prop drillingen" ved å bruke context direkte.
   const { updateAthlete } = useContext(AthleteContext) as IAthleteContext;
@@ -77,6 +72,10 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
     await updateFinance(updatedFinance);
   };
 
+  const handleEditClick = () => {};
+
+  const handleDeleteClick = () => {};
+
   const renderButtons = () => {
     switch (variant) {
       case "view":
@@ -87,7 +86,7 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
           <>
             <button
               type="button"
-              onClick={() => onEdit?.(athlete)}
+              onClick={() => handleEditClick()}
               className={`${buttonBase} ${buttonHover}`}
             >
               Edit
@@ -95,7 +94,7 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
 
             <button
               type="button"
-              onClick={() => onDelete?.(athlete.id)}
+              onClick={() => handleDeleteClick()}
               className={`${buttonBase} ${buttonHover}`}
             >
               Delete
