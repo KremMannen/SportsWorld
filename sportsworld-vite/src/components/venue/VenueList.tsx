@@ -68,18 +68,17 @@ export const VenueList: FC<IVenueListProps> = ({
         </>
       );
     }
+    return (
+      <>
+        <h2 className={titleStyling}>{displayTitle}</h2>
+        <div className={cardGridStyling}>
+          {venues.map((venue) => (
+            <VenueCard key={venue.id} venue={venue} variant={cardVariant} />
+          ))}
+        </div>
+      </>
+    );
   };
-
-  return (
-    <>
-      <h2 className={titleStyling}>{displayTitle}</h2>
-      <div className={cardGridStyling}>
-        {venues.map((venue) => (
-          <VenueCard key={venue.id} venue={venue} variant={cardVariant} />
-        ))}
-      </div>
-    </>
-  );
 
   return renderJsx();
 };

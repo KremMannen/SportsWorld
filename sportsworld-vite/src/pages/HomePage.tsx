@@ -16,7 +16,8 @@ const HomePage = () => {
       <NavButton destination="/admin" />
       <AthleteList filterType="available" />
       <NavButton destination="/finances" />
-      <VenueList />
+
+      <VenueList isLimited={true} />
     </WideLayout>
   );
 };
