@@ -1,80 +1,66 @@
 import { useContext, type FC } from "react";
-import type { IVenueCardProps } from "../../interfaces/components/IVenueCardProps.ts";
-import { VenueContext } from "../../contexts/VenueContext.tsx";
-import type { IVenueContext } from "../../interfaces/contexts/IVenueContext.ts";
 import { Link } from "react-router-dom";
+
+import type { IVenueCardProps } from "../../interfaces/components/IVenueCardProps";
+import type { IVenueContext } from "../../interfaces/contexts/IVenueContext";
+import { VenueContext } from "../../contexts/VenueContext";
 
 export const VenueCard: FC<IVenueCardProps> = ({ venue, variant }) => {
   const { deleteVenueById } = useContext(VenueContext) as IVenueContext;
-  // --- Knappstyling ---
-  const buttonBase =
-    "px-4 py-2 rounded text-white transition-colors duration-200";
-  const editButtonStyling = `${buttonBase} bg-blue-500 hover:bg-blue-600`;
-  const deleteButtonStyling = `${buttonBase} bg-red-500 hover:bg-red-600`;
 
-  // --- Kortstyling ---
-  const cardContainerStyling =
-    "bg-[#252828] col-span-12 sm:col-span-6 lg:flex-shrink-0 lg:w-[400px] xl:col-span-3 xl:w-auto rounded-lg shadow-md shadow-black/20 overflow-hidden transition-transform duration-200 hover:scale-[1.05] hover:shadow-black/40 hover:cursor-pointer";
-  const imageContainerStyling = "w-full h-40";
-  const imageStyling = "w-full h-full object-cover";
-  const textContainerStyling = "text-white p-4 flex flex-col justify-between";
-  const titleStyling = "text-xl font-bold";
-  const buttonContainerStyling = "flex gap-2 mt-4";
+  const isManage = variant === "manage";
 
-  const buttonColor = "bg-[#000000]";
-  const buttonHover = "hover:shadow hover:cursor-pointer hover:bg-[#870000]";
+  // --- Styling ---
+  const cardHover = isManage ? "" : "hover:scale-[1.05] hover:cursor-pointer";
 
-  // --- Knapp handlers ---
-  const handleDeleteClick = () => {
-    deleteVenueById(venue.id);
-  };
+  const cardClasses = `
+    bg-[#252828] text-white rounded-lg shadow-md shadow-black/20 overflow-hidden
+    transition-transform duration-200 col-span-12 sm:col-span-6 
+    lg:flex-shrink-0 lg:w-[400px] xl:col-span-3 xl:w-auto
+    ${cardHover}
+  `;
+
+  const btnBase = "px-4 py-2 rounded text-white transition-all duration-200";
+  const editBtn = `${btnBase} bg-blue-500 hover:bg-blue-600 inline-block text-center`;
+  const deleteBtn = `${btnBase} bg-red-500 hover:bg-red-800`;
+
+  // --- Logic ---
+  const handleDelete = () => deleteVenueById(venue.id);
 
   const renderButtons = () => {
-    switch (variant) {
-      case "view":
-        return null;
+    if (!isManage) return null;
 
-      case "manage":
-        return (
-          <>
-            <Link
-              to={`/venues/${venue.id}`}
-              className={`${buttonBase} ${editButtonStyling}  ${buttonHover} ${buttonColor} inline-block text-center`}
-            >
-              Edit
-            </Link>
-            <button
-              onClick={() => handleDeleteClick()}
-              className={deleteButtonStyling}
-            >
-              Delete
-            </button>
-          </>
-        );
+    return (
+      <>
+        <Link to={`/venues/${venue.id}`} className={editBtn}>
+          Edit
+        </Link>
 
-      default:
-        return null;
-    }
+        <button onClick={handleDelete} className={deleteBtn}>
+          Delete
+        </button>
+      </>
+    );
   };
 
+  // --- Render handler ---
   const renderJsx = () => (
-    <div className={cardContainerStyling}>
-      <div className={imageContainerStyling}>
+    <div className={cardClasses}>
+      <div className="w-full h-40">
         <img
           src={`http://localhost:5110/images/VenueImages/${venue.image}`}
           alt={venue.name}
-          className={imageStyling}
+          className="w-full h-full object-cover"
         />
       </div>
 
-      <div className={textContainerStyling}>
+      <div className="p-4 flex flex-col justify-between">
         <div>
-          <h3 className={titleStyling}>{venue.name}</h3>
+          <h3 className="text-xl font-bold">{venue.name}</h3>
           <p>Capacity: {venue.capacity}</p>
         </div>
 
-        {/* Kondisjonelle knapper basert på variant parameteret */}
-        <div className={buttonContainerStyling}>{renderButtons()}</div>
+        <div className="flex gap-2 mt-4">{renderButtons()}</div>
       </div>
     </div>
   );
