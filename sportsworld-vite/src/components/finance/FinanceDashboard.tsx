@@ -5,6 +5,7 @@ import type { IFinanceContext } from "../../interfaces/contexts/IFinanceContext"
 import { FinanceContext } from "../../contexts/FinanceContext";
 import type { IFinanceDashboardProps } from "../../interfaces/components/IFinanceDashboardProps";
 import { FinanceCard } from "./FinanceCard";
+import { FinanceLoanWindow } from "./FinanceLoanWindow";
 
 export const FinanceDashboard: FC<IFinanceDashboardProps> = ({
   limitedVariant = false,
@@ -24,8 +25,9 @@ export const FinanceDashboard: FC<IFinanceDashboardProps> = ({
   const errorContainer = "text-center";
   const errorText = "text-xl text-red-600";
 
-  const limitedSectionBase =
-    "w-full px-4 py-8 grid grid-cols-12 gap-6 text-center";
+  const sectionBase = "w-full px-4 py-8 grid grid-cols-12 gap-6 text-center";
+
+  const containerStyling = "col-span-12 lg:col-span-6 grid grid-cols-12 gap-6";
 
   // --- Kalkulerte visningsverdier ---
   const purchasedAthletes = athletes.filter((a) => a.purchased);
@@ -59,6 +61,10 @@ export const FinanceDashboard: FC<IFinanceDashboardProps> = ({
     </>
   );
 
+  const renderLoanWindow = () => {
+    return <FinanceLoanWindow />;
+  };
+
   const renderJsx = () => {
     // Loading
     if (athleteIsLoading || financeIsLoading) {
@@ -80,13 +86,17 @@ export const FinanceDashboard: FC<IFinanceDashboardProps> = ({
       );
     }
 
-    // Limited layout
     if (limitedVariant) {
-      return <section className={limitedSectionBase}>{renderCards()}</section>;
+      return <section className={sectionBase}>{renderCards()}</section>;
     }
 
-    // Default layout
-    return renderCards();
+    // Default output
+    return (
+      <section className={sectionBase}>
+        <div className={containerStyling}>{renderCards()}</div>
+        <div className={containerStyling}>{renderLoanWindow()}</div>
+      </section>
+    );
   };
 
   return renderJsx();
