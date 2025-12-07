@@ -100,17 +100,39 @@ export const VenueProvider: FC<IProviderProps> = ({ children }) => {
     await showAll();
   };
 
-  const updateVenue = async (updatedVenue: IVenue) => {
+  const updateVenue = async (venue: IVenue, img?: File) => {
     setErrorMessage("");
+    setIsLoading(true);
 
-    const response = await putVenue(updatedVenue);
+    // Beholder gamle bildet om det er ingen img parameter
+    let fileName = venue.image;
 
-    if (!response.success) {
-      setErrorMessage(response.error ?? "Failed to update venue");
-      return;
+    if (img) {
+      try {
+        const uploadResponse = await ImageUploadService.uploadVenueImage(img);
+        if (!uploadResponse.success || uploadResponse.fileName === null) {
+          setErrorMessage(uploadResponse.error ?? "Image upload failed");
+          return;
+        }
+        fileName = uploadResponse.fileName;
+      } catch {
+        setErrorMessage("Unexpected error updating venue");
+        return;
+      }
     }
 
-    await showAll();
+    const venueWithImage = { ...venue, image: fileName };
+
+    try {
+      const response = await putVenue(venueWithImage);
+      if (!response.success) {
+        setErrorMessage(response.error ?? "Failed to update venue");
+        return;
+      }
+      await showAll();
+    } catch {
+      setErrorMessage("Unexpected error updating venue");
+    }
   };
 
   const initializeVenues = async () => {
