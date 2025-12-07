@@ -70,7 +70,6 @@ export const VenueRegister: FC = () => {
   };
 
   // --- Tailwind styling variabler ---
-  const sectionStyling = "col-span-9 col-start-3 sm:col-span-6 lg:col-span-4";
   const titleContainerStyling =
     "rounded-sm shadow-md shadow-black/40 px-4 py-2 bg-black text-black w-full";
   const titleStyling = "text-md text-white";
@@ -143,7 +142,7 @@ export const VenueRegister: FC = () => {
     }
 
     return (
-      <section className={sectionStyling}>
+      <>
         <div className={titleContainerStyling}>
           <h3 className={titleStyling}>
             {isEditMode ? "Edit Venue" : "Register New Venue"}
@@ -177,7 +176,7 @@ export const VenueRegister: FC = () => {
             {isEditMode ? "Update Venue" : "Register Venue"}
           </button>
         </form>
-      </section>
+      </>
     );
   };
 

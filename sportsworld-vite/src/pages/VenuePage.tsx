@@ -1,17 +1,17 @@
 import { NarrowLayout } from "../components/common/NarrowLayout";
-import { PageLayout } from "../components/common/PageLayout";
+import { WideLayout } from "../components/common/WideLayout";
 import { VenueList } from "../components/venue/VenueList";
 import { VenueRegister } from "../components/venue/VenueRegister";
 
 const VenuePage = () => {
   return (
-    <PageLayout>
+    <WideLayout>
       <NarrowLayout>
         <VenueRegister />
       </NarrowLayout>
 
       <VenueList cardVariant="manage" />
-    </PageLayout>
+    </WideLayout>
   );
 };
 

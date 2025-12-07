@@ -1,17 +1,17 @@
 import { AthleteList } from "../components/athlete/AthleteList";
 import { AthleteRegister } from "../components/athlete/AthleteRegister";
 import { NarrowLayout } from "../components/common/NarrowLayout";
-import { PageLayout } from "../components/common/PageLayout";
+import { WideLayout } from "../components/common/WideLayout";
 
 const RegisterPage = () => {
   return (
-    <PageLayout>
+    <WideLayout>
       <NarrowLayout>
         <AthleteRegister />
       </NarrowLayout>
 
       <AthleteList filterType="all" cardVariant="manage" />
-    </PageLayout>
+    </WideLayout>
   );
 };
 

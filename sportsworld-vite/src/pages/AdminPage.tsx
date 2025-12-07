@@ -1,11 +1,11 @@
 import { AthleteList } from "../components/athlete/AthleteList";
-import { PageLayout } from "../components/common/PageLayout";
+import { WideLayout } from "../components/common/WideLayout";
 
 const AdminPage = () => {
   return (
-    <PageLayout>
+    <WideLayout>
       <AthleteList filterType="all" cardVariant="manage" />
-    </PageLayout>
+    </WideLayout>
   );
 };
 

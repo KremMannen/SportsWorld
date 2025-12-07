@@ -1,23 +1,23 @@
 import { VenueList } from "../components/venue/VenueList";
 import { FinanceDashboard } from "../components/finance/FinanceDashboard";
-import { PageLayout } from "../components/common/PageLayout";
+import { WideLayout } from "../components/common/WideLayout";
 import { AthleteList } from "../components/athlete/AthleteList";
 import NavButton from "../components/common/NavButton";
-import { NarrowLayout } from "../components/common/NarrowLayout";
+import { MediumLayout } from "../components/common/MediumLayout";
 
 const HomePage = () => {
   return (
-    <PageLayout>
-      <NarrowLayout>
+    <WideLayout>
+      <MediumLayout>
         <FinanceDashboard limitedVariant={true} />
-      </NarrowLayout>
+      </MediumLayout>
 
       <AthleteList filterType="owned" />
       <NavButton destination="/admin" />
       <AthleteList filterType="available" />
       <NavButton destination="/finances" />
       <VenueList />
-    </PageLayout>
+    </WideLayout>
   );
 };
 

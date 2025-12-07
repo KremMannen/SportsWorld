@@ -1,19 +1,19 @@
 import { AthleteList } from "../components/athlete/AthleteList";
 
-import { NarrowLayout } from "../components/common/NarrowLayout";
-import { PageLayout } from "../components/common/PageLayout";
+import { MediumLayout } from "../components/common/MediumLayout";
+import { WideLayout } from "../components/common/WideLayout";
 import { FinanceDashboard } from "../components/finance/FinanceDashboard";
 import { FinanceLoanWindow } from "../components/finance/FinanceLoanWindow";
 
 const FinancesPage = () => {
   return (
-    <PageLayout>
-      <NarrowLayout>
+    <WideLayout>
+      <MediumLayout>
         <FinanceDashboard limitedVariant={false} />
-      </NarrowLayout>
+      </MediumLayout>
       <AthleteList filterType="owned" cardVariant="finance" />
       <AthleteList filterType="available" cardVariant="finance" />
-    </PageLayout>
+    </WideLayout>
   );
 };
 
