@@ -6,7 +6,7 @@ const RegisterPage = () => {
   return (
     <PageLayout>
       <AthleteRegister />
-      <AthleteList filterType="all" cardVariant="view" />
+      <AthleteList filterType="all" cardVariant="manage" />
     </PageLayout>
   );
 };

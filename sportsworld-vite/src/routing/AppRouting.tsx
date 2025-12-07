@@ -23,6 +23,7 @@ const AppRouting = () => {
           <Route path="/register/:athleteId" element={<RegisterPage />} />
           <Route path="/finances" element={<FinancesPage />} />
           <Route path="/venues" element={<VenuePage />} />
+          <Route path="/venues/:venueId" element={<VenuePage />} />
         </Routes>
       </main>
       <Footer />

@@ -1,7 +1,11 @@
-import type { FC } from "react";
+import { useContext, type FC } from "react";
 import type { IVenueCardProps } from "../../interfaces/components/IVenueCardProps.ts";
+import { VenueContext } from "../../contexts/VenueContext.tsx";
+import type { IVenueContext } from "../../interfaces/contexts/IVenueContext.ts";
+import { Link } from "react-router-dom";
 
 export const VenueCard: FC<IVenueCardProps> = ({ venue, variant }) => {
+  const { deleteVenueById } = useContext(VenueContext) as IVenueContext;
   // --- Knappstyling ---
   const buttonBase =
     "px-4 py-2 rounded text-white transition-colors duration-200";
@@ -17,9 +21,13 @@ export const VenueCard: FC<IVenueCardProps> = ({ venue, variant }) => {
   const titleStyling = "text-xl font-bold";
   const buttonContainerStyling = "flex gap-2 mt-4";
 
+  const buttonColor = "bg-[#000000]";
+  const buttonHover = "hover:shadow hover:cursor-pointer hover:bg-[#870000]";
+
   // --- Knapp handlers ---
-  const handleEditClick = () => {};
-  const handleDeleteClick = () => {};
+  const handleDeleteClick = () => {
+    deleteVenueById(venue.id);
+  };
 
   const renderButtons = () => {
     switch (variant) {
@@ -29,14 +37,14 @@ export const VenueCard: FC<IVenueCardProps> = ({ venue, variant }) => {
       case "manage":
         return (
           <>
-            <button
-              onClick={() => handleEditClick}
-              className={editButtonStyling}
+            <Link
+              to={`/venues/${venue.id}`}
+              className={`${buttonBase} ${editButtonStyling}  ${buttonHover} ${buttonColor} inline-block text-center`}
             >
               Edit
-            </button>
+            </Link>
             <button
-              onClick={() => handleDeleteClick}
+              onClick={() => handleDeleteClick()}
               className={deleteButtonStyling}
             >
               Delete

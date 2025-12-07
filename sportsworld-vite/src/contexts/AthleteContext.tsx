@@ -87,6 +87,7 @@ export const AthleteProvider: FC<IProviderProps> = ({ children }) => {
     setAthleteErrorMessage("");
     try {
       const uploadResponse = await ImageUploadService.uploadAthleteImage(img);
+
       if (!uploadResponse.success || uploadResponse.fileName === null) {
         setAthleteErrorMessage(uploadResponse.error ?? "Image upload failed");
         return;
@@ -94,6 +95,7 @@ export const AthleteProvider: FC<IProviderProps> = ({ children }) => {
 
       const athleteWithImage = { ...athlete, image: uploadResponse.fileName };
       const postResponse = await postAthlete(athleteWithImage);
+
       if (!postResponse.success) {
         setAthleteErrorMessage(postResponse.error ?? "Failed to add athlete");
         return;

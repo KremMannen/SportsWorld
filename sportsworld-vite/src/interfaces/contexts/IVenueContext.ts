@@ -8,7 +8,7 @@ export interface IVenueContext {
   showAll: () => Promise<void>;
   searchByID: (id: number) => Promise<void>;
   searchByName: (name: string) => Promise<void>;
-  addVenue: (venue: Omit<IVenue, "id">, img: File) => Promise<void>;
+  addVenue: (venue: Omit<IVenue, "id" | "image">, img: File) => Promise<void>;
   deleteVenueById: (id: number) => Promise<void>;
-  updateVenue: (venue: IVenue) => Promise<void>;
+  updateVenue: (venue: IVenue, img?: File) => Promise<void>;
 }

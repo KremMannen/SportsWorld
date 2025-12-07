@@ -61,24 +61,30 @@ export const VenueProvider: FC<IProviderProps> = ({ children }) => {
     setIsLoading(false);
   };
 
-  const addVenue = async (newVenue: Omit<IVenue, "id">, img: File) => {
+  const addVenue = async (
+    newVenue: Omit<IVenue, "id" | "image">,
+    img: File
+  ) => {
     setErrorMessage("");
+    try {
+      const uploadResponse = await ImageUploadService.uploadVenueImage(img);
 
-    const uploadResponse = await ImageUploadService.uploadVenueImage(img);
+      if (!uploadResponse.success || uploadResponse.fileName === null) {
+        setErrorMessage(uploadResponse.error ?? "Image upload failed");
+        return;
+      }
 
-    if (!uploadResponse.success) {
-      setErrorMessage(uploadResponse.error ?? "Image upload failed");
-      return;
+      const venueWithImage = { ...newVenue, image: uploadResponse.fileName };
+      const postResponse = await postVenue(venueWithImage);
+
+      if (!postResponse.success) {
+        setErrorMessage(postResponse.error ?? "Failed to add venue");
+        return;
+      }
+      await showAll();
+    } catch (err) {
+      setErrorMessage("Unexpected error adding venue");
     }
-
-    const venueWithImage = { ...newVenue, image: uploadResponse.fileName };
-    const postResponse = await postVenue(venueWithImage);
-
-    if (!postResponse.success) {
-      setErrorMessage(postResponse.error ?? "Failed to add athlete");
-      return;
-    }
-    await showAll();
   };
 
   const deleteVenueById = async (id: number) => {

@@ -6,76 +6,67 @@ import {
   type FC,
   type FormEvent,
 } from "react";
-import { AthleteContext } from "../../contexts/AthleteContext";
-import type { IAthleteContext } from "../../interfaces/contexts/IAthleteContext";
+
 import { Link, useParams } from "react-router-dom";
+import { VenueContext } from "../../contexts/VenueContext";
+import type { IVenueContext } from "../../interfaces/contexts/IVenueContext";
 
 // Denne komponenten registrerer nye atleter om parameteret er undefined
 // Om id er passert som parameter, oppdaterer den tilhørende athlete istedet
 
-export const AthleteRegister: FC = () => {
-  const {
-    athletes,
-    updateAthlete,
-    addAthlete,
-    athleteIsLoading,
-    athleteErrorMessage,
-  } = useContext(AthleteContext) as IAthleteContext;
+export const VenueRegister: FC = () => {
+  const { venues, addVenue, updateVenue, isLoading, errorMessage } = useContext(
+    VenueContext
+  ) as IVenueContext;
 
-  const { athleteId } = useParams<{ athleteId: string }>();
+  const { venueId } = useParams<{ venueId: string }>();
 
-  const isEditMode = athleteId !== undefined;
+  const isEditMode = venueId !== undefined;
 
-  const athlete = isEditMode
-    ? athletes.find((a) => a.id === Number(athleteId))
+  const venue = isEditMode
+    ? venues.find((v) => v.id === Number(venueId))
     : undefined;
 
   const [name, setName] = useState("");
-  const [price, setPrice] = useState("");
-  const [gender, setGender] = useState("");
+  const [capacity, setCapacity] = useState("");
   const [image, setImage] = useState<File | null>(null);
 
   const handleRegister = async (e: FormEvent) => {
     e.preventDefault();
 
-    if (athlete === undefined) {
-      if (!name || !price || !gender || !image) {
+    if (venue === undefined) {
+      if (!name || !capacity || !image) {
         alert("Please fill in all fields.");
         return;
       }
-      const newAthlete = {
+      const newVenue = {
         name,
-        price: Number(price),
-        gender,
-        purchased: false,
+        capacity: Number(capacity),
+        image,
       };
-      await addAthlete(newAthlete, image);
+      await addVenue(newVenue, image);
     } else {
       // image kan være tom, da beholder bare gamle bildet
-      if (!name || !price || !gender) {
+      if (!name || !capacity) {
         alert("Please fill in all fields.");
         return;
       }
-
-      const updatedAthlete = {
-        id: athlete.id,
+      const updatedVenue = {
+        id: venue.id,
         name,
-        price: Number(price),
-        gender,
-        image: athlete.image,
-        purchased: false,
+        capacity: Number(capacity),
+        image: venue.image,
       };
       if (image) {
-        await updateAthlete(updatedAthlete, image);
+        await updateVenue(updatedVenue, image);
       } else {
-        await updateAthlete(updatedAthlete);
+        await updateVenue(updatedVenue);
       }
     }
 
     setName("");
-    setPrice("");
-    setGender("");
     setImage(null);
+    setCapacity("");
   };
 
   // --- Tailwind styling variabler ---
@@ -102,41 +93,40 @@ export const AthleteRegister: FC = () => {
   };
 
   useEffect(() => {
-    if (athlete) {
-      setName(athlete.name);
-      setPrice(athlete.price.toString());
-      setGender(athlete.gender);
+    if (venue) {
+      setName(venue.name);
+      setCapacity(venue.capacity.toString());
     } else if (!isEditMode) {
       setName("");
-      setPrice("");
-      setGender("");
+      setImage(null);
+      setCapacity("");
       setImage(null);
     }
-  }, [athlete, isEditMode]);
+  }, [venue, isEditMode]);
 
   const renderJsx = () => {
     // Vi sjekker kun etter id- og athlete- relaterte feil når ID er passert og komponenten skal være i redigeringsmodus
     if (isEditMode) {
-      const idNumber = Number(athleteId);
+      const idNumber = Number(venueId);
       if (isNaN(idNumber)) {
         return (
           <article className={errorContainerStyling}>
             <p>Invalid id</p>
-            <Link to="/register">Back</Link>
+            <Link to="/venues">Back</Link>
           </article>
         );
       }
-      if (!athlete || athlete === undefined) {
+      if (!venue || venue === undefined) {
         return (
           <article className={errorContainerStyling}>
-            <p>Athlete not found</p>
-            <Link to="/register">Back</Link>
+            <p>Venue not found</p>
+            <Link to="/venues">Back</Link>
           </article>
         );
       }
     }
 
-    if (athleteIsLoading) {
+    if (isLoading) {
       return (
         <div className={loadingContainerStyling}>
           <p className={loadingTextStyling}>Loading athletes...</p>
@@ -144,10 +134,10 @@ export const AthleteRegister: FC = () => {
       );
     }
 
-    if (athleteErrorMessage) {
+    if (errorMessage) {
       return (
         <div className={errorContainerStyling}>
-          <p>{athleteErrorMessage}</p>
+          <p>{errorMessage}</p>
         </div>
       );
     }
@@ -156,7 +146,7 @@ export const AthleteRegister: FC = () => {
       <section className={sectionStyling}>
         <div className={titleContainerStyling}>
           <h3 className={titleStyling}>
-            {isEditMode ? "Edit Athlete" : "Register New Athlete"}
+            {isEditMode ? "Edit Venue" : "Register New Venue"}
           </h3>
         </div>
 
@@ -170,17 +160,10 @@ export const AthleteRegister: FC = () => {
           />
           <input
             type="number"
-            placeholder="Price"
-            value={price}
+            placeholder="Capacity"
+            value={capacity}
             className={inputStyling}
-            onChange={(e) => setPrice(e.target.value)}
-          />
-          <input
-            type="text"
-            placeholder="Gender"
-            value={gender}
-            className={inputStyling}
-            onChange={(e) => setGender(e.target.value)}
+            onChange={(e) => setCapacity(e.target.value)}
           />
 
           <input
@@ -191,7 +174,7 @@ export const AthleteRegister: FC = () => {
           />
 
           <button type="submit" className={buttonStyling}>
-            {isEditMode ? "Update Athlete" : "Register Athlete"}
+            {isEditMode ? "Update Venue" : "Register Venue"}
           </button>
         </form>
       </section>

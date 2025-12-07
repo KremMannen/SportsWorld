@@ -4,7 +4,10 @@ import type { IVenueContext } from "../../interfaces/contexts/IVenueContext";
 import type { IVenueListProps } from "../../interfaces/components/IVenueListProps";
 import { VenueCard } from "./VenueCard";
 
-export const VenueList: FC<IVenueListProps> = ({ cardVariant = "view" }) => {
+export const VenueList: FC<IVenueListProps> = ({
+  cardVariant = "view",
+  isLimited = false,
+}) => {
   const { venues, errorMessage, isLoading } = useContext(
     VenueContext
   ) as IVenueContext;
@@ -52,18 +55,31 @@ export const VenueList: FC<IVenueListProps> = ({ cardVariant = "view" }) => {
       );
     }
 
-    // Viser venue-cards
-    return (
-      <>
-        <h2 className={titleStyling}>{displayTitle}</h2>
-        <div className={cardGridStyling}>
-          {venues.slice(0, 4).map((venue) => (
-            <VenueCard key={venue.id} venue={venue} variant={cardVariant} />
-          ))}
-        </div>
-      </>
-    );
+    // Viser kun 4 venue-cards
+    if (isLimited) {
+      return (
+        <>
+          <h2 className={titleStyling}>{displayTitle}</h2>
+          <div className={cardGridStyling}>
+            {venues.slice(0, 4).map((venue) => (
+              <VenueCard key={venue.id} venue={venue} variant={cardVariant} />
+            ))}
+          </div>
+        </>
+      );
+    }
   };
+
+  return (
+    <>
+      <h2 className={titleStyling}>{displayTitle}</h2>
+      <div className={cardGridStyling}>
+        {venues.map((venue) => (
+          <VenueCard key={venue.id} venue={venue} variant={cardVariant} />
+        ))}
+      </div>
+    </>
+  );
 
   return renderJsx();
 };
