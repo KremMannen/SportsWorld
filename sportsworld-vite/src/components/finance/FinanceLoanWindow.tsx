@@ -9,7 +9,7 @@ export const FinanceLoanWindow: FC = () => {
   const [loanAmount, setLoanAmount] = useState("");
 
   // --- Tailwind styling variables ---
-  const sectionBase = "col-span-12 sm:col-span-6 lg:col-span-4";
+  const sectionBase = "col-span-12 pb-6";
 
   const titleContainerStyling =
     "rounded-sm shadow-md shadow-black/40 px-4 py-2 bg-black text-black w-full";

@@ -1,12 +1,16 @@
 import type { FC } from "react";
 import type { IProviderProps } from "../../interfaces/components/IProviderProps";
 
-// En enkel layout-komponent som sentrerer definering av padding og maks-bredde for innholdet.
-
 export const PageLayout: FC<IProviderProps> = ({ children }) => {
   return (
-    <main className="w-full bg-[#F2F2F2]">
-      <div className="max-w-[1600px] mx-auto p-12">{children}</div>
+    // Setter bakgrunnsfargen
+    <main className="bg-[#F2F2F2]">
+      {/* Setter padding, maksbredde og automargin:
+
+      |---- auto ----| [   sideinnhold (max 1600px) ] |---- auto ----|
+      
+      */}
+      <div className="max-w-[1600px] mx-auto p-12 ">{children}</div>
     </main>
   );
 };
