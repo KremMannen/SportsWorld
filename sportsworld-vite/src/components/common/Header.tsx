@@ -20,7 +20,7 @@ const getNavigationItemStyling = (route: string) => {
     whitespace-nowrap
 `;
   // Boksen endrer bakgrunn og får rød border dersom route matcher url-objektet lagret i useLocation
-  const activeClasses = pathname === route ? "bg-[#870000] border-2 border-red-600 shadow-sm" : "";
+  const activeClasses = pathname === route ? "bg-[#870000] border-1 border-red-600 shadow-sm" : "";
 
   return `${baseStyling} ${activeClasses}`;
 }
