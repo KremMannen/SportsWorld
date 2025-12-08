@@ -9,7 +9,6 @@ const RegisterPage = () => {
       <NarrowLayout>
         <AthleteRegister />
       </NarrowLayout>
-
       <AthleteList filterType="all" cardVariant="manage" layoutVariant="grid"/>
     </WideLayout>
   );

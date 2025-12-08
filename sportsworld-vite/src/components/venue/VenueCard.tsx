@@ -20,23 +20,33 @@ export const VenueCard: FC<IVenueCardProps> = ({ venue, variant }) => {
     ${cardHover}
   `;
 
-  const btnBase = "px-4 py-2 rounded text-white transition-all duration-200";
-  const editBtn = `${btnBase} bg-blue-500 hover:bg-blue-600 inline-block text-center`;
-  const deleteBtn = `${btnBase} bg-red-500 hover:bg-red-800`;
+  // ---Knappstyling---
+  const buttonBase =
+    "w-full px-4 py-2 rounded transition duration-200 text-white";
+  const buttonColor = "bg-black";
+  const buttonHover = "hover:bg-[#870000] hover:shadow";
+  const buttonContainerStyling = "flex gap-2 pt-2";
 
   // --- Logic ---
   const handleDelete = () => deleteVenueById(venue.id);
 
-  const renderButtons = () => {
-    if (!isManage) return null;
+const renderButtons = () => {
+    if (!isManage) return;
 
     return (
       <>
-        <Link to={`/venues/${venue.id}`} className={editBtn}>
+        <Link
+          to={`/venues/${venue.id}`}
+          className={`${buttonBase} ${buttonHover} ${buttonColor} text-center`}
+        >
           Edit
         </Link>
 
-        <button onClick={handleDelete} className={deleteBtn}>
+        <button
+          type="button"
+          onClick={handleDelete}
+          className={`${buttonBase} ${buttonHover} ${buttonColor}`}
+        >
           Delete
         </button>
       </>
@@ -60,7 +70,7 @@ export const VenueCard: FC<IVenueCardProps> = ({ venue, variant }) => {
           <p>Capacity: {venue.capacity}</p>
         </div>
 
-        <div className="flex gap-2 mt-4">{renderButtons()}</div>
+        <div className={buttonContainerStyling}>{renderButtons()}</div>
       </div>
     </div>
   );
