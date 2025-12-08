@@ -9,7 +9,7 @@ const RegisterPage = () => {
       <NarrowLayout>
         <AthleteRegister />
       </NarrowLayout>
-      <AthleteList filterType="all" cardVariant="manage" layoutVariant="grid"/>
+      <AthleteList filterType="all" cardVariant="view" layoutVariant="grid"/>
     </WideLayout>
   );
 };
