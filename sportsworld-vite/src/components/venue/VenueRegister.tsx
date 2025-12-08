@@ -70,8 +70,9 @@ export const VenueRegister: FC = () => {
   };
 
   // --- Tailwind styling variabler ---
+  const containerStyling = "p-4";
   const titleContainerStyling =
-    "rounded-sm shadow-md shadow-black/40 px-4 py-2 bg-black text-black w-full";
+    "rounded-sm shadow-md shadow-black/40 px-4 py-2 bg-black text-black w-full gap-6";
   const titleStyling = "text-md text-white";
   const inputStyling =
     "flex-1 px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#4C0000] min-w-0";
@@ -142,7 +143,7 @@ export const VenueRegister: FC = () => {
     }
 
     return (
-      <>
+      <div className={containerStyling}>
         <div className={titleContainerStyling}>
           <h3 className={titleStyling}>
             {isEditMode ? "Edit Venue" : "Register New Venue"}
@@ -176,7 +177,7 @@ export const VenueRegister: FC = () => {
             {isEditMode ? "Update Venue" : "Register Venue"}
           </button>
         </form>
-      </>
+      </div>
     );
   };
 
