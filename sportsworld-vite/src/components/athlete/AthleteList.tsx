@@ -7,20 +7,26 @@ import type { IAthleteListProps } from "../../interfaces/components/IAthleteList
 export const AthleteList: FC<IAthleteListProps> = ({
   filterType = "all",
   cardVariant = "view",
+  layoutVariant = "horizontal",
 }) => {
   const { athletes, athleteErrorMessage, athleteIsLoading } = useContext(
     AthleteContext
   ) as IAthleteContext;
 
-  // --- Styling variables ---
+  // --- Styling variabler ---
   const titleStyling = "text-3xl font-bold mb-6 pl-4";
   const loadingContainerStyling = "flex justify-center items-center py-12";
   const loadingTextStyling = "text-gray-500 text-lg";
   const errorContainerStyling =
     "bg-red-50 border border-red-400 text-red-700 px-4 py-3 mb-10 rounded";
   const cardsContainerBaseStyling = "grid grid-cols-12 gap-6 p-4 mb-8";
+  
+  // Endre layout basert på layoutVariant, slik at admin-page ikke får horizontal scroll på lg-breakpoint
   const cardsContainerLgStyling =
-    "lg:flex lg:flex-row lg:overflow-x-auto lg:gap-4 lg:p-4";
+    layoutVariant === "horizontal"
+      ? "lg:flex lg:flex-row lg:overflow-x-auto lg:gap-4 lg:p-4"
+      : ""; // Tom streng komponentene får default styling (grid)
+      
   const cardsContainerXlStyling = "xl:grid xl:overflow-visible xl:p-4";
 
   let filteredAthletes;
@@ -86,6 +92,7 @@ export const AthleteList: FC<IAthleteListProps> = ({
               key={athlete.id}
               athlete={athlete}
               variant={cardVariant}
+              layoutVariant={layoutVariant}
             />
           ))}
         </div>

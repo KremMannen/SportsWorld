@@ -12,7 +12,7 @@ import type { IFinanceContext } from "../../interfaces/contexts/IFinanceContext.
 // Vi tar derfor en string som parameter i komponenten som bestemmer hvilke knapper som skal genereres i kortet.
 // Hvordan vi håndterer TypeSafetyen til stringen forklares i IAthleteCardProps
 
-export const AthleteCard: FC<IAthleteCardProps> = ({ athlete, variant }) => {
+export const AthleteCard: FC<IAthleteCardProps> = ({ athlete, variant, layoutVariant = "horizontal" }) => {
   // En løsning kunne vært å bruke callback funksjon og la parent komponenten håndtere oppdateringen av athlete.
   // Siden context mønsteret allerede er implementert, unngår vi "prop drilling" ved å bruke context direkte.
   const { updateAthlete, deleteAthleteById } = useContext(
@@ -36,8 +36,13 @@ export const AthleteCard: FC<IAthleteCardProps> = ({ athlete, variant }) => {
   const cardImageContainer =
     variant === "manage" || variant === "finance" ? "w-32 h-48" : "w-32 h-32";
 
+    // Styler col-span for kort i grid på admin-page, som ikke skal ha horizontal row scrolling slik de andre pagene har
+  const cardGridSpan = layoutVariant === "grid" 
+    ? "col-span-12 sm:col-span-6 lg:col-span-4 xl:col-span-3" // Kortene på admin page spanner nå 3 kolonner hver
+    : "col-span-12 sm:col-span-6 lg:flex-shrink-0 lg:w-[400px] xl:col-span-3 xl:w-auto"; 
+
   // Container-klassene som sitter på elementet som er direkte child i grid.
-  const cardContainerStyling = `flex col-span-12 sm:col-span-6 lg:flex-shrink-0 lg:w-[400px] xl:col-span-3 xl:w-auto ${cardHoverEffect} ${cardColor} rounded-lg shadow-md shadow-black/20 overflow-hidden ${cardHeight}`;
+  const cardContainerStyling = `flex ${cardGridSpan} ${cardHoverEffect} ${cardColor} rounded-lg shadow-md shadow-black/20 overflow-hidden ${cardHeight}`;
 
   const cardImageStyling = "w-full h-full object-cover";
   const cardContentContainerStyling =

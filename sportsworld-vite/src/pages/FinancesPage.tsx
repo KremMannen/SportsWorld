@@ -10,8 +10,8 @@ const FinancesPage = () => {
       <MediumLayout>
         <FinanceDashboard limitedVariant={false} />
       </MediumLayout>
-      <AthleteList filterType="owned" cardVariant="finance" />
-      <AthleteList filterType="available" cardVariant="finance" />
+      <AthleteList filterType="owned" cardVariant="finance" layoutVariant="horizontal"/>
+      <AthleteList filterType="available" cardVariant="finance" layoutVariant="horizontal"/>
     </WideLayout>
   );
 };

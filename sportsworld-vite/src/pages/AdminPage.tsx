@@ -4,7 +4,7 @@ import { WideLayout } from "../components/common/WideLayout";
 const AdminPage = () => {
   return (
     <WideLayout>
-      <AthleteList filterType="all" cardVariant="manage" />
+      <AthleteList filterType="all" cardVariant="manage" layoutVariant="grid" />
     </WideLayout>
   );
 };

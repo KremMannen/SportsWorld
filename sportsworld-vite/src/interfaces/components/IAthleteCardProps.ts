@@ -1,4 +1,5 @@
 import type { IAthlete } from "../objects/IAthlete";
+import type { LayoutVariant } from "./IAthleteListProps";
 
 // type CardVariant fungerer litt som en enum: en liste med strings som er gyldige alternativer.
 // Forskjellen er at denne kun eksisterer i TypeScript / ved kompileringstid, og ikke ved runtime.
@@ -15,4 +16,5 @@ export type CardVariant = "view" | "manage" | "finance";
 export interface IAthleteCardProps {
   athlete: IAthlete;
   variant: CardVariant;
+  layoutVariant?: LayoutVariant;
 }

@@ -12,9 +12,9 @@ const HomePage = () => {
         <FinanceDashboard limitedVariant={true} />
       </MediumLayout>
 
-      <AthleteList filterType="owned" />
+      <AthleteList filterType="owned" layoutVariant="horizontal"/>
       <NavButton destination="/admin" />
-      <AthleteList filterType="available" />
+      <AthleteList filterType="available" layoutVariant="horizontal"/>
       <NavButton destination="/finances" />
 
       <VenueList isLimited={true} />
