@@ -11,7 +11,7 @@ export const WideLayout: FC<IProviderProps> = ({ children }) => {
       |---- auto m ----| [ ---- sideinnhold ---- ] |---- auto m ----|
       
       */}
-      <div className="max-w-[1600px] mx-auto pt-12">{children}</div>
+      <div className="max-w-[1600px] mx-auto py-12">{children}</div>
     </section>
   );
 };

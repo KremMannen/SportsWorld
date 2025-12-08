@@ -1,4 +1,4 @@
-import { useContext, type FC } from "react";
+import { useContext, useState, type FC, type FormEvent } from "react";
 import { AthleteCard } from "./AthleteCard";
 import { AthleteContext } from "../../contexts/AthleteContext";
 import type { IAthleteContext } from "../../interfaces/contexts/IAthleteContext";
@@ -9,13 +9,26 @@ export const AthleteList: FC<IAthleteListProps> = ({
   cardVariant = "view",
   layoutVariant = "horizontal",
 }) => {
-  const { athletes, athleteErrorMessage, athleteIsLoading } = useContext(
-    AthleteContext
-  ) as IAthleteContext;
+  const {
+    athletes,
+    searchResults,
+    athleteErrorMessage,
+    athleteIsLoading,
+    searchByName,
+  } = useContext(AthleteContext) as IAthleteContext;
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isSearchActive, setIsSearchActive] = useState(false);
 
   // --- Styling variabler ---
-  const titleStyling =
-    "text-2xl text-white font-bold mb-6 p-2 px-8 bg-black rounded-sm";
+  const headerContainerStyling =
+    "flex justify-between items-center mb-6 p-2 px-8 bg-black rounded-sm";
+  const titleStyling = "text-2xl text-white font-bold";
+  const searchContainerStyling = "flex gap-2";
+  const searchInputStyling =
+    "px-4 py-2 rounded bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#870000] w-64";
+  const searchButtonStyling =
+    "px-4 py-2 rounded bg-[#4C0000] text-white font-bold hover:bg-[#870000] transition-colors cursor-pointer";
   const loadingContainerStyling = "flex justify-center items-center py-12";
   const loadingTextStyling = "text-gray-500 text-lg";
   const errorContainerStyling =
@@ -30,27 +43,33 @@ export const AthleteList: FC<IAthleteListProps> = ({
 
   const cardsContainerXlStyling = "xl:grid xl:overflow-visible xl:p-4";
 
-  let filteredAthletes;
-  switch (filterType) {
-    case "owned":
-      filteredAthletes = athletes.filter((athlete) => athlete.purchased);
-      break;
-    case "available":
-      filteredAthletes = athletes.filter((athlete) => !athlete.purchased);
-      break;
-    case "all":
-    default:
-      filteredAthletes = athletes;
-      break;
-  }
+  const handleSearch = (e: FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      searchByName(searchQuery);
+      setIsSearchActive(true);
+    } else {
+      // Hvis søkefeltet er tomt, vis alle athletes igjen
+      setIsSearchActive(false);
+    }
+  };
 
-  // Tittelen til listen bestemmer av filterType
+  // Velg datakilde basert på om vi søker eller ikke
+  let filteredAthletes = isSearchActive ? searchResults : athletes;
+
+  // Filtrer og sett tittel basert på listens filtertype
   let displayTitle;
   switch (filterType) {
     case "owned":
+      filteredAthletes = filteredAthletes.filter(
+        (athlete) => athlete.purchased
+      );
       displayTitle = "Fighters in your arsenal";
       break;
     case "available":
+      filteredAthletes = filteredAthletes.filter(
+        (athlete) => !athlete.purchased
+      );
       displayTitle = "Available Fighters";
       break;
     case "all":
@@ -63,7 +82,21 @@ export const AthleteList: FC<IAthleteListProps> = ({
     if (athleteIsLoading) {
       return (
         <>
-          <h2 className={titleStyling}>{displayTitle}</h2>
+          <div className={headerContainerStyling}>
+            <h2 className={titleStyling}>{displayTitle}</h2>
+            <form onSubmit={handleSearch} className={searchContainerStyling}>
+              <input
+                type="text"
+                placeholder="Search fighters..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className={searchInputStyling}
+              />
+              <button type="submit" className={searchButtonStyling}>
+                Search
+              </button>
+            </form>
+          </div>
           <div className={loadingContainerStyling}>
             <div className={loadingTextStyling}>Loading fighters...</div>
           </div>
@@ -74,13 +107,29 @@ export const AthleteList: FC<IAthleteListProps> = ({
     if (athleteErrorMessage || filteredAthletes.length === 0) {
       const errorMessage = athleteErrorMessage
         ? athleteErrorMessage
+        : isSearchActive
+        ? `No fighters found matching "${searchQuery}"`
         : filterType === "owned"
         ? "No fighters signed yet"
         : "No fighters available";
 
       return (
         <>
-          <h2 className={titleStyling}>{displayTitle}</h2>
+          <div className={headerContainerStyling}>
+            <h2 className={titleStyling}>{displayTitle}</h2>
+            <form onSubmit={handleSearch} className={searchContainerStyling}>
+              <input
+                type="text"
+                placeholder="Search fighters..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className={searchInputStyling}
+              />
+              <button type="submit" className={searchButtonStyling}>
+                Search
+              </button>
+            </form>
+          </div>
           <div className={errorContainerStyling}>
             <p>{errorMessage}</p>
           </div>
@@ -92,7 +141,21 @@ export const AthleteList: FC<IAthleteListProps> = ({
 
     return (
       <>
-        <h2 className={titleStyling}>{displayTitle}</h2>
+        <div className={headerContainerStyling}>
+          <h2 className={titleStyling}>{displayTitle}</h2>
+          <form onSubmit={handleSearch} className={searchContainerStyling}>
+            <input
+              type="text"
+              placeholder="Search fighters..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className={searchInputStyling}
+            />
+            <button type="submit" className={searchButtonStyling}>
+              Search
+            </button>
+          </form>
+        </div>
         <div className={cardsContainerStyling}>
           {filteredAthletes.map((athlete) => (
             <AthleteCard
