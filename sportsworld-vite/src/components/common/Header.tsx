@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 
 const Header: FC = () => {
   const baseStyling =
-    "h-10 w-10 bg-[#4C0000] text-white text-xs sm:text-base md:text-md lg:text-lg xl:text-xl font-medium h-8 sm:h-10 px-2 sm:px-3 lg:px-4 py-1 sm:py-2 rounded-md hover:bg-[#870000] flex items-center gap-2 whitespace-nowrap";
+    "h-10 bg-[#4C0000] text-white text-xs sm:text-base md:text-md lg:text-lg xl:text-xl font-medium h-8 sm:h-10 px-2 sm:px-3 lg:px-4 py-1 sm:py-2 rounded-md hover:bg-[#870000] flex items-center gap-2 whitespace-nowrap";
   const activeStyling = "bg-[#870000] border-1 border-red-600 shadow-sm";
   const listItemMargin = "mr-2 sm:mr-2 lg:mr-4";
   const iconStyling = "!inline sm:!hidden fas text-xl ";
