@@ -13,7 +13,7 @@ export const VenueList: FC<IVenueListProps> = ({
   ) as IVenueContext;
 
   // --- Styling variabler ---
-  const titleStyling = "text-3xl font-bold mb-6";
+  const titleStyling = "text-3xl font-bold mb-6 pl-2";
   const loadingContainerStyling = "flex justify-center items-center py-12";
   const loadingTextStyling = "text-gray-500 text-lg";
   const errorContainerStyling =
