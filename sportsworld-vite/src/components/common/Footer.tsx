@@ -33,15 +33,12 @@ const Footer: FC = () => {
           <hr className="border-red-600 mb-4" />
           <ul className="space-y-2">
             <li>
-              <a
-                href="mailto:info@sportsworld.com"
-                className="hover:text-red-300"
-              >
+              <a href="" className="hover:text-red-300">
                 info@sportsworld.com
               </a>
             </li>
             <li>
-              <a href="tel:+1234567890" className="hover:text-red-300">
+              <a href="" className="hover:text-red-300">
                 +1 (234) 567-890
               </a>
             </li>

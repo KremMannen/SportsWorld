@@ -59,7 +59,6 @@ export const FinanceLoanWindow: FC = () => {
   };
 
   const renderJsx = () => {
-    // Sjekker først om innhold laster og isåfall informerer bruker
     if (financeIsLoading) {
       return (
         <div className={loadingContainer}>
@@ -68,7 +67,6 @@ export const FinanceLoanWindow: FC = () => {
       );
     }
 
-    // Sjekker om det er noen feil og viser eventuell feilmelding til bruker
     if (financeErrorMessage) {
       return (
         <div className={errorContainer}>
@@ -77,7 +75,6 @@ export const FinanceLoanWindow: FC = () => {
       );
     }
 
-    // Hovedinnholdet til FinanceLoanWindow
     return (
       <>
         <section className={sectionBase}>

@@ -30,15 +30,14 @@ export const VenueList: FC<IVenueListProps> = ({
     "bg-red-50 border border-red-400 text-red-700 px-4 py-3 my-10 rounded max-w-[200px] mx-auto";
   const cardsContainerBaseStyling = "grid grid-cols-12 gap-6 p-4 mb-8";
 
-  // Endre layout basert på layoutVariant, slik at admin-page ikke får horizontal scroll på lg-breakpoint
+  // admin-page ikke får horizontal scroll på lg-breakpoint
   const cardsContainerLgStyling =
     layoutVariant === "horizontal"
       ? "lg:flex lg:flex-row lg:overflow-x-auto lg:gap-4 lg:p-4"
-      : ""; // Tom streng komponentene får default styling (grid)
+      : ""; // default styling (grid)
 
   const cardsContainerXlStyling = "xl:grid xl:overflow-visible xl:p-4";
 
-  // Håndter søk når skjemaet submitter
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
@@ -50,7 +49,7 @@ export const VenueList: FC<IVenueListProps> = ({
     }
   };
 
-  // Velg riktig datakilde basert på om vi søker eller ikke
+  // Velg datakilde basert på om vi søker eller ikke
   let displayVenues = isSearchActive ? searchResults : venues;
 
   let displayTitle;
@@ -67,7 +66,6 @@ export const VenueList: FC<IVenueListProps> = ({
   }
 
   const renderJsx = () => {
-    // Innhold laster inn
     if (isLoading) {
       return (
         <>

@@ -11,18 +11,15 @@ import { Link, useParams } from "react-router-dom";
 import { VenueContext } from "../../contexts/VenueContext";
 import type { IVenueContext } from "../../interfaces/contexts/IVenueContext";
 
-// Denne komponenten registrerer nye atleter om parameteret er undefined
-// Om id er passert som parameter, oppdaterer den tilhørende athlete istedet
-
 export const VenueRegister: FC = () => {
   const { venues, addVenue, updateVenue, isLoading, errorMessage } = useContext(
     VenueContext
   ) as IVenueContext;
 
+  // Registrerer nye venues når det er ingen parameters
   const { venueId } = useParams<{ venueId: string }>();
-
+  // Komponenten går i redigeringsmodus om det er passert parameter (athlete.id)
   const isEditMode = venueId !== undefined;
-
   const venue = isEditMode
     ? venues.find((v) => v.id === Number(venueId))
     : undefined;
@@ -46,7 +43,7 @@ export const VenueRegister: FC = () => {
       };
       await addVenue(newVenue, image);
     } else {
-      // image kan være tom, da beholder bare gamle bildet
+      // image kan være tom, da beholdes gamle bildet
       if (!name || !capacity) {
         alert("Please fill in all fields.");
         return;
@@ -102,6 +99,7 @@ export const VenueRegister: FC = () => {
       setCapacity("");
       setImage(null);
     }
+    // useEffect kjøres om disse verdiene endrer seg for å oppdatere inputfeltene
   }, [venue, isEditMode]);
 
   const renderJsx = () => {

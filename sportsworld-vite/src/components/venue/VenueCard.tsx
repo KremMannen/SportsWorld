@@ -5,7 +5,11 @@ import type { IVenueCardProps } from "../../interfaces/components/IVenueCardProp
 import type { IVenueContext } from "../../interfaces/contexts/IVenueContext";
 import { VenueContext } from "../../contexts/VenueContext";
 
-export const VenueCard: FC<IVenueCardProps> = ({ venue, variant, layoutVariant = "horizontal" }) => {
+export const VenueCard: FC<IVenueCardProps> = ({
+  venue,
+  variant,
+  layoutVariant = "horizontal",
+}) => {
   const { deleteVenueById } = useContext(VenueContext) as IVenueContext;
 
   const isManage = variant === "manage";
@@ -32,12 +36,9 @@ export const VenueCard: FC<IVenueCardProps> = ({ venue, variant, layoutVariant =
   const deleteButtonColor = "bg-[#4C0000]";
   const buttonHover = "hover:bg-[#870000] hover:shadow hover:cursor-pointer";
   const buttonContainerStyling = "flex gap-2 pt-2";
-
   const venueViewCardHref = "/venues";
 
-  // --- Logic ---
   const handleDelete = () => deleteVenueById(venue.id);
-
   const renderButtons = () => {
     if (!isManage) return;
 
@@ -61,28 +62,26 @@ export const VenueCard: FC<IVenueCardProps> = ({ venue, variant, layoutVariant =
     );
   };
 
-  // --- Render handler ---
-
   const content = (
     <>
       <div className={cardClasses}>
-      <div className="w-full h-40">
-        <img
-          src={`http://localhost:5110/images/VenueImages/${venue.image}`}
-          alt={venue.name}
-          className="w-full h-full object-cover"
-        />
-      </div>
-
-      <div className="p-4 flex flex-col justify-between">
-        <div>
-          <h3 className="text-xl font-bold">{venue.name}</h3>
-          <p>Capacity: {venue.capacity}</p>
+        <div className="w-full h-40">
+          <img
+            src={`http://localhost:5110/images/VenueImages/${venue.image}`}
+            alt={venue.name}
+            className="w-full h-full object-cover"
+          />
         </div>
 
-        <div className={buttonContainerStyling}>{renderButtons()}</div>
+        <div className="p-4 flex flex-col justify-between">
+          <div>
+            <h3 className="text-xl font-bold">{venue.name}</h3>
+            <p>Capacity: {venue.capacity}</p>
+          </div>
+
+          <div className={buttonContainerStyling}>{renderButtons()}</div>
+        </div>
       </div>
-    </div>
     </>
   );
 
