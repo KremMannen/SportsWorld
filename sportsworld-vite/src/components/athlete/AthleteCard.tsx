@@ -1,4 +1,4 @@
-import { useContext, type FC } from "react";
+import { useContext, type FC, useState } from "react";
 import type { IAthleteCardProps } from "../../interfaces/components/IAthleteCardProps.ts";
 import { Link } from "react-router-dom";
 import { AthleteContext } from "../../contexts/AthleteContext.tsx";
@@ -21,6 +21,9 @@ export const AthleteCard: FC<IAthleteCardProps> = ({ athlete, variant, layoutVar
   const { finances, updateFinance } = useContext(
     FinanceContext
   ) as IFinanceContext;
+
+   const [confirming, setConfirming] = useState(false);
+
 
   // -------- Kort styling --------
   const cardColor = athlete.purchased ? "bg-white" : "bg-[#3D4645]";
@@ -86,9 +89,13 @@ export const AthleteCard: FC<IAthleteCardProps> = ({ athlete, variant, layoutVar
     await updateFinance(updatedFinance);
   };
 
-  const handleDeleteClick = () => {
+  const handleDeleteClick = () => setConfirming(true);
+  const handleCancel = () => setConfirming(false);
+  const handleConfirmDelete = () => {
     deleteAthleteById(athlete.id);
+    setConfirming(false);
   };
+
 
   const renderButtons = () => {
     switch (variant) {
@@ -105,13 +112,21 @@ export const AthleteCard: FC<IAthleteCardProps> = ({ athlete, variant, layoutVar
               Edit
             </Link>
 
-            <button
-              type="button"
-              onClick={handleDeleteClick}
-              className={`${buttonBase} ${buttonHover} ${deleteButtonColor}`}
-            >
-              Delete
-            </button>
+            {confirming ? (
+              <div>
+                <p>Du holder på å slette en atlet fra databasen. Ønsker du å gå videre?</p>
+                <button onClick={handleConfirmDelete}>Yes</button>
+                <button onClick={handleCancel}>No</button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={handleDeleteClick}
+                className={`${buttonBase} ${buttonHover} ${deleteButtonColor}`}
+              >
+                Delete
+              </button>
+            )}
           </>
         );
 
@@ -157,6 +172,30 @@ export const AthleteCard: FC<IAthleteCardProps> = ({ athlete, variant, layoutVar
 
   // Det ytre elementet (Link eller article) må ha cardContainerStyling så grid-col-span fungerer.
   const renderJsx = () => {
+     if (confirming) {
+      return (
+        <article className={cardContainerStyling}>
+          <div className={`${cardTextColor} ${cardContentContainerStyling}`}>
+            <p>Du holder på å slette {athlete.name} fra databasen. Ønsker du å gå videre?</p>
+            <div className={buttonContainerStyling}>
+              <button
+                onClick={handleConfirmDelete}
+                className={`${buttonBase} ${buttonHover} ${buttonColor}`}
+              >
+                Yes
+              </button>
+              <button
+                onClick={handleCancel}
+                className={`${buttonBase} ${buttonHover} ${buttonColor}`}
+              >
+                No
+              </button>
+            </div>
+          </div>
+        </article>
+      );
+    }
+    
     if (variant === "view") {
       return (
         <Link to={viewCardHref} className={`${cardContainerStyling} `}>
