@@ -22,6 +22,7 @@ export const AthleteCard: FC<IAthleteCardProps> = ({ athlete, variant, layoutVar
     FinanceContext
   ) as IFinanceContext;
 
+  // Bruker useState her for å kunne gi brukeren valget om å bekrefte sletting før vi kaller på deleteAthleteById
    const [confirming, setConfirming] = useState(false);
 
 
@@ -33,7 +34,6 @@ export const AthleteCard: FC<IAthleteCardProps> = ({ athlete, variant, layoutVar
     variant === "manage" || variant === "finance"
       ? "hover:shadow-black/40"
       : "hover:scale-[1.05] hover:shadow-black/40";
-
   const cardHeight =
     variant === "manage" || variant === "finance" ? "h-48" : "h-32";
   const cardImageContainer =
@@ -46,11 +46,9 @@ export const AthleteCard: FC<IAthleteCardProps> = ({ athlete, variant, layoutVar
 
   // Container-klassene som sitter på elementet som er direkte child i grid.
   const cardContainerStyling = `flex ${cardGridSpan} ${cardHoverEffect} ${cardColor} rounded-lg shadow-md shadow-black/20 overflow-hidden ${cardHeight}`;
-
   const cardImageStyling = "w-full h-full object-cover";
   const cardContentContainerStyling =
     "p-4 flex-1 flex flex-col justify-between";
-
   const cardTitleStyling = "text-xl font-bold";
   const viewCardHref = athlete.purchased ? "/admin" : "/finances";
 
@@ -60,7 +58,6 @@ export const AthleteCard: FC<IAthleteCardProps> = ({ athlete, variant, layoutVar
   const buttonColor =
     athlete.purchased && variant === "finance" ? "bg-[#4C0000]" : "bg-black";
   const deleteButtonColor = "bg-[#4C0000]";
-
   const buttonHover = "hover:bg-[#870000] hover:shadow hover:cursor-pointer";
   const buttonContainerStyling = "flex gap-2";
 
@@ -89,6 +86,7 @@ export const AthleteCard: FC<IAthleteCardProps> = ({ athlete, variant, layoutVar
     await updateFinance(updatedFinance);
   };
 
+  // Delete-knappen åpner nå en popup i valgt card der brukeren må bekrefte eller avbryte sletting. deleteAthleteById-funksjonen er koblet på ja-knappen.
   const handleDeleteClick = () => setConfirming(true);
   const handleCancel = () => setConfirming(false);
   const handleConfirmDelete = () => {
@@ -147,7 +145,7 @@ export const AthleteCard: FC<IAthleteCardProps> = ({ athlete, variant, layoutVar
   };
 
   // Vi lager content uten de ytre grid-klassene slik at vi kan legge disse
-  // på enten Link (for view) eller article (for ikke-view).
+  // -på enten Link (for view) eller article (for ikke-view).
   const content = (
     <>
       <div className={cardImageContainer}>
@@ -195,7 +193,7 @@ export const AthleteCard: FC<IAthleteCardProps> = ({ athlete, variant, layoutVar
         </article>
       );
     }
-    
+
     if (variant === "view") {
       return (
         <Link to={viewCardHref} className={`${cardContainerStyling} `}>
