@@ -30,7 +30,7 @@ export const AthleteCard: FC<IAthleteCardProps> = ({ athlete, variant, layoutVar
   const cardColor = athlete.purchased ? "bg-white" : "bg-[#3D4645]";
   const cardTextColor = athlete.purchased ? "text-black" : "text-white";
   const deleteCardColor = "bg-[#252828]"
-  const deleteCardTextColor = athlete.purchased ? "text-black text-lg font-bold" : "text-white text-lg font-bold";
+  const deleteCardTextColor = "text-white text-lg font-bold ";
 
 
   const cardHoverEffect =
