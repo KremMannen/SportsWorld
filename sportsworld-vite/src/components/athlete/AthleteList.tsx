@@ -14,19 +14,20 @@ export const AthleteList: FC<IAthleteListProps> = ({
   ) as IAthleteContext;
 
   // --- Styling variabler ---
-  const titleStyling = "text-3xl font-bold mb-6 pl-4";
+  const titleStyling =
+    "text-2xl text-white font-bold mb-6 p-2 px-8 bg-black rounded-sm";
   const loadingContainerStyling = "flex justify-center items-center py-12";
   const loadingTextStyling = "text-gray-500 text-lg";
   const errorContainerStyling =
-    "bg-red-50 border border-red-400 text-red-700 px-4 py-3 mb-10 rounded";
+    "bg-red-50 border border-red-400 text-red-700 px-4 py-3 my-10 rounded max-w-[200px] mx-auto";
   const cardsContainerBaseStyling = "grid grid-cols-12 gap-6 p-4 mb-8";
-  
+
   // Endre layout basert på layoutVariant, slik at admin-page ikke får horizontal scroll på lg-breakpoint
   const cardsContainerLgStyling =
     layoutVariant === "horizontal"
       ? "lg:flex lg:flex-row lg:overflow-x-auto lg:gap-4 lg:p-4"
       : ""; // Tom streng komponentene får default styling (grid)
-      
+
   const cardsContainerXlStyling = "xl:grid xl:overflow-visible xl:p-4";
 
   let filteredAthletes;
@@ -61,9 +62,12 @@ export const AthleteList: FC<IAthleteListProps> = ({
   const renderJsx = () => {
     if (athleteIsLoading) {
       return (
-        <div className={loadingContainerStyling}>
-          <div className={loadingTextStyling}>Loading fighters...</div>
-        </div>
+        <>
+          <h2 className={titleStyling}>{displayTitle}</h2>
+          <div className={loadingContainerStyling}>
+            <div className={loadingTextStyling}>Loading fighters...</div>
+          </div>
+        </>
       );
     }
 
@@ -75,9 +79,12 @@ export const AthleteList: FC<IAthleteListProps> = ({
         : "No fighters available";
 
       return (
-        <div className={errorContainerStyling}>
-          <p>{errorMessage}</p>
-        </div>
+        <>
+          <h2 className={titleStyling}>{displayTitle}</h2>
+          <div className={errorContainerStyling}>
+            <p>{errorMessage}</p>
+          </div>
+        </>
       );
     }
 

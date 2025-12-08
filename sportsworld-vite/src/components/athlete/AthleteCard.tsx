@@ -6,15 +6,14 @@ import type { IAthleteContext } from "../../interfaces/contexts/IAthleteContext.
 import { FinanceContext } from "../../contexts/FinanceContext.tsx";
 import type { IFinanceContext } from "../../interfaces/contexts/IFinanceContext.ts";
 
-// Vi ønsker en modulær AthleteCard komponent som kan generere de forskjellige variantene vi
-// skisserte i prototype-fasen.
-// På denne måten slipper vi å skrive 3 veldig like komponenter i henhold til DRY-prinsippet.
-// Vi tar derfor en string som parameter i komponenten som bestemmer hvilke knapper som skal genereres i kortet.
-// Hvordan vi håndterer TypeSafetyen til stringen forklares i IAthleteCardProps
-
-export const AthleteCard: FC<IAthleteCardProps> = ({ athlete, variant, layoutVariant = "horizontal" }) => {
-  // En løsning kunne vært å bruke callback funksjon og la parent komponenten håndtere oppdateringen av athlete.
-  // Siden context mønsteret allerede er implementert, unngår vi "prop drilling" ved å bruke context direkte.
+// Modulær komponent som genererer forskjellige varianter (view, manage, finance) for mer DRY kode.
+// TypeSafety for parameterene håndteres i IAthleteCardProps.
+export const AthleteCard: FC<IAthleteCardProps> = ({
+  athlete,
+  variant,
+  layoutVariant = "horizontal",
+}) => {
+  // Siden context-mønsteret allerede er implementert, unngår vi prop drilling ved å bruke context direkte
   const { updateAthlete, deleteAthleteById } = useContext(
     AthleteContext
   ) as IAthleteContext;
@@ -22,58 +21,52 @@ export const AthleteCard: FC<IAthleteCardProps> = ({ athlete, variant, layoutVar
     FinanceContext
   ) as IFinanceContext;
 
-  // Bruker useState her for å kunne gi brukeren valget om å bekrefte sletting før vi kaller på deleteAthleteById
-   const [confirming, setConfirming] = useState(false);
+  // Bekreftelses-state slik at brukeren må bekrefte sletting
+  const [confirming, setConfirming] = useState(false);
 
+  const isPurchased = athlete.purchased;
+  const isManageOrFinance = variant === "manage" || variant === "finance";
 
-  // -------- Kort styling --------
-  const cardColor = athlete.purchased ? "bg-white" : "bg-[#3D4645]";
-  const cardTextColor = athlete.purchased ? "text-black" : "text-white";
-  const deleteCardColor = "bg-[#252828]"
-  const deleteCardTextColor = "text-white text-lg font-bold ";
+  // Kort styling - varierer basert på purchased status og variant
+  const baseCardClasses = "flex rounded-lg shadow-md overflow-hidden";
+  const cardColorClasses = isPurchased
+    ? "bg-white text-black"
+    : "bg-[#3D4645] text-white";
+  const cardHeightClasses = isManageOrFinance ? "h-48" : "h-32";
+  const cardHoverClasses =
+    variant === "view"
+      ? "hover:scale-[1.05] hover:shadow-black/40"
+      : "hover:shadow-black/40";
 
+  // Grid layout for admin page vs horizontal scroll for andre pages
+  const cardGridClasses =
+    layoutVariant === "grid"
+      ? "col-span-12 sm:col-span-6 lg:col-span-4 xl:col-span-3"
+      : "col-span-12 sm:col-span-6 lg:flex-shrink-0 lg:w-[400px] xl:col-span-3 xl:w-auto";
 
-  const cardHoverEffect =
-    variant === "manage" || variant === "finance"
-      ? "hover:shadow-black/40"
-      : "hover:scale-[1.05] hover:shadow-black/40";
-  const cardHeight =
-    variant === "manage" || variant === "finance" ? "h-48" : "h-32";
-  const cardImageContainer =
-    variant === "manage" || variant === "finance" ? "w-32 h-48" : "w-32 h-32";
+  const cardClasses = `${baseCardClasses} ${cardColorClasses} ${cardHeightClasses} ${cardHoverClasses} ${cardGridClasses} shadow-black/20`;
 
-    // Styler col-span for kort i grid på admin-page, som ikke skal ha horizontal row scrolling slik de andre pagene har
-  const cardGridSpan = layoutVariant === "grid" 
-    ? "col-span-12 sm:col-span-6 lg:col-span-4 xl:col-span-3" // Kortene på admin page spanner nå 3 kolonner hver
-    : "col-span-12 sm:col-span-6 lg:flex-shrink-0 lg:w-[400px] xl:col-span-3 xl:w-auto"; 
+  // Styling for delete-bekreftelse kortet
+  const deleteCardClasses = `${baseCardClasses} bg-[#252828] text-white text-lg font-bold ${cardHeightClasses} ${cardGridClasses} border-1 border-red-600 shadow-black/60 scale-[1.05]`;
 
-  // Container-klassene som sitter på elementet som er direkte child i grid.
-  const cardContainerStyling = `flex ${cardGridSpan} ${cardHoverEffect} ${cardColor} rounded-lg shadow-md shadow-black/20 overflow-hidden ${cardHeight}`;
-  const deleteCardContainerStyling = `flex ${cardGridSpan} ${cardHoverEffect} ${deleteCardColor} rounded-lg shadow-md border-1 border-red-600 shadow-black/60 scale-[1.05] ${cardHeight}`;
+  const imageContainerClasses = isManageOrFinance ? "w-32 h-48" : "w-32 h-32";
+  const viewCardHref = isPurchased ? "/admin" : "/finances";
 
-  const cardImageStyling = "w-full h-full object-cover";
-  const cardContentContainerStyling =
-    "p-4 flex-1 flex flex-col justify-between";
-  const cardTitleStyling = "text-xl font-bold";
-  const viewCardHref = athlete.purchased ? "/admin" : "/finances";
-
-  // -------- Knappstyling --------
+  // Knapp styling
   const buttonBase =
-    "w-full px-4 py-2 rounded transition duration-200 text-white";
-  const buttonColor =
-    athlete.purchased && variant === "finance" ? "bg-[#4C0000]" : "bg-black";
-  const deleteButtonColor = "bg-[#4C0000]";
-  const buttonHover = "hover:bg-[#870000] hover:shadow hover:cursor-pointer";
-  const buttonContainerStyling = "flex gap-2";
+    "w-full px-4 py-2 rounded transition-colors duration-200 text-white hover:bg-[#870000] hover:shadow cursor-pointer";
+  const buttonPrimary = `${buttonBase} bg-black`;
+  const buttonDelete = `${buttonBase} bg-[#4C0000]`;
+  const buttonSell =
+    isPurchased && variant === "finance" ? buttonDelete : buttonPrimary;
 
-  // -------- Knapp handlers --------
   const handleFinanceClick = async () => {
     if (!finances) return;
 
     const updatedFinance = { ...finances };
-    const updatedAthlete = { ...athlete, purchased: !athlete.purchased };
+    const updatedAthlete = { ...athlete, purchased: !isPurchased };
 
-    if (athlete.purchased) {
+    if (isPurchased) {
       // Selger athlete
       updatedFinance.moneyLeft += athlete.price;
     } else {
@@ -87,11 +80,10 @@ export const AthleteCard: FC<IAthleteCardProps> = ({ athlete, variant, layoutVar
     }
 
     await updateAthlete(updatedAthlete);
-
     await updateFinance(updatedFinance);
   };
 
-  // Delete-knappen åpner nå en popup i valgt card der brukeren må bekrefte eller avbryte sletting. deleteAthleteById-funksjonen er koblet på ja-knappen.
+  // Delete-knappen åpner bekreftelse-popup i kortet
   const handleDeleteClick = () => setConfirming(true);
   const handleCancel = () => setConfirming(false);
   const handleConfirmDelete = () => {
@@ -99,59 +91,51 @@ export const AthleteCard: FC<IAthleteCardProps> = ({ athlete, variant, layoutVar
     setConfirming(false);
   };
 
-
   const renderButtons = () => {
     switch (variant) {
       case "view":
         return null;
 
       case "manage":
-      if (confirming) {
-        return (
-          <div className={buttonContainerStyling}>
-            <button
-              onClick={handleConfirmDelete}
-              className={`${buttonBase} ${buttonHover} ${deleteButtonColor}`}
-            >
-              Yes
-            </button>
-            <button
-              onClick={handleCancel}
-              className={`${buttonBase} ${buttonHover} ${buttonColor}`}
-            >
-              No
-            </button>
-          </div>
-        );
-      }
-      
-      return (
-        <>
-          <Link
-            to={`/register/${athlete.id}`}
-            className={`${buttonBase} ${buttonHover} ${buttonColor} text-center`}
-          >
-            Edit
-          </Link>
+        if (confirming) {
+          return (
+            <div className="flex gap-2">
+              <button onClick={handleConfirmDelete} className={buttonDelete}>
+                Yes
+              </button>
+              <button onClick={handleCancel} className={buttonPrimary}>
+                No
+              </button>
+            </div>
+          );
+        }
 
-          <button
-            type="button"
-            onClick={handleDeleteClick}
-            className={`${buttonBase} ${buttonHover} ${deleteButtonColor}`}
-          >
-            Delete
-          </button>
-        </>
-      );
+        return (
+          <>
+            <Link
+              to={`/register/${athlete.id}`}
+              className={`${buttonPrimary} text-center`}
+            >
+              Edit
+            </Link>
+            <button
+              type="button"
+              onClick={handleDeleteClick}
+              className={buttonDelete}
+            >
+              Delete
+            </button>
+          </>
+        );
 
       case "finance":
         return (
           <button
             type="button"
             onClick={handleFinanceClick}
-            className={`${buttonBase} ${buttonHover} ${buttonColor}`}
+            className={buttonSell}
           >
-            {athlete.purchased ? "Sell Athlete" : "Sign Athlete"}
+            {isPurchased ? "Sell Athlete" : "Sign Athlete"}
           </button>
         );
 
@@ -160,37 +144,36 @@ export const AthleteCard: FC<IAthleteCardProps> = ({ athlete, variant, layoutVar
     }
   };
 
-  // Vi lager content uten de ytre grid-klassene slik at vi kan legge disse
-  // -på enten Link (for view) eller article (for ikke-view).
   const content = (
     <>
-      <div className={cardImageContainer}>
+      <div className={imageContainerClasses}>
         <img
           src={`http://localhost:5110/images/AthleteImages/${athlete.image}`}
           alt={athlete.name}
-          className={cardImageStyling}
+          className="w-full h-full object-cover"
         />
       </div>
 
-      <div className={`${cardTextColor} ${cardContentContainerStyling}`}>
+      <div className="p-4 flex-1 flex flex-col justify-between">
         <div>
-          <h3 className={cardTitleStyling}>{athlete.name}</h3>
+          <h3 className="text-xl font-bold">{athlete.name}</h3>
           <p>Price: {athlete.price} $</p>
           <p>Gender: {athlete.gender}</p>
         </div>
 
-        <div className={buttonContainerStyling}>{renderButtons()}</div>
+        <div className="flex gap-2">{renderButtons()}</div>
       </div>
     </>
   );
 
-  // Det ytre elementet (Link eller article) må ha cardContainerStyling så grid-col-span fungerer.
+  // Grid column span må håndteres her for å fungere med AthleteLists grid-col-12.
+  // Vanligvis vil vi ha all column-logikk samlet i en komponent, men vi tillater dette for nå.
   const renderJsx = () => {
     if (confirming) {
       return (
-        <article className={deleteCardContainerStyling}>
-          <div className={`${deleteCardTextColor} ${cardContentContainerStyling}`}>
-            <p>Du holder på å slette {athlete.name} fra databasen. Ønsker du å gå videre?</p>
+        <article className={deleteCardClasses}>
+          <div className="p-4 flex-1 flex flex-col justify-between">
+            <p>Deleting: {athlete.name}. Are you sure?</p>
             {renderButtons()}
           </div>
         </article>
@@ -199,12 +182,12 @@ export const AthleteCard: FC<IAthleteCardProps> = ({ athlete, variant, layoutVar
 
     if (variant === "view") {
       return (
-        <Link to={viewCardHref} className={`${cardContainerStyling} `}>
+        <Link to={viewCardHref} className={cardClasses}>
           {content}
         </Link>
       );
     } else {
-      return <article className={cardContainerStyling}>{content}</article>;
+      return <article className={cardClasses}>{content}</article>;
     }
   };
 
