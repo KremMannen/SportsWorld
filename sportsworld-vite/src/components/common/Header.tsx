@@ -4,6 +4,18 @@ import { Link, useLocation } from "react-router-dom";
 const Header: FC = () => {
 
   // bruker useLocation hook for å hente brukerens nåværende sted i nettsiden.
+  // Denne teknikken fant vi i den offisielle dokumentasjonen til reactrouter: 
+    // "https://api.reactrouter.com/v7/functions/react_router.useLocation.html" og "https://github.com/remix-run/react-router/blob/32d759958978b9fbae676806dd6c84ade9866746/packages/react-router/lib/hooks.tsx#L129"
+
+  // Dokumentasjonen her oppleves som noe mangelfull. Derfor brukte vi ai.kristiania.no/chat sin LLM modell for å diskutere om vår forståelse av hooken var korrekt. 
+  // Prompten vi brukte : 
+    // jeg valgte å bruke en react hook som heter useLocation her, det er ikke i pensum for meg nå, men det slår meg som en ganske naturlig hook å bruke i dette tilfellet. 
+    // Jeg tolker det slik at den registrerer brukerens lokasjon i nettsiden gjennom å lagre url-pathen som et objekt. 
+    // Dermed kan man bruke conditional styling i header-objektene ved å matche routen i Link til objektet useLocation har lagret. 
+    // Jeg sender bare med route som parameter i funksjonen som styrer stylingen."
+        // Har jeg forstått den riktig?
+
+  // Kristiania sin GPT-modell bekrefter dermed at jeg har fortstått det riktig, og jeg føler meg komfortabel med å bruke denne  i løsningen.
   const { pathname } = useLocation();
 
   // Alle nav-elementer i listen har en boks, som endrer styling dersom man er på siden elementet linker til.
