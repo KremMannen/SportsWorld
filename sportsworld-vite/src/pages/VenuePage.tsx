@@ -10,7 +10,7 @@ const VenuePage = () => {
         <VenueRegister />
       </NarrowLayout>
 
-      <VenueList cardVariant="manage" />
+      <VenueList cardVariant="manage" layoutVariant="grid"/>
     </WideLayout>
   );
 };

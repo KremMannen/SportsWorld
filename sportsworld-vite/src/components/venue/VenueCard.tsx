@@ -5,7 +5,7 @@ import type { IVenueCardProps } from "../../interfaces/components/IVenueCardProp
 import type { IVenueContext } from "../../interfaces/contexts/IVenueContext";
 import { VenueContext } from "../../contexts/VenueContext";
 
-export const VenueCard: FC<IVenueCardProps> = ({ venue, variant }) => {
+export const VenueCard: FC<IVenueCardProps> = ({ venue, variant, layoutVariant = "horizontal" }) => {
   const { deleteVenueById } = useContext(VenueContext) as IVenueContext;
 
   const isManage = variant === "manage";
@@ -13,10 +13,15 @@ export const VenueCard: FC<IVenueCardProps> = ({ venue, variant }) => {
   // --- Styling ---
   const cardHover = isManage ? "" : "hover:scale-[1.05] hover:cursor-pointer";
 
+  const cardGridSpan =
+    layoutVariant === "grid"
+      ? "col-span-12 sm:col-span-6 lg:col-span-4 xl:col-span-3"
+      : "col-span-12 sm:col-span-6 lg:flex-shrink-0 lg:w-[400px] xl:col-span-3 xl:w-auto";
+
   const cardClasses = `
     bg-[#252828] text-white rounded-lg shadow-md shadow-black/20 overflow-hidden
-    transition-transform duration-200 col-span-12 sm:col-span-6 
-    lg:flex-shrink-0 lg:w-[400px] xl:col-span-3 xl:w-auto
+    transition-transform duration-200
+    ${cardGridSpan}
     ${cardHover}
   `;
 
@@ -28,10 +33,11 @@ export const VenueCard: FC<IVenueCardProps> = ({ venue, variant }) => {
   const buttonHover = "hover:bg-[#870000] hover:shadow hover:cursor-pointer";
   const buttonContainerStyling = "flex gap-2 pt-2";
 
+
   // --- Logic ---
   const handleDelete = () => deleteVenueById(venue.id);
 
-const renderButtons = () => {
+  const renderButtons = () => {
     if (!isManage) return;
 
     return (

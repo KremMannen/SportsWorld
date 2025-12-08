@@ -7,6 +7,7 @@ import { VenueCard } from "./VenueCard";
 export const VenueList: FC<IVenueListProps> = ({
   cardVariant = "view",
   isLimited = false,
+  layoutVariant = "horizontal",
 }) => {
   const { venues, errorMessage, isLoading } = useContext(
     VenueContext
@@ -19,8 +20,15 @@ export const VenueList: FC<IVenueListProps> = ({
   const errorContainerStyling =
     "bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded";
   const errorTitleStyling = "font-medium";
-  const cardGridStyling =
-    "grid grid-cols-12 gap-6 p-4 lg:flex lg:flex-row lg:overflow-x-auto lg:gap-4 lg:p-4 xl:grid xl:overflow-visible xl:p-4";
+  const cardsContainerBaseStyling = "grid grid-cols-12 gap-6 p-4 mb-8";
+  
+  // Endre layout basert på layoutVariant, slik at admin-page ikke får horizontal scroll på lg-breakpoint
+  const cardsContainerLgStyling =
+    layoutVariant === "horizontal"
+      ? "lg:flex lg:flex-row lg:overflow-x-auto lg:gap-4 lg:p-4"
+      : ""; // Tom streng komponentene får default styling (grid)
+      
+  const cardsContainerXlStyling = "xl:grid xl:overflow-visible xl:p-4";
 
   let displayTitle;
   switch (cardVariant) {
@@ -54,13 +62,14 @@ export const VenueList: FC<IVenueListProps> = ({
         </div>
       );
     }
+        const cardsContainerStyling = `${cardsContainerBaseStyling} ${cardsContainerLgStyling} ${cardsContainerXlStyling}`;
 
     // Viser kun 4 venue-cards
     if (isLimited) {
       return (
         <>
           <h2 className={titleStyling}>{displayTitle}</h2>
-          <div className={cardGridStyling}>
+          <div className={cardsContainerStyling}>
             {venues.slice(0, 4).map((venue) => (
               <VenueCard key={venue.id} venue={venue} variant={cardVariant} />
             ))}
@@ -71,9 +80,13 @@ export const VenueList: FC<IVenueListProps> = ({
     return (
       <>
         <h2 className={titleStyling}>{displayTitle}</h2>
-        <div className={cardGridStyling}>
+        <div className={cardsContainerStyling}>
           {venues.map((venue) => (
-            <VenueCard key={venue.id} venue={venue} variant={cardVariant} />
+            <VenueCard
+             key={venue.id}
+             venue={venue} 
+             variant={cardVariant} 
+             layoutVariant={layoutVariant}/>
           ))}
         </div>
       </>
