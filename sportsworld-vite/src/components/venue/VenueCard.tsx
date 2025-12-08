@@ -33,6 +33,7 @@ export const VenueCard: FC<IVenueCardProps> = ({ venue, variant, layoutVariant =
   const buttonHover = "hover:bg-[#870000] hover:shadow hover:cursor-pointer";
   const buttonContainerStyling = "flex gap-2 pt-2";
 
+  const venueViewCardHref = "/venues";
 
   // --- Logic ---
   const handleDelete = () => deleteVenueById(venue.id);
@@ -61,8 +62,10 @@ export const VenueCard: FC<IVenueCardProps> = ({ venue, variant, layoutVariant =
   };
 
   // --- Render handler ---
-  const renderJsx = () => (
-    <div className={cardClasses}>
+
+  const content = (
+    <>
+      <div className={cardClasses}>
       <div className="w-full h-40">
         <img
           src={`http://localhost:5110/images/VenueImages/${venue.image}`}
@@ -80,7 +83,20 @@ export const VenueCard: FC<IVenueCardProps> = ({ venue, variant, layoutVariant =
         <div className={buttonContainerStyling}>{renderButtons()}</div>
       </div>
     </div>
+    </>
   );
+
+  const renderJsx = () => {
+    if (variant === "view") {
+      return (
+        <Link to={venueViewCardHref} className={`${cardClasses}`}>
+          {content}
+        </Link>
+      );
+    } else {
+      return <article className={cardClasses}>{content}</article>;
+    }
+  };
 
   return renderJsx();
 };
