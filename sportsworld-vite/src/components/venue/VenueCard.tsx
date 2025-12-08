@@ -24,7 +24,8 @@ export const VenueCard: FC<IVenueCardProps> = ({ venue, variant }) => {
   const buttonBase =
     "w-full px-4 py-2 rounded transition duration-200 text-white";
   const buttonColor = "bg-black";
-  const buttonHover = "hover:bg-[#870000] hover:shadow";
+  const deleteButtonColor = "bg-[#4C0000]";
+  const buttonHover = "hover:bg-[#870000] hover:shadow hover:cursor-pointer";
   const buttonContainerStyling = "flex gap-2 pt-2";
 
   // --- Logic ---
@@ -45,7 +46,7 @@ const renderButtons = () => {
         <button
           type="button"
           onClick={handleDelete}
-          className={`${buttonBase} ${buttonHover} ${buttonColor}`}
+          className={`${buttonBase} ${buttonHover} ${deleteButtonColor}`}
         >
           Delete
         </button>

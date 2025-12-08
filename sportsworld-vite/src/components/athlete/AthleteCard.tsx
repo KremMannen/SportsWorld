@@ -56,8 +56,9 @@ export const AthleteCard: FC<IAthleteCardProps> = ({ athlete, variant, layoutVar
     "w-full px-4 py-2 rounded transition duration-200 text-white";
   const buttonColor =
     athlete.purchased && variant === "finance" ? "bg-[#4C0000]" : "bg-black";
+  const deleteButtonColor = "bg-[#4C0000]";
 
-  const buttonHover = "hover:bg-[#870000] hover:shadow";
+  const buttonHover = "hover:bg-[#870000] hover:shadow hover:cursor-pointer";
   const buttonContainerStyling = "flex gap-2";
 
   // -------- Knapp handlers --------
@@ -107,7 +108,7 @@ export const AthleteCard: FC<IAthleteCardProps> = ({ athlete, variant, layoutVar
             <button
               type="button"
               onClick={handleDeleteClick}
-              className={`${buttonBase} ${buttonHover} ${buttonColor}`}
+              className={`${buttonBase} ${buttonHover} ${deleteButtonColor}`}
             >
               Delete
             </button>
