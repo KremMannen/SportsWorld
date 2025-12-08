@@ -29,6 +29,9 @@ export const AthleteCard: FC<IAthleteCardProps> = ({ athlete, variant, layoutVar
   // -------- Kort styling --------
   const cardColor = athlete.purchased ? "bg-white" : "bg-[#3D4645]";
   const cardTextColor = athlete.purchased ? "text-black" : "text-white";
+  const deleteCardColor = "bg-[#252828]"
+  const deleteCardTextColor = athlete.purchased ? "text-black text-lg font-bold" : "text-white text-lg font-bold";
+
 
   const cardHoverEffect =
     variant === "manage" || variant === "finance"
@@ -46,6 +49,8 @@ export const AthleteCard: FC<IAthleteCardProps> = ({ athlete, variant, layoutVar
 
   // Container-klassene som sitter på elementet som er direkte child i grid.
   const cardContainerStyling = `flex ${cardGridSpan} ${cardHoverEffect} ${cardColor} rounded-lg shadow-md shadow-black/20 overflow-hidden ${cardHeight}`;
+  const deleteCardContainerStyling = `flex ${cardGridSpan} ${cardHoverEffect} ${deleteCardColor} rounded-lg shadow-md border-1 border-red-600 shadow-black/60 scale-[1.05] ${cardHeight}`;
+
   const cardImageStyling = "w-full h-full object-cover";
   const cardContentContainerStyling =
     "p-4 flex-1 flex flex-col justify-between";
@@ -101,32 +106,43 @@ export const AthleteCard: FC<IAthleteCardProps> = ({ athlete, variant, layoutVar
         return null;
 
       case "manage":
+      if (confirming) {
         return (
-          <>
-            <Link
-              to={`/register/${athlete.id}`}
-              className={`${buttonBase} ${buttonHover} ${buttonColor} text-center`}
+          <div className={buttonContainerStyling}>
+            <button
+              onClick={handleConfirmDelete}
+              className={`${buttonBase} ${buttonHover} ${deleteButtonColor}`}
             >
-              Edit
-            </Link>
-
-            {confirming ? (
-              <div>
-                <p>Du holder på å slette en atlet fra databasen. Ønsker du å gå videre?</p>
-                <button onClick={handleConfirmDelete}>Yes</button>
-                <button onClick={handleCancel}>No</button>
-              </div>
-            ) : (
-              <button
-                type="button"
-                onClick={handleDeleteClick}
-                className={`${buttonBase} ${buttonHover} ${deleteButtonColor}`}
-              >
-                Delete
-              </button>
-            )}
-          </>
+              Yes
+            </button>
+            <button
+              onClick={handleCancel}
+              className={`${buttonBase} ${buttonHover} ${buttonColor}`}
+            >
+              No
+            </button>
+          </div>
         );
+      }
+      
+      return (
+        <>
+          <Link
+            to={`/register/${athlete.id}`}
+            className={`${buttonBase} ${buttonHover} ${buttonColor} text-center`}
+          >
+            Edit
+          </Link>
+
+          <button
+            type="button"
+            onClick={handleDeleteClick}
+            className={`${buttonBase} ${buttonHover} ${deleteButtonColor}`}
+          >
+            Delete
+          </button>
+        </>
+      );
 
       case "finance":
         return (
@@ -170,25 +186,12 @@ export const AthleteCard: FC<IAthleteCardProps> = ({ athlete, variant, layoutVar
 
   // Det ytre elementet (Link eller article) må ha cardContainerStyling så grid-col-span fungerer.
   const renderJsx = () => {
-     if (confirming) {
+    if (confirming) {
       return (
-        <article className={cardContainerStyling}>
-          <div className={`${cardTextColor} ${cardContentContainerStyling}`}>
+        <article className={deleteCardContainerStyling}>
+          <div className={`${deleteCardTextColor} ${cardContentContainerStyling}`}>
             <p>Du holder på å slette {athlete.name} fra databasen. Ønsker du å gå videre?</p>
-            <div className={buttonContainerStyling}>
-              <button
-                onClick={handleConfirmDelete}
-                className={`${buttonBase} ${buttonHover} ${buttonColor}`}
-              >
-                Yes
-              </button>
-              <button
-                onClick={handleCancel}
-                className={`${buttonBase} ${buttonHover} ${buttonColor}`}
-              >
-                No
-              </button>
-            </div>
+            {renderButtons()}
           </div>
         </article>
       );
