@@ -133,18 +133,6 @@ export const VenueList: FC<IVenueListProps> = ({
         <>
           <div className={headerContainerStyling}>
             <h2 className={titleStyling}>{displayTitle}</h2>
-            <form onSubmit={handleSearch} className={searchContainerStyling}>
-              <input
-                type="text"
-                placeholder="Search venues..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className={searchInputStyling}
-              />
-              <button type="submit" className={searchButtonStyling}>
-                Search
-              </button>
-            </form>
           </div>
           <div className={cardsContainerStyling}>
             {displayVenues.slice(0, 4).map((venue) => (
