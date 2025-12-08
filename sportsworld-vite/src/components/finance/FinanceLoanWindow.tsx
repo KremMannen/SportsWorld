@@ -25,7 +25,7 @@ export const FinanceLoanWindow: FC = () => {
   const buttonHover = "hover:shadow hover:cursor-pointer hover:bg-[#870000]";
 
   const inputContainerStyling =
-    "flex flex-col sm:flex-row gap-4 items-stretch sm:items-center";
+    "flex flex-col sm:flex-row gap-4 items-stretch sm:items-center lg:-mt-11";
 
   const loadingContainer = "text-center";
   const loadingText = "text-xl text-gray-600";
