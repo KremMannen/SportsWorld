@@ -25,7 +25,7 @@ export const FinanceDashboard: FC<IFinanceDashboardProps> = ({
   const errorContainer = "text-center";
   const errorText = "text-xl text-red-600";
 
-  const sectionBase = "w-full px-4 py-8 grid grid-cols-12 gap-6 text-center";
+  const sectionBase = "w-full px-4 grid grid-cols-12 gap-6 text-center mb-8";
 
   const containerStyling = "col-span-12 lg:col-span-6 grid grid-cols-12 gap-6";
 
