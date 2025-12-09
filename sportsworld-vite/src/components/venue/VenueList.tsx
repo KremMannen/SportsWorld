@@ -28,7 +28,7 @@ export const VenueList: FC<IVenueListProps> = ({
   const headerContainerStyling =
   "flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 p-2 px-8 bg-black";
   const titleStyling = "text-2xl text-white font-bold mb-2 sm:mb-0 text-center";
-  const searchContainerStyling = "flex flex-col sm:flex-row gap-2 w-full sm:w-auto";
+  const searchContainerStyling = "flex flex-col sm:flex-row py-2 sm:py-0 gap-2 w-full sm:w-auto";
   const searchInputStyling =
   "px-4 py-2 rounded bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#870000] w-full sm:w-64";
   const searchButtonStyling =
