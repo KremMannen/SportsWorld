@@ -9,11 +9,17 @@ export const VenueList: FC<IVenueListProps> = ({
   isLimited = false,
   layoutVariant = "horizontal",
 }) => {
-  const { venues, searchResults, errorMessage, isLoading, searchByName } =
+  const { 
+    venues, 
+    searchResults, 
+    errorMessage, 
+    isLoading, 
+    searchByName } =
     useContext(VenueContext) as IVenueContext;
 
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearchActive, setIsSearchActive] = useState(false);
+  const [confirmingId, setConfirmingId] = useState<number | null>(null); 
 
   // --- Styling variabler ---
   const headerContainerStyling =
@@ -165,6 +171,10 @@ export const VenueList: FC<IVenueListProps> = ({
               venue={venue}
               variant={cardVariant}
               layoutVariant={layoutVariant}
+              confirming={confirmingId === venue.id}
+              onConfirmingChange={(isConfirming) => 
+                setConfirmingId(isConfirming ? venue.id : null)
+              }     
             />
           ))}
         </div>
