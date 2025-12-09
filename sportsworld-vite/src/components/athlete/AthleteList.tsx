@@ -20,6 +20,10 @@ export const AthleteList: FC<IAthleteListProps> = ({
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearchActive, setIsSearchActive] = useState(false);
 
+  // confirming-state er på foreldrenivå, ikke i AthleteCard, slik at kun ett kort om gangen kan holde denne staten.
+  // Dette gjør at dersom man trykker på delete et annet sted, mens et bekreftelsesvindu er åpent, vil det forrige lukkes automatisk
+  const [confirmingId, setConfirmingId] = useState<number | null>(null); 
+
   // --- Styling variabler ---
   const headerContainerStyling =
     "flex justify-between items-center mb-6 p-2 px-8 bg-black rounded-sm";
@@ -163,6 +167,10 @@ export const AthleteList: FC<IAthleteListProps> = ({
               athlete={athlete}
               variant={cardVariant}
               layoutVariant={layoutVariant}
+              confirming={confirmingId === athlete.id}
+              onConfirmingChange={(isConfirming) => 
+                setConfirmingId(isConfirming ? athlete.id : null)
+              }              
             />
           ))}
         </div>

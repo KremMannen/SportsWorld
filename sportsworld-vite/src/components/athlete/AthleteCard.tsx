@@ -12,6 +12,8 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
   athlete,
   variant,
   layoutVariant = "horizontal",
+  confirming = false,
+  onConfirmingChange,
 }) => {
   // Siden context-mønsteret allerede er implementert, unngår vi prop drilling ved å bruke context direkte
   const { updateAthlete, deleteAthleteById } = useContext(
@@ -20,9 +22,6 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
   const { finances, updateFinance } = useContext(
     FinanceContext
   ) as IFinanceContext;
-
-  // Bekreftelses-state slik at brukeren må bekrefte sletting
-  const [confirming, setConfirming] = useState(false);
 
   const isPurchased = athlete.purchased;
   const isManageOrFinance = variant === "manage" || variant === "finance";
@@ -84,11 +83,12 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
   };
 
   // Delete-knappen åpner bekreftelse-popup i kortet
-  const handleDeleteClick = () => setConfirming(true);
-  const handleCancel = () => setConfirming(false);
+  // Knappene i popuppen kaller på deleteAthleteById fra context, eller lukker staten og går tilbake til vanlig card
+  const handleDeleteClick = () => onConfirmingChange?.(true);
+  const handleCancel = () => onConfirmingChange?.(false);
   const handleConfirmDelete = () => {
     deleteAthleteById(athlete.id);
-    setConfirming(false);
+    onConfirmingChange?.(false);
   };
 
   const renderButtons = () => {
@@ -97,6 +97,8 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
         return null;
 
       case "manage":
+
+      // Hvis bruker har trykket på delete-knappen vises knappene under i et nytt kort
         if (confirming) {
           return (
             <div className="flex gap-2">
@@ -110,6 +112,7 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
           );
         }
 
+        // Vanlig manage-variant kort så sant ingenting er trykket på
         return (
           <>
             <Link
