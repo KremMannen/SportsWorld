@@ -21,12 +21,9 @@ export const FinanceDashboard: FC<IFinanceDashboardProps> = ({
   // --- Styling ---
   const loadingContainer = "text-center";
   const loadingText = "text-xl text-gray-600";
-
   const errorContainer = "text-center";
   const errorText = "text-xl text-red-600";
-
   const sectionBase = "w-full px-4 grid grid-cols-12 gap-6 text-center mb-8";
-
   const containerStyling = "col-span-12 lg:col-span-6 grid grid-cols-12 gap-6";
 
   // --- Kalkulerte visningsverdier ---
@@ -51,6 +48,7 @@ export const FinanceDashboard: FC<IFinanceDashboardProps> = ({
         value={`$${fightersWorth.toLocaleString()}`}
         limitedVariant={limitedVariant}
       />
+      {/* Viser ikke denne på hovedsiden */}
       {!limitedVariant && (
         <FinanceCard
           title="Total Spending"
@@ -74,7 +72,6 @@ export const FinanceDashboard: FC<IFinanceDashboardProps> = ({
         </div>
       );
     }
-
     // Error
     if (athleteErrorMessage || financeErrorMessage) {
       return (
@@ -85,11 +82,10 @@ export const FinanceDashboard: FC<IFinanceDashboardProps> = ({
         </div>
       );
     }
-
+    // Begrenset variant som vises kun på forsiden (homepage)
     if (limitedVariant) {
       return <section className={sectionBase}>{renderCards()}</section>;
     }
-
     // Default output
     return (
       <section className={sectionBase}>

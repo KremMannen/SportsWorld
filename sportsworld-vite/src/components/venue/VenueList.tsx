@@ -19,6 +19,9 @@ export const VenueList: FC<IVenueListProps> = ({
 
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearchActive, setIsSearchActive] = useState(false);
+
+  // confirming-state er på foreldrenivå, ikke i VenueCard, slik at kun ett kort om gangen kan holde denne staten.
+  // Dette gjør at dersom man trykker på delete et annet sted, mens et bekreftelsesvindu er åpent, vil det forrige lukkes automatisk
   const [confirmingId, setConfirmingId] = useState<number | null>(null); 
 
   // --- Styling variabler ---
@@ -36,12 +39,13 @@ export const VenueList: FC<IVenueListProps> = ({
     "bg-red-50 border border-red-400 text-red-700 px-4 py-3 my-10 rounded max-w-[200px] mx-auto";
   const cardsContainerBaseStyling = "grid grid-cols-12 gap-6 p-4 mb-8";
 
-  // admin-page ikke får horizontal scroll på lg-breakpoint
+  // Venues-page ikke får horizontal scroll på lg-breakpoint
   const cardsContainerLgStyling =
     layoutVariant === "horizontal"
       ? "lg:flex lg:flex-row lg:overflow-x-auto lg:gap-4 lg:p-4"
       : ""; // default styling (grid)
 
+  // Går tilbake til vanlig grid-layout på xl
   const cardsContainerXlStyling = "xl:grid xl:overflow-visible xl:p-4";
 
   const handleSearch = (e: React.FormEvent) => {

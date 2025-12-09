@@ -48,6 +48,8 @@ export const VenueCard: FC<IVenueCardProps> = ({
   const buttonHover = "hover:bg-[#870000] hover:shadow hover:cursor-pointer";
   const buttonContainerStyling = "flex gap-2 pt-2";
 
+  // Delete-knappen åpner bekreftelse-popup i kortet
+  // Knappene i popuppen kaller på deleteVenueById fra context, eller lukker staten og går tilbake til vanlig kort
   const handleDeleteClick = () => onConfirmingChange?.(true);
   const handleCancel = () => onConfirmingChange?.(false);
   const handleConfirmDelete = () => {
@@ -61,6 +63,8 @@ export const VenueCard: FC<IVenueCardProps> = ({
         return null;
 
       case "manage":
+
+        // Hvis bruker har trykket på delete-knappen vises knappene under i et nytt kort
         if (confirming) {
           return (
             <div className={buttonContainerStyling}>
@@ -80,6 +84,7 @@ export const VenueCard: FC<IVenueCardProps> = ({
           );
         }
 
+        // Vanlig manage-variant kort så sant ingenting er trykket på
         return (
           <>
             <Link
@@ -124,6 +129,8 @@ export const VenueCard: FC<IVenueCardProps> = ({
     </>
   );
 
+  // Grid column span må håndteres her for å fungere med AthleteLists grid-col-12.
+  // Vanligvis vil vi ha all column-logikk samlet i en komponent, men vi tillater dette for nå.
   const renderJsx = () => {
     if (confirming) {
       return (

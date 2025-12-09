@@ -43,8 +43,9 @@ export const AthleteList: FC<IAthleteListProps> = ({
   const cardsContainerLgStyling =
     layoutVariant === "horizontal"
       ? "lg:flex lg:flex-row lg:overflow-x-auto lg:gap-4 lg:p-4"
-      : ""; // Tom streng komponentene får default styling (grid)
+      : ""; // default styling (grid)
 
+  // Går tilbake til vanlig grid-layout på xl
   const cardsContainerXlStyling = "xl:grid xl:overflow-visible xl:p-4";
 
   const handleSearch = (e: FormEvent) => {
