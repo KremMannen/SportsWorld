@@ -172,8 +172,12 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
     if (confirming) {
       return (
         <article className={deleteCardClasses}>
-          <div className="p-4 flex-1 flex flex-col justify-between">
-            <p>Deleting: {athlete.name}. Are you sure?</p>
+          <div className="p-4 h-full flex flex-col justify-between">
+            <div className="flex-1 flex items-center justify-center">
+              <p className="text-center">
+                Deleting: {athlete.name}. Are you sure?
+              </p>
+            </div>
             {renderButtons()}
           </div>
         </article>
