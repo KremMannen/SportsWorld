@@ -1,4 +1,4 @@
-import { useContext, type FC, useState } from "react";
+import { useContext, type FC } from "react";
 import type { IAthleteCardProps } from "../../interfaces/components/IAthleteCardProps.ts";
 import { Link } from "react-router-dom";
 import { AthleteContext } from "../../contexts/AthleteContext.tsx";
@@ -83,7 +83,7 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
   };
 
   // Delete-knappen åpner bekreftelse-popup i kortet
-  // Knappene i popuppen kaller på deleteAthleteById fra context, eller lukker staten og går tilbake til vanlig card
+  // Knappene i popuppen kaller på deleteAthleteById fra context, eller lukker staten og går tilbake til vanlig kort
   const handleDeleteClick = () => onConfirmingChange?.(true);
   const handleCancel = () => onConfirmingChange?.(false);
   const handleConfirmDelete = () => {
