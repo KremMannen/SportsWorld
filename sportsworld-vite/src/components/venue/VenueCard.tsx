@@ -1,4 +1,4 @@
-import { useContext, type FC } from "react";
+import { useContext, type FC, useState } from "react";
 import { Link } from "react-router-dom";
 
 import type { IVenueCardProps } from "../../interfaces/components/IVenueCardProps";
@@ -11,6 +11,7 @@ export const VenueCard: FC<IVenueCardProps> = ({
   layoutVariant = "horizontal",
 }) => {
   const { deleteVenueById } = useContext(VenueContext) as IVenueContext;
+  const [confirming, setConfirming] = useState(false);
 
   const isManage = variant === "manage";
 
@@ -27,7 +28,12 @@ export const VenueCard: FC<IVenueCardProps> = ({
     transition-transform duration-200
     ${cardGridSpan}
     ${cardHover}
-  `;
+    `;
+  const deleteCardClasses = `
+  bg-[#252828] text-white text-lg font-bold rounded-lg shadow-md overflow-hidden
+  border-1 border-red-600 shadow-black/60 scale-[1.05]
+  ${cardGridSpan}
+    `;
 
   // ---Knappstyling---
   const buttonBase =
@@ -38,64 +44,101 @@ export const VenueCard: FC<IVenueCardProps> = ({
   const buttonContainerStyling = "flex gap-2 pt-2";
   const venueViewCardHref = "/venues";
 
-  const handleDelete = () => deleteVenueById(venue.id);
-  const renderButtons = () => {
-    if (!isManage) return;
+  const handleDeleteClick = () => setConfirming(true);
+  const handleCancel = () => setConfirming(false);
+  const handleConfirmDelete = () => {
+    deleteVenueById(venue.id);
+    setConfirming(false);
+  };
 
+const renderButtons = () => {
+  if (!isManage) return;
+
+  if (confirming) {
     return (
-      <>
-        <Link
-          to={`/venues/${venue.id}`}
-          className={`${buttonBase} ${buttonHover} ${buttonColor} text-center`}
-        >
-          Edit
-        </Link>
-
+      <div className={buttonContainerStyling}>
         <button
-          type="button"
-          onClick={handleDelete}
+          onClick={handleConfirmDelete}
           className={`${buttonBase} ${buttonHover} ${deleteButtonColor}`}
         >
-          Delete
+          Yes
         </button>
-      </>
-    );
-  };
-
-  const content = (
-    <>
-      <div className={cardClasses}>
-        <div className="w-full h-40">
-          <img
-            src={`http://localhost:5110/images/VenueImages/${venue.image}`}
-            alt={venue.name}
-            className="w-full h-full object-cover"
-          />
-        </div>
-
-        <div className="p-4 flex flex-col justify-between">
-          <div>
-            <h3 className="text-xl font-bold">{venue.name}</h3>
-            <p>Capacity: {venue.capacity}</p>
-          </div>
-
-          <div className={buttonContainerStyling}>{renderButtons()}</div>
-        </div>
+        <button
+          onClick={handleCancel}
+          className={`${buttonBase} ${buttonHover} ${buttonColor}`}
+        >
+          No
+        </button>
       </div>
+    );
+  }
+
+  return (
+    <>
+      <Link
+        to={`/venues/${venue.id}`}
+        className={`${buttonBase} ${buttonHover} ${buttonColor} text-center`}
+      >
+        Edit
+      </Link>
+
+      <button
+        type="button"
+        onClick={handleDeleteClick}
+        className={`${buttonBase} ${buttonHover} ${deleteButtonColor}`}
+      >
+        Delete
+      </button>
     </>
   );
+};
 
-  const renderJsx = () => {
-    if (variant === "view") {
-      return (
-        <Link to={venueViewCardHref} className={`${cardClasses}`}>
-          {content}
-        </Link>
-      );
-    } else {
-      return <article className={cardClasses}>{content}</article>;
-    }
-  };
+const content = (
+  <>
+    <div className="w-full h-40">
+      <img
+        src={`http://localhost:5110/images/VenueImages/${venue.image}`}
+        alt={venue.name}
+        className="w-full h-full object-cover"
+      />
+    </div>
 
+    <div className="p-4 flex flex-col justify-between">
+      <div>
+        <h3 className="text-xl font-bold">{venue.name}</h3>
+        <p>Capacity: {venue.capacity}</p>
+      </div>
+
+      <div className={buttonContainerStyling}>{renderButtons()}</div>
+    </div>
+  </>
+);
+
+const renderJsx = () => {
+if (confirming) {
+  return (
+    <article className={deleteCardClasses}>
+      <div className="p-4 h-full flex flex-col justify-between">
+        <div className="flex-1 flex items-center justify-center">
+          <p className="text-center">
+            Deleting: {venue.name}. Are you sure?
+          </p>
+        </div>
+        {renderButtons()}
+      </div>
+    </article>
+  );
+}
+
+  if (variant === "view") {
+    return (
+      <Link to={venueViewCardHref} className={cardClasses}>
+        {content}
+      </Link>
+    );
+  } else {
+    return <article className={cardClasses}>{content}</article>;
+  }
+};
   return renderJsx();
 };
