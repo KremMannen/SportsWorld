@@ -31,4 +31,3 @@ export const FinanceCard: FC<IFinanceCardProps> = ({
   return renderJsx();
 };
 
-// bg-[#252828], font-bold
