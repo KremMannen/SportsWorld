@@ -15,7 +15,7 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
   confirming = false,
   onConfirmingChange,
 }) => {
-  
+
   // Siden context-mønsteret allerede er implementert, unngår vi prop drilling ved å bruke context direkte
   const { updateAthlete, deleteAthleteById } = useContext(
     AthleteContext
@@ -50,10 +50,9 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
   // --- Styling for delete-confirmation kortet ---
   const deleteCardClasses = `${baseCardClasses} bg-[#252828] text-white text-lg ${cardHeightClasses} ${cardGridClasses} border-1 border-red-600 shadow-black/60 scale-[1.05]`;
   
-  // --- Delete Confirmation Styling ---
+  // --- Separate stylinger for bekreftelses-kortet til delete-knappen  ---
   const deleteContentClasses = "p-4 h-full flex flex-col justify-between";
-  const deleteTextContainerClasses = "flex-1 flex items-center justify-center";
-  const deleteTextClasses = "text-center";
+  const deleteTextClasses = "flex-1 flex items-center justify-center text-center";
 
   const imageContainerClasses = isManageOrFinance ? "w-32 h-48" : "w-32 h-32";
   const imageClasses = "w-full h-full object-cover";
@@ -187,11 +186,9 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
       return (
         <article className={deleteCardClasses}>
           <div className={deleteContentClasses}>
-            <div className={deleteTextContainerClasses}>
               <p className={deleteTextClasses}>
                 Deleting: {athlete.name}. Are you sure?
               </p>
-            </div>
             {renderButtons()}
           </div>
         </article>

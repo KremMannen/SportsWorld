@@ -15,22 +15,18 @@ export const VenueCard: FC<IVenueCardProps> = ({
   const { deleteVenueById } = useContext(VenueContext) as IVenueContext;
 
   // --- Styling ---
-  const cardHoverClasses =
-    variant === "view"
-      ? "hover:scale-[1.05] hover:cursor-pointer"
-      : "";
+  const isView = variant === "view";
+
+  const baseCardClasses = "rounded-lg shadow-md overflow-hidden transition-transform duration-200";
+  const cardColorClasses = "bg-[#252828] text-white";
+  const cardHoverClasses = isView ? "hover:scale-[1.05] hover:cursor-pointer" : "";
 
   const cardGridSpan =
     layoutVariant === "grid"
       ? "col-span-12 sm:col-span-6 lg:col-span-4 xl:col-span-3"
       : "col-span-12 sm:col-span-6 lg:flex-shrink-0 lg:w-[400px] xl:col-span-3 xl:w-auto";
 
-  const cardClasses = `
-    bg-[#252828] text-white rounded-lg shadow-md shadow-black/20 overflow-hidden
-    transition-transform duration-200
-    ${cardGridSpan}
-    ${cardHoverClasses}
-  `;
+  const cardClasses = `${baseCardClasses} ${cardColorClasses} ${cardGridSpan} ${cardHoverClasses} shadow-black/20`;
 
   const deleteCardClasses = `
     bg-[#252828] text-white text-lg font-bold rounded-lg shadow-md overflow-hidden
@@ -40,13 +36,23 @@ export const VenueCard: FC<IVenueCardProps> = ({
 
   const venueViewCardHref = "/venues";
 
-  // --- Knappstyling ---
-  const buttonBase =
-    "w-full px-4 py-2 rounded transition duration-200 text-white";
+  // --- Button styling ---
+  const buttonBase = "w-full px-4 py-2 rounded transition duration-200 text-white";
   const buttonColor = "bg-black";
   const deleteButtonColor = "bg-[#4C0000]";
   const buttonHover = "hover:bg-[#870000] hover:shadow hover:cursor-pointer";
   const buttonContainerStyling = "flex gap-2 pt-2";
+
+  // --- Content layout classes ---
+  const imageContainerClasses = "w-full h-40";
+  const imageClasses = "w-full h-full object-cover";
+  const contentContainerClasses = "p-4 flex flex-col justify-between";
+  const titleClasses = "text-xl font-bold";
+
+  // --- Separate stylinger for bekreftelses-kortet til delete-knappen  ---
+  const deleteContentClasses = "p-4 h-full flex flex-col justify-between";
+  const deleteTextClasses = "flex-1 flex items-center justify-center text-center";
+
 
   // Delete-knappen åpner bekreftelse-popup i kortet
   // Knappene i popuppen kaller på deleteVenueById fra context, eller lukker staten og går tilbake til vanlig kort
@@ -110,17 +116,17 @@ export const VenueCard: FC<IVenueCardProps> = ({
 
   const content = (
     <>
-      <div className="w-full h-40">
+      <div className={imageContainerClasses}>
         <img
           src={`http://localhost:5110/images/VenueImages/${venue.image}`}
           alt={venue.name}
-          className="w-full h-full object-cover"
+          className={imageClasses}
         />
       </div>
 
-      <div className="p-4 flex flex-col justify-between">
+      <div className={contentContainerClasses}>
         <div>
-          <h3 className="text-xl font-bold">{venue.name}</h3>
+          <h3 className={titleClasses}>{venue.name}</h3>
           <p>Capacity: {venue.capacity}</p>
         </div>
 
@@ -135,12 +141,10 @@ export const VenueCard: FC<IVenueCardProps> = ({
     if (confirming) {
       return (
         <article className={deleteCardClasses}>
-          <div className="p-4 h-full flex flex-col justify-between">
-            <div className="flex-1 flex items-center justify-center">
-              <p className="text-center">
-                Deleting: {venue.name}. Are you sure?
-              </p>
-            </div>
+          <div className={deleteContentClasses}>
+              <p className={deleteTextClasses}> 
+                Deleting: {venue.name}. Are you sure? 
+              </p> 
             {renderButtons()}
           </div>
         </article>
