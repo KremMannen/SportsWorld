@@ -10,8 +10,8 @@ import { AthleteContext } from "../../contexts/AthleteContext";
 import type { IAthleteContext } from "../../interfaces/contexts/IAthleteContext";
 import { Link, useParams } from "react-router-dom";
 
-// Denne komponenten registrerer nye atleter om parameteret er undefined
-// Om id er passert som parameter, oppdaterer den tilhørende athlete istedet
+// Registrerer nye atleter om url parameteret er undefined
+// Om id er passert som parameter, oppdateres den assosierte athleten
 
 export const AthleteRegister: FC = () => {
   const {
@@ -24,6 +24,7 @@ export const AthleteRegister: FC = () => {
 
   const { athleteId } = useParams<{ athleteId: string }>();
 
+  // Redigeringsmodus om det er passert parameter i url (athlete.id)
   const isEditMode = athleteId !== undefined;
 
   const athlete = isEditMode
@@ -38,6 +39,9 @@ export const AthleteRegister: FC = () => {
   const handleRegister = async (e: FormEvent) => {
     e.preventDefault();
 
+    // Knappen poster ny athlet om vi ikke er i redigeringsmodus
+    // Ved å sjekke om athlete er undefined i stedet for å bruke isEditMode,
+    // kan updateAthlete trygt bruke athlete.id når vi er i redigeringsmodus.
     if (athlete === undefined) {
       if (!name || !price || !gender || !image) {
         alert("Please fill in all fields.");
@@ -51,7 +55,7 @@ export const AthleteRegister: FC = () => {
       };
       await addAthlete(newAthlete, image);
     } else {
-      // image kan være tom, da beholder bare gamle bildet
+      // image kan være tom, da beholdes gamle bildet
       if (!name || !price || !gender) {
         alert("Please fill in all fields.");
         return;
@@ -79,7 +83,8 @@ export const AthleteRegister: FC = () => {
   };
 
   // --- Tailwind styling variabler ---
-  const sectionStyling = "col-span-9 col-start-3 sm:col-span-6 lg:col-span-4 p-4";
+  const sectionStyling =
+    "col-span-9 col-start-3 sm:col-span-6 lg:col-span-4 p-4";
   const titleContainerStyling =
     "rounded-sm shadow-md shadow-black/40 px-4 py-2 bg-black text-black w-full";
   const titleStyling = "text-md text-white";
@@ -95,7 +100,6 @@ export const AthleteRegister: FC = () => {
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { files } = e.target;
-
     if (files != null) {
       setImage(files[0]);
     }
@@ -111,7 +115,7 @@ export const AthleteRegister: FC = () => {
       setPrice("");
       setGender("");
       setImage(null);
-    }
+    } // useEffect kjøres om disse verdiene endrer seg for å oppdatere inputfeltene
   }, [athlete, isEditMode]);
 
   const renderJsx = () => {
@@ -136,6 +140,7 @@ export const AthleteRegister: FC = () => {
       }
     }
 
+    // Innhold laser inn
     if (athleteIsLoading) {
       return (
         <div className={loadingContainerStyling}>
@@ -144,6 +149,7 @@ export const AthleteRegister: FC = () => {
       );
     }
 
+    // Dersom feilmelding oppstår
     if (athleteErrorMessage) {
       return (
         <div className={errorContainerStyling}>
@@ -152,6 +158,7 @@ export const AthleteRegister: FC = () => {
       );
     }
 
+    // Redigerings vindu
     return (
       <section className={sectionStyling}>
         <div className={titleContainerStyling}>

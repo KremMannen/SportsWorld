@@ -4,6 +4,8 @@ import { AthleteContext } from "../../contexts/AthleteContext";
 import type { IAthleteContext } from "../../interfaces/contexts/IAthleteContext";
 import type { IAthleteListProps } from "../../interfaces/components/IAthleteListProps";
 
+// Håndterer visning av AthleteCards
+
 export const AthleteList: FC<IAthleteListProps> = ({
   filterType = "all",
   cardVariant = "view",
@@ -22,17 +24,18 @@ export const AthleteList: FC<IAthleteListProps> = ({
 
   // confirming-state er på foreldrenivå, ikke i AthleteCard, slik at kun ett kort om gangen kan holde denne staten.
   // Dette gjør at dersom man trykker på delete et annet sted, mens et bekreftelsesvindu er åpent, vil det forrige lukkes automatisk
-  const [confirmingId, setConfirmingId] = useState<number | null>(null); 
+  const [confirmingId, setConfirmingId] = useState<number | null>(null);
 
   // --- Styling variabler ---
   const headerContainerStyling =
-  "flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 p-2 px-8 bg-black";
+    "flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 p-2 px-8 bg-black";
   const titleStyling = "text-2xl text-white font-bold mb-2 sm:mb-0 text-center";
-  const searchContainerStyling = "flex flex-col sm:flex-row py-2 sm:py-0 gap-2 w-full sm:w-auto";
+  const searchContainerStyling =
+    "flex flex-col sm:flex-row py-2 sm:py-0 gap-2 w-full sm:w-auto";
   const searchInputStyling =
-  "px-4 py-2 rounded bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#870000] w-full sm:w-64";
+    "px-4 py-2 rounded bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#870000] w-full sm:w-64";
   const searchButtonStyling =
-  "w-full sm:w-auto px-4 py-2 rounded bg-[#4C0000] text-white font-bold hover:bg-[#870000] transition-colors cursor-pointer";
+    "w-full sm:w-auto px-4 py-2 rounded bg-[#4C0000] text-white font-bold hover:bg-[#870000] transition-colors cursor-pointer";
   const loadingContainerStyling = "flex justify-center items-center py-12";
   const loadingTextStyling = "text-gray-500 text-lg";
   const errorContainerStyling =
@@ -48,7 +51,10 @@ export const AthleteList: FC<IAthleteListProps> = ({
   // Går tilbake til vanlig grid-layout på xl
   const cardsContainerXlStyling = "xl:grid xl:overflow-visible xl:p-4";
 
+  const cardsContainerStyling = `${cardsContainerBaseStyling} ${cardsContainerLgStyling} ${cardsContainerXlStyling}`;
+
   const handleSearch = (e: FormEvent) => {
+    // e.preventDefault har ingen effekt her, men lar stå for nå
     e.preventDefault();
     if (searchQuery.trim()) {
       searchByName(searchQuery);
@@ -142,8 +148,6 @@ export const AthleteList: FC<IAthleteListProps> = ({
       );
     }
 
-    const cardsContainerStyling = `${cardsContainerBaseStyling} ${cardsContainerLgStyling} ${cardsContainerXlStyling}`;
-
     return (
       <>
         <div className={headerContainerStyling}>
@@ -169,9 +173,9 @@ export const AthleteList: FC<IAthleteListProps> = ({
               variant={cardVariant}
               layoutVariant={layoutVariant}
               confirming={confirmingId === athlete.id}
-              onConfirmingChange={(isConfirming) => 
+              onConfirmingChange={(isConfirming) =>
                 setConfirmingId(isConfirming ? athlete.id : null)
-              }              
+              }
             />
           ))}
         </div>

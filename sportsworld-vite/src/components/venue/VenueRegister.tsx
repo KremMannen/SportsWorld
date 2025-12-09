@@ -16,9 +16,8 @@ export const VenueRegister: FC = () => {
     VenueContext
   ) as IVenueContext;
 
-  // Registrerer nye venues når det er ingen parameters
   const { venueId } = useParams<{ venueId: string }>();
-  // Komponenten går i redigeringsmodus om det er passert parameter (athlete.id)
+
   const isEditMode = venueId !== undefined;
   const venue = isEditMode
     ? venues.find((v) => v.id === Number(venueId))
@@ -30,7 +29,6 @@ export const VenueRegister: FC = () => {
 
   const handleRegister = async (e: FormEvent) => {
     e.preventDefault();
-
     if (venue === undefined) {
       if (!name || !capacity || !image) {
         alert("Please fill in all fields.");
@@ -99,11 +97,9 @@ export const VenueRegister: FC = () => {
       setCapacity("");
       setImage(null);
     }
-    // useEffect kjøres om disse verdiene endrer seg for å oppdatere inputfeltene
   }, [venue, isEditMode]);
 
   const renderJsx = () => {
-    // Vi sjekker kun etter id- og athlete- relaterte feil når ID er passert og komponenten skal være i redigeringsmodus
     if (isEditMode) {
       const idNumber = Number(venueId);
       if (isNaN(idNumber)) {

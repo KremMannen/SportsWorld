@@ -6,8 +6,9 @@ import type { IAthleteContext } from "../../interfaces/contexts/IAthleteContext.
 import { FinanceContext } from "../../contexts/FinanceContext.tsx";
 import type { IFinanceContext } from "../../interfaces/contexts/IFinanceContext.ts";
 
-// Modulær komponent som genererer forskjellige varianter (view, manage, finance) for mer DRY kode.
-// TypeSafety for parameterene håndteres i IAthleteCardProps.
+// Modulær komponent som genererer forskjellige varianter (view-, manage- og finance-cards) av athletes.
+// Håndterer alle i en komponent ihht DRY.
+// Typesafety-håndtering forklares i IAthleteCard.ts
 export const AthleteCard: FC<IAthleteCardProps> = ({
   athlete,
   variant,
@@ -15,8 +16,7 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
   confirming = false,
   onConfirmingChange,
 }) => {
-
-  // Siden context-mønsteret allerede er implementert, unngår vi prop drilling ved å bruke context direkte
+  // Unngår prop drilling ved å bruke context direkte
   const { updateAthlete, deleteAthleteById } = useContext(
     AthleteContext
   ) as IAthleteContext;
@@ -47,22 +47,20 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
 
   const cardClasses = `${baseCardClasses} ${cardColorClasses} ${cardHeightClasses} ${cardHoverClasses} ${cardGridClasses} shadow-black/20`;
 
-  // --- Styling for delete-confirmation kortet ---
-  const deleteCardClasses = `${baseCardClasses} bg-[#252828] text-white text-lg ${cardHeightClasses} ${cardGridClasses} border-1 border-red-600 shadow-black/60 scale-[1.05]`;
-  
-  // --- Separate stylinger for bekreftelses-kortet til delete-knappen  ---
-  const deleteContentClasses = "p-4 h-full flex flex-col justify-between";
-  const deleteTextClasses = "flex-1 flex items-center justify-center text-center";
-
   const imageContainerClasses = isManageOrFinance ? "w-32 h-48" : "w-32 h-32";
   const imageClasses = "w-full h-full object-cover";
-  
+
   const contentContainerClasses = "p-4 flex-1 flex flex-col justify-between";
   const titleClasses = "text-xl font-bold";
   const buttonContainerClasses = "flex gap-2";
-  
+
   const viewCardHref = isPurchased ? "/admin" : "/finances";
 
+  // --- Separate stylinger for bekreftelses-kortet til delete-knappen  ---
+  const deleteContentClasses = "p-4 h-full flex flex-col justify-between";
+  const deleteTextClasses =
+    "flex-1 flex items-center justify-center text-center";
+  const deleteCardClasses = `${baseCardClasses} bg-[#252828] text-white text-lg ${cardHeightClasses} ${cardGridClasses} border-1 border-red-600 shadow-black/60 scale-[1.05]`;
 
   // --- Button Styling ---
   const buttonBase =
@@ -73,6 +71,7 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
     isPurchased && variant === "finance" ? buttonDelete : buttonPrimary;
   const buttonLink = `${buttonPrimary} text-center`;
 
+  // --- Knapp handlers ---
   const handleFinanceClick = async () => {
     if (!finances) return;
 
@@ -95,11 +94,11 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
     await updateAthlete(updatedAthlete);
     await updateFinance(updatedFinance);
   };
-
-  // Delete-knappen åpner bekreftelse-popup i kortet
-  // Knappene i popuppen kaller på deleteAthleteById fra context, eller lukker staten og går tilbake til vanlig kort
+  // Sjekker onConfirmingChange i renderJsx og gir bruker et bekreftelses vindu før sletting.
   const handleDeleteClick = () => onConfirmingChange?.(true);
+  // Kansellere handling
   const handleCancel = () => onConfirmingChange?.(false);
+
   const handleConfirmDelete = () => {
     deleteAthleteById(athlete.id);
     onConfirmingChange?.(false);
@@ -111,7 +110,7 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
         return null;
 
       case "manage":
-        // Hvis bruker har trykket på delete-knappen vises knappene under i et nytt kort
+        // Bekreftelses vindu for sletting
         if (confirming) {
           return (
             <div className={buttonContainerClasses}>
@@ -125,7 +124,7 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
           );
         }
 
-        // Vanlig manage-variant kort så sant ingenting er trykket på
+        // Manage-variant kort (edit og delete knapper)
         return (
           <>
             <Link to={`/register/${athlete.id}`} className={buttonLink}>
@@ -141,6 +140,7 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
           </>
         );
 
+      // Finance-variant kort (sign og sell knapper)
       case "finance":
         return (
           <button
@@ -157,6 +157,7 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
     }
   };
 
+  // Athlete Kortet
   const content = (
     <>
       <div className={imageContainerClasses}>
@@ -179,23 +180,25 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
     </>
   );
 
-  // Grid column span må håndteres her for å fungere med AthleteLists grid-col-12.
-  // Vanligvis vil vi ha all column-logikk samlet i en komponent, men vi tillater dette for nå.
   const renderJsx = () => {
+    // Sjekker først om vi skal vise confirmdelete vindu
     if (confirming) {
       return (
         <article className={deleteCardClasses}>
           <div className={deleteContentClasses}>
-              <p className={deleteTextClasses}>
-                Deleting: {athlete.name}. Are you sure?
-              </p>
+            <p className={deleteTextClasses}>
+              Deleting: {athlete.name}. Are you sure?
+            </p>
             {renderButtons()}
           </div>
         </article>
       );
     }
 
+    // View-varianten skal være clickable, trenger link-wrapper
     if (variant === "view") {
+      // Grid column span (cardClasses) må settes på ytterste element for å svare AthleteLists grid-col-12.
+      // Vanligvis er column-logikk samlet i en komponent, men vi tillater dette siden AthleteCard alltid er child av AthleteList
       return (
         <Link to={viewCardHref} className={cardClasses}>
           {content}
