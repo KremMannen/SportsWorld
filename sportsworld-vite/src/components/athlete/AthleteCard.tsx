@@ -15,10 +15,12 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
   confirming = false,
   onConfirmingChange,
 }) => {
+  
   // Siden context-mønsteret allerede er implementert, unngår vi prop drilling ved å bruke context direkte
   const { updateAthlete, deleteAthleteById } = useContext(
     AthleteContext
   ) as IAthleteContext;
+
   const { finances, updateFinance } = useContext(
     FinanceContext
   ) as IFinanceContext;
@@ -26,7 +28,7 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
   const isPurchased = athlete.purchased;
   const isManageOrFinance = variant === "manage" || variant === "finance";
 
-  // Kort styling - varierer basert på purchased status og variant
+  // --- Card Styling ---
   const baseCardClasses = "flex rounded-lg shadow-md overflow-hidden";
   const cardColorClasses = isPurchased
     ? "bg-white text-black"
@@ -45,19 +47,32 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
 
   const cardClasses = `${baseCardClasses} ${cardColorClasses} ${cardHeightClasses} ${cardHoverClasses} ${cardGridClasses} shadow-black/20`;
 
-  // Styling for delete-bekreftelse kortet
-  const deleteCardClasses = `${baseCardClasses} bg-[#252828] text-white text-lg font-bold ${cardHeightClasses} ${cardGridClasses} border-1 border-red-600 shadow-black/60 scale-[1.05]`;
+  // --- Styling for delete-confirmation kortet ---
+  const deleteCardClasses = `${baseCardClasses} bg-[#252828] text-white text-lg ${cardHeightClasses} ${cardGridClasses} border-1 border-red-600 shadow-black/60 scale-[1.05]`;
+  
+  // --- Delete Confirmation Styling ---
+  const deleteContentClasses = "p-4 h-full flex flex-col justify-between";
+  const deleteTextContainerClasses = "flex-1 flex items-center justify-center";
+  const deleteTextClasses = "text-center";
 
   const imageContainerClasses = isManageOrFinance ? "w-32 h-48" : "w-32 h-32";
+  const imageClasses = "w-full h-full object-cover";
+  
+  const contentContainerClasses = "p-4 flex-1 flex flex-col justify-between";
+  const titleClasses = "text-xl font-bold";
+  const buttonContainerClasses = "flex gap-2";
+  
   const viewCardHref = isPurchased ? "/admin" : "/finances";
 
-  // Knapp styling
+
+  // --- Button Styling ---
   const buttonBase =
     "w-full px-4 py-2 rounded transition-colors duration-200 text-white hover:bg-[#870000] hover:shadow cursor-pointer";
   const buttonPrimary = `${buttonBase} bg-black`;
   const buttonDelete = `${buttonBase} bg-[#4C0000]`;
   const buttonSell =
     isPurchased && variant === "finance" ? buttonDelete : buttonPrimary;
+  const buttonLink = `${buttonPrimary} text-center`;
 
   const handleFinanceClick = async () => {
     if (!finances) return;
@@ -97,11 +112,10 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
         return null;
 
       case "manage":
-
-      // Hvis bruker har trykket på delete-knappen vises knappene under i et nytt kort
+        // Hvis bruker har trykket på delete-knappen vises knappene under i et nytt kort
         if (confirming) {
           return (
-            <div className="flex gap-2">
+            <div className={buttonContainerClasses}>
               <button onClick={handleConfirmDelete} className={buttonDelete}>
                 Yes
               </button>
@@ -115,10 +129,7 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
         // Vanlig manage-variant kort så sant ingenting er trykket på
         return (
           <>
-            <Link
-              to={`/register/${athlete.id}`}
-              className={`${buttonPrimary} text-center`}
-            >
+            <Link to={`/register/${athlete.id}`} className={buttonLink}>
               Edit
             </Link>
             <button
@@ -153,18 +164,18 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
         <img
           src={`http://localhost:5110/images/AthleteImages/${athlete.image}`}
           alt={athlete.name}
-          className="w-full h-full object-cover"
+          className={imageClasses}
         />
       </div>
 
-      <div className="p-4 flex-1 flex flex-col justify-between">
+      <div className={contentContainerClasses}>
         <div>
-          <h3 className="text-xl font-bold">{athlete.name}</h3>
+          <h3 className={titleClasses}>{athlete.name}</h3>
           <p>Price: {athlete.price} $</p>
           <p>Gender: {athlete.gender}</p>
         </div>
 
-        <div className="flex gap-2">{renderButtons()}</div>
+        <div className={buttonContainerClasses}>{renderButtons()}</div>
       </div>
     </>
   );
@@ -175,9 +186,9 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
     if (confirming) {
       return (
         <article className={deleteCardClasses}>
-          <div className="p-4 h-full flex flex-col justify-between">
-            <div className="flex-1 flex items-center justify-center">
-              <p className="text-center">
+          <div className={deleteContentClasses}>
+            <div className={deleteTextContainerClasses}>
+              <p className={deleteTextClasses}>
                 Deleting: {athlete.name}. Are you sure?
               </p>
             </div>
