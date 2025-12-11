@@ -10,7 +10,7 @@ namespace sportsworld_backend.Controllers;
 
 public class AthleteController (SportsWorldContext _context) : ControllerBase
 {
-    [HttpGet] // Hent alle atleter
+    [HttpGet]
     public async Task<ActionResult<List<Athlete>>> Get()
     {
         try
@@ -24,7 +24,7 @@ public class AthleteController (SportsWorldContext _context) : ControllerBase
         }
     }
 
-    [HttpGet("{id}")] // Hent atlet basert på ID
+    [HttpGet("{id}")] 
     public async Task<ActionResult<Athlete>> Get(int id)
     {
         try
@@ -51,7 +51,7 @@ public class AthleteController (SportsWorldContext _context) : ControllerBase
                 athlete => athlete.Name.ToLower().Contains(name.ToLower()))
                 .ToListAsync();
 
-            // ToListAsync returnerer en tom liste dersom det ikke er noen resultater. Ikke null. Sjekker derfor antall returnerte
+            // ToListAsync returnerer tom liste ved ingen resultater 
             if (athletes.Count == 0)
             {
                 return NotFound("No athlete found with that Name.");
@@ -65,7 +65,7 @@ public class AthleteController (SportsWorldContext _context) : ControllerBase
         }
     }
 
-    [HttpPost] // Legg til ny atlet
+    [HttpPost] 
     public async Task<ActionResult<Athlete>> Post(Athlete newAthlete)
     {
         try
@@ -103,14 +103,15 @@ public class AthleteController (SportsWorldContext _context) : ControllerBase
         }
     }
 
-        [HttpPut] // Endre atlet-info
+        [HttpPut] // Den oppdaterte athleten får ny img-property av guid.
+        // Returnerer den oppdaterte athleten slik at client slipper en dyrere getAll-kall etter oppdatering
         public async Task<ActionResult<Athlete>> Put(Athlete editedAthlete)
         {
             try
             {
                 _context.Entry(editedAthlete).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
-                return NoContent();
+                return Ok(editedAthlete);
             }
             catch (Exception e)
             {

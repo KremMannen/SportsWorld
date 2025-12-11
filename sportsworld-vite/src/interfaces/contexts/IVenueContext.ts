@@ -5,7 +5,6 @@ export interface IVenueContext {
   searchResults: IVenue[];
   errorMessage: string;
   isLoading: boolean;
-  showAll: () => Promise<void>;
   searchByID: (id: number) => Promise<void>;
   searchByName: (name: string) => Promise<void>;
   addVenue: (venue: Omit<IVenue, "id" | "image">, img: File) => Promise<void>;

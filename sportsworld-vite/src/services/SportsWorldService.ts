@@ -125,24 +125,27 @@ const deleteAthlete = async (id: number): Promise<IDefaultResponse> => {
 };
 const putAthlete = async (
   editedAthlete: IAthlete
-): Promise<IDefaultResponse> => {
+): Promise<IAthleteResponseSingle> => {
   try {
     const response = await axios.put(athleteEndpoint, editedAthlete);
 
-    if (response.status !== 204) {
-      return { success: false, error: "Failed to update athlete." };
+    if (response.status !== 200) {
+      return { success: false, data: null, error: "Failed to update athlete." };
     }
 
     return {
       success: true,
+      data: response.data,
     };
   } catch (error) {
     console.error("putAthlete: Failed to put athlete:", error);
     return {
       success: false,
+      data: null,
     };
   }
 };
+
 const getVenues = async (): Promise<IVenueResponseList> => {
   try {
     const response = await axios.get<IVenue[]>(venueEndpoint);
@@ -247,21 +250,23 @@ const deleteVenue = async (id: number): Promise<IDefaultResponse> => {
     };
   }
 };
-const putVenue = async (editedVenue: IVenue): Promise<IDefaultResponse> => {
+const putVenue = async (editedVenue: IVenue): Promise<IVenueResponseSingle> => {
   try {
     const response = await axios.put(venueEndpoint, editedVenue);
 
-    if (response.status !== 204) {
-      return { success: false, error: "Failed to update venue." };
+    if (response.status !== 200) {
+      return { success: false, data: null, error: "Failed to update venue." };
     }
 
     return {
       success: true,
+      data: response.data,
     };
   } catch (error) {
     console.error("putVenue: Failed to put venue:", error);
     return {
       success: false,
+      data: null,
     };
   }
 };
@@ -312,20 +317,22 @@ const postFinance = async (
 };
 const putFinance = async (
   editedFinance: IFinance
-): Promise<IDefaultResponse> => {
+): Promise<IFinanceResponseSingle> => {
   try {
     const response = await axios.put(financeEndpoint, editedFinance);
-    if (response.status !== 204) {
-      return { success: false, error: "Failed to update finance." };
+    if (response.status !== 200) {
+      return { success: false, data: null, error: "Failed to update finance." };
     }
 
     return {
       success: true,
+      data: response.data,
     };
   } catch (error) {
     console.error("putFinance: Failed to put finance:", error);
     return {
       success: false,
+      data: null,
     };
   }
 };
@@ -334,8 +341,7 @@ const putFinance = async (
 // Delete -- Not necessary in current scope
 
 // Hjelpefunksjoner for å validere outputtet fra Axios kallene
-// Skåner alle andre metoder mange identiske if-checks
-// Passere bruker-vennlige feilmeldinger tilbake til kallende funksjon
+// Returnerer brukervennlige feilmeldinger til kallende funksjon
 const validateResponseList = (
   response: AxiosResponse
 ): { isValid: boolean; error?: string } => {
@@ -353,7 +359,7 @@ const validateResponseList = (
     };
   }
 
-  // Sjekker at data-arrayen ikke er tom. setter isValid til true her, da tom array ikke er feil per se
+  // Sjekker at data-arrayen ikke er tom. setter isValid til true her, da tom array ikke betyr teknisk feil
   if (response.data.length === 0) {
     return { isValid: true, error: "No data available in the server." };
   }

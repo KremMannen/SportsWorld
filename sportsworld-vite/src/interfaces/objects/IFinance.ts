@@ -1,5 +1,5 @@
 export interface IFinance {
-  id?: number;
+  id: number;
   moneyLeft: number;
   numberOfPurchases: number;
   moneySpent: number;

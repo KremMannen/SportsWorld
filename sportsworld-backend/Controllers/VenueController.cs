@@ -113,7 +113,7 @@ public class VenueController (SportsWorldContext _context) : ControllerBase
         {
             _context.Entry(editedVenue).State = EntityState.Modified;
             await _context.SaveChangesAsync();
-            return NoContent();
+            return Ok(editedVenue);
         }
         catch (Exception e)
         {

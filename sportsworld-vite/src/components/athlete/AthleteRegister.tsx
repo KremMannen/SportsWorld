@@ -82,22 +82,6 @@ export const AthleteRegister: FC = () => {
     setImage(null);
   };
 
-  // --- Tailwind styling variabler ---
-  const sectionStyling =
-    "col-span-9 col-start-3 sm:col-span-6 lg:col-span-4 p-4";
-  const titleContainerStyling =
-    "rounded-sm shadow-md shadow-black/40 px-4 py-2 bg-black text-black w-full";
-  const titleStyling = "text-md text-white";
-  const inputStyling =
-    "flex-1 px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#4C0000] min-w-0";
-  const buttonStyling =
-    "bg-[#4C0000] text-white px-6 p-2 rounded font-bold hover:shadow hover:cursor-pointer hover:bg-[#870000] mb-8";
-  const formContainerStyling = "flex flex-col gap-4 mt-4";
-  const errorContainerStyling =
-    "bg-red-50 border border-red-400 text-red-700 px-4 py-3 mb-10 rounded";
-  const loadingContainerStyling = "flex justify-center items-center py-12";
-  const loadingTextStyling = "text-gray-500 text-lg";
-
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { files } = e.target;
     if (files != null) {
@@ -117,6 +101,22 @@ export const AthleteRegister: FC = () => {
       setImage(null);
     } // useEffect kjøres om disse verdiene endrer seg for å oppdatere inputfeltene
   }, [athlete, isEditMode]);
+
+  // --- Tailwind styling variabler ---
+  const sectionStyling =
+    "col-span-9 col-start-3 sm:col-span-6 lg:col-span-4 p-4";
+  const titleContainerStyling =
+    "rounded-sm shadow-md shadow-black/40 px-4 py-2 bg-black text-black w-full";
+  const titleStyling = "text-md text-white";
+  const inputStyling =
+    "flex-1 px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#4C0000] min-w-0";
+  const buttonStyling =
+    "bg-[#4C0000] text-white px-6 p-2 rounded font-bold hover:shadow hover:cursor-pointer hover:bg-[#870000] mb-8";
+  const formContainerStyling = "flex flex-col gap-4 mt-4";
+  const errorContainerStyling =
+    "bg-red-50 border border-red-400 text-red-700 px-4 py-3 mb-10 rounded";
+  const loadingContainerStyling = "flex justify-center items-center py-12";
+  const loadingTextStyling = "text-gray-500 text-lg";
 
   const renderJsx = () => {
     // Vi sjekker kun etter id- og athlete- relaterte feil når ID er passert og komponenten skal være i redigeringsmodus

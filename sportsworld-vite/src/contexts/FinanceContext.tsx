@@ -8,8 +8,10 @@ import {
 import type { IFinanceContext } from "../interfaces/contexts/IFinanceContext";
 import type { IFinance } from "../interfaces/objects/IFinance";
 
-// Vi bruker denne for å slippe å sette | null i finances, og følgelig overalt i komponentene som bruker den
+// Vi bruker denne for å slippe å sette | null i finances useState
+// Fungerer som standardverdier som vises mens innhold laster
 const defaultFinance: IFinance = {
+  id: 0,
   moneyLeft: 0,
   numberOfPurchases: 0,
   moneySpent: 0,
@@ -24,43 +26,22 @@ export const FinanceProvider: FC<IProviderProps> = ({ children }) => {
   const [financeIsLoading, setFinanceIsLoading] = useState(false);
   const isInitializing = useRef(false);
 
-  const showFinances = async () => {
-    setFinanceIsLoading(true);
-    setFinanceErrorMessage("");
-    try {
-      const response = await getFinances();
-
-      if (response.success && response.data) {
-        // Finance kommer i array format, men herfra vil vi konvertere til enkelt objekt
-        // Dette fordi context skal gjøre det enklere for komponenter å hente finance data
-        const financeArray = response.data;
-        // Denne linjen er litt stygg, men vi vet at det kun er ett finance objekt i arrayet
-        const finance = financeArray[0];
-        setFinance(finance);
-      } else {
-        setFinanceErrorMessage(response.error ?? "Failed to load finances");
-      }
-      setFinanceIsLoading(false);
-    } catch (err) {
-      setFinanceErrorMessage("Unexpected error updating finance");
-    }
-  };
-
   const updateFinance = async (updatedFinance: IFinance) => {
     setFinanceIsLoading(true);
     setFinanceErrorMessage("");
-    try {
-      const response = await putFinance(updatedFinance);
 
-      if (!response.success) {
-        setFinanceErrorMessage(response.error ?? "Failed to update finances");
-        return;
-      }
-      // Trenger ikke sette loading som false enda, da showFinance gjør det til slutt
-      await showFinances();
-    } catch (err) {
-      setFinanceErrorMessage("Unexpected error updating finance");
+    const response = await putFinance(updatedFinance);
+
+    if (!response.success) {
+      setFinanceErrorMessage(response.error ?? "Failed to update finances");
+      setFinanceIsLoading(false);
+      return;
     }
+    if (response.data) {
+      const updatedFinance: IFinance = response.data;
+      setFinance(updatedFinance);
+    }
+    setFinanceIsLoading(false);
   };
 
   const initializeFinances = async () => {
@@ -69,41 +50,63 @@ export const FinanceProvider: FC<IProviderProps> = ({ children }) => {
     }
     isInitializing.current = true;
     setFinanceIsLoading(true);
+    setFinanceErrorMessage("");
 
-    // Sjekk om det allerede finnes finances
-    const existingFinances = await getFinances();
+    const getResponse = await getFinances();
 
-    if (!existingFinances.success) {
-      setFinanceErrorMessage(
-        existingFinances.error ?? "Failed to connect to database"
-      );
-      isInitializing.current = false;
+    if (!getResponse.success) {
+      setFinanceErrorMessage(getResponse.error ?? "Failed to load finances");
       setFinanceIsLoading(false);
+      isInitializing.current = false;
       return;
     }
 
-    if (existingFinances.data.length === 0) {
-      console.log(`Seeding database with finances`);
-      const seedFinances = {
-        moneyLeft: 100000,
-        numberOfPurchases: 0,
-        moneySpent: 0,
-        debt: 0,
-      };
+    const financeArray = getResponse.data;
 
-      const result = await postFinance(seedFinances);
-      if (!result.success) {
-        setFinanceErrorMessage(result.error ?? "Failed to seed finances");
-        isInitializing.current = false;
-        setFinanceIsLoading(false);
-        return;
-      }
-    } else {
+    if (financeArray.length === 0) {
       console.log(
-        `Database already has ${existingFinances.data.length} finances, skipping seeding`
+        "initializeFinances: No finance records found, seeding database..."
+      );
+      await seedDatabase();
+      setFinanceIsLoading(false);
+      isInitializing.current = false;
+      return;
+    }
+
+    if (financeArray.length > 1) {
+      console.warn(
+        "initializeFinances: More than 1 Finance object found, using newest by ID"
       );
     }
-    await showFinances();
+
+    const newestFinance = financeArray.reduce((latest, current) =>
+      current.id > latest.id ? current : latest
+    );
+
+    setFinance(newestFinance);
+    setFinanceIsLoading(false);
+    isInitializing.current = false;
+  };
+
+  const seedDatabase = async () => {
+    console.log(`Seeding database with finances`);
+    const seedFinances = {
+      moneyLeft: 100000,
+      numberOfPurchases: 0,
+      moneySpent: 0,
+      debt: 0,
+    };
+
+    const response = await postFinance(seedFinances);
+
+    if (!response.success) {
+      setFinanceErrorMessage(response.error ?? "Failed to seed finances");
+    }
+
+    if (response.data) {
+      const updatedFinance: IFinance = response.data;
+      setFinance(updatedFinance);
+    }
   };
 
   useEffect(() => {
@@ -116,7 +119,6 @@ export const FinanceProvider: FC<IProviderProps> = ({ children }) => {
         finances,
         financeErrorMessage,
         financeIsLoading,
-        showFinances,
         updateFinance,
       }}
     >

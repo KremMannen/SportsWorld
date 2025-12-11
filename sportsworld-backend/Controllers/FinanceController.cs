@@ -10,7 +10,7 @@ namespace sportsworld_backend.Controllers;
 
 public class FinanceController (SportsWorldContext _context) : ControllerBase
 {
-    [HttpGet] // Hent all finans-info, selv om det kun er en rad i tabellen.
+    [HttpGet] // Hent all finans-info, selv om det kun skal være en rad i tabellen.
     public async Task<ActionResult<List<Finance>>> Get()
     {
         try
@@ -25,7 +25,7 @@ public class FinanceController (SportsWorldContext _context) : ControllerBase
     }
 
 
-    [HttpPost] // Skal kun brukes om raden har blitt slettet og bruker vil legge inn all data på nytt. Flush and reset.
+    [HttpPost]
     public async Task<ActionResult<Finance>> Post(Finance newFinance)
     {
         try
@@ -47,7 +47,7 @@ public class FinanceController (SportsWorldContext _context) : ControllerBase
         }
     }
 
-    [HttpDelete] // Sletter første rad i tabellen. Skal aldri være flere rader her uansett.
+    [HttpDelete] // Ubrukt
     public async Task<IActionResult> Delete()
     {
         try
@@ -71,14 +71,14 @@ public class FinanceController (SportsWorldContext _context) : ControllerBase
         }
     }
 
-    [HttpPut] // Endre info i finance-raden
+    [HttpPut] 
     public async Task<ActionResult<Finance>> Put(Finance editedFinance)
     {
         try
         {
             _context.Entry(editedFinance).State = EntityState.Modified;
             await _context.SaveChangesAsync();
-            return NoContent();
+            return Ok(editedFinance);
         }
         catch (Exception e)
         {
