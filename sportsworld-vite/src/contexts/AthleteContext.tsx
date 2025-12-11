@@ -91,32 +91,24 @@ export const AthleteProvider: FC<IProviderProps> = ({ children }) => {
   };
 
   const updateAthlete = async (athlete: IAthlete, img?: File) => {
-    console.log("updateAthlete called with:", athlete, "img:", img);
     setAthleteErrorMessage("");
 
     // Beholder gamle bildet om det er ingen img parameter
     let fileName = athlete.image;
-    console.log("Initial fileName:", fileName);
 
     if (img) {
-      console.log("Uploading new image...");
       const uploadResponse = await ImageUploadService.uploadAthleteImage(img);
-      console.log("Upload response:", uploadResponse);
 
       if (!uploadResponse.success || uploadResponse.fileName === null) {
-        console.error("Image upload failed:", uploadResponse.error);
         setAthleteErrorMessage(uploadResponse.error ?? "Image upload failed");
         return;
       }
       fileName = uploadResponse.fileName;
-      console.log("New fileName:", fileName);
     }
 
     const athleteWithImage = { ...athlete, image: fileName };
-    console.log("Calling putAthlete with:", athleteWithImage);
 
     const updateResponse = await putAthlete(athleteWithImage);
-    console.log("putAthlete response:", updateResponse);
 
     if (!updateResponse.success) {
       console.error("Update failed:", updateResponse.error);
@@ -128,12 +120,12 @@ export const AthleteProvider: FC<IProviderProps> = ({ children }) => {
 
     if (updateResponse.data) {
       const updatedAthlete: IAthlete = updateResponse.data;
-      console.log("Update successful, new athlete:", updatedAthlete);
+
       setAthletes((prev) => {
         const updated = prev.map((a) =>
           a.id === updatedAthlete.id ? updatedAthlete : a
         );
-        console.log("Updated athletes array:", updated);
+
         return updated;
       });
     } else {

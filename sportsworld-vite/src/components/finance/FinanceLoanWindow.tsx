@@ -13,7 +13,7 @@ export const FinanceLoanWindow: FC = () => {
 
   const titleContainerStyling =
     "rounded-sm shadow-md shadow-black/40 px-4 py-2 bg-black text-black w-full";
-  const titleStyling = "text-md text-white";
+  const titleStyling = "text-lg text-white font-bold";
 
   const debtTextStyling =
     "text-2xl font-bold mt-3 text-[#4C0000] bg-transparent";

@@ -107,12 +107,14 @@ export const AthleteRegister: FC = () => {
     "col-span-9 col-start-3 sm:col-span-6 lg:col-span-4 p-4";
   const titleContainerStyling =
     "rounded-sm shadow-md shadow-black/40 px-4 py-2 bg-black text-black w-full";
-  const titleStyling = "text-md text-white";
+  const titleStyling = "text-lg text-white font-bold";
   const inputStyling =
     "flex-1 px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#4C0000] min-w-0";
   const buttonStyling =
     "bg-[#4C0000] text-white px-6 p-2 rounded font-bold hover:shadow hover:cursor-pointer hover:bg-[#870000] mb-8";
-  const formContainerStyling = "flex flex-col gap-4 mt-4";
+  const formContainerStyling = "flex flex-col gap-4 p-4";
+  const inputContainerStyling = "flex flex-col gap-1";
+
   const errorContainerStyling =
     "bg-red-50 border border-red-400 text-red-700 px-4 py-3 mb-10 rounded";
   const loadingContainerStyling = "flex justify-center items-center py-12";
@@ -168,34 +170,72 @@ export const AthleteRegister: FC = () => {
         </div>
 
         <form className={formContainerStyling} onSubmit={handleRegister}>
-          <input
-            type="text"
-            placeholder="Name"
-            value={name}
-            className={inputStyling}
-            onChange={(e) => setName(e.target.value)}
-          />
-          <input
-            type="number"
-            placeholder="Price"
-            value={price}
-            className={inputStyling}
-            onChange={(e) => setPrice(e.target.value)}
-          />
-          <input
-            type="text"
-            placeholder="Gender"
-            value={gender}
-            className={inputStyling}
-            onChange={(e) => setGender(e.target.value)}
-          />
+          <div className={inputContainerStyling}>
+            <label
+              htmlFor="athlete-name"
+              className="text-sm font-medium text-gray-700"
+            >
+              Name
+            </label>
+            <input
+              id="athlete-name"
+              type="text"
+              placeholder="Enter athlete name"
+              value={name}
+              className={inputStyling}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
 
-          <input
-            type="file"
-            onChange={handleImageChange}
-            className="px-4 py-2 border border-gray-300 rounded cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-[#4C0000] file:text-white file:cursor-pointer hover:file:bg-[#870000]"
-            accept="image/*"
-          />
+          <div className={inputContainerStyling}>
+            <label
+              htmlFor="athlete-price"
+              className="text-sm font-medium text-gray-700"
+            >
+              Price
+            </label>
+            <input
+              id="athlete-price"
+              type="number"
+              placeholder="Enter price"
+              value={price}
+              className={inputStyling}
+              onChange={(e) => setPrice(e.target.value)}
+            />
+          </div>
+
+          <div className={inputContainerStyling}>
+            <label
+              htmlFor="athlete-gender"
+              className="text-sm font-medium text-gray-700"
+            >
+              Gender
+            </label>
+            <input
+              id="athlete-gender"
+              type="text"
+              placeholder="Enter gender"
+              value={gender}
+              className={inputStyling}
+              onChange={(e) => setGender(e.target.value)}
+            />
+          </div>
+
+          <div className={inputContainerStyling}>
+            <label
+              htmlFor="athlete-image"
+              className="text-sm font-medium text-gray-700"
+            >
+              Profile Image
+            </label>
+            <input
+              id="athlete-image"
+              type="file"
+              onChange={handleImageChange}
+              className="px-4 py-2 border border-gray-300 rounded cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-[#4C0000] file:text-white file:cursor-pointer hover:file:bg-[#870000]"
+              accept="image/*"
+            />
+          </div>
 
           <button type="submit" className={buttonStyling}>
             {isEditMode ? "Update Athlete" : "Register Athlete"}
