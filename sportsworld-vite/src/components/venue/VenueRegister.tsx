@@ -65,20 +65,23 @@ export const VenueRegister: FC = () => {
   };
 
   // --- Tailwind styling variabler ---
-  const containerStyling = "p-4";
-  const titleContainerStyling =
+
+  const sectionStyling =
+    "col-span-9 col-start-3 sm:col-span-6 lg:col-span-4 py-6 pt-12";
+  const titlesectionStyling =
     "rounded-sm shadow-md shadow-black/40 px-4 py-2 bg-black text-black w-full gap-6";
   const titleStyling = "text-lg text-white font-bold";
   const inputStyling =
     "flex-1 px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#4C0000] min-w-0";
   const buttonStyling =
-    "bg-[#4C0000] text-white px-6 py-2 rounded font-bold hover:shadow hover:cursor-pointer hover:bg-[#870000] mb-8";
-  const formContainerStyling = "flex flex-col gap-4 p-4";
-  const inputContainerStyling = "flex flex-col gap-1";
+    "bg-[#4C0000] text-white px-6 py-2 rounded font-bold hover:shadow hover:cursor-pointer hover:bg-[#870000]";
+  const formsectionStyling = "flex flex-col gap-4 p-4";
+  const inputsectionStyling = "flex flex-col gap-1";
 
-  const errorContainerStyling =
-    "bg-red-50 border border-red-400 text-red-700 px-4 py-3 mb-10 rounded";
-  const loadingContainerStyling = "flex justify-center items-center py-12";
+  const errorsectionStyling =
+    "flex flex-col gap-4 max-w-[250px] mx-auto bg-red-50 border border-red-400 text-red-700 p-2 mb-10 rounded";
+
+  const loadingsectionStyling = "flex justify-center items-center py-12";
   const loadingTextStyling = "text-gray-500 text-lg";
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -106,25 +109,27 @@ export const VenueRegister: FC = () => {
       const idNumber = Number(venueId);
       if (isNaN(idNumber)) {
         return (
-          <article className={errorContainerStyling}>
+          <div className={errorsectionStyling}>
             <p>Invalid id</p>
             <Link to="/venues">Back</Link>
-          </article>
+          </div>
         );
       }
       if (!venue || venue === undefined) {
         return (
-          <article className={errorContainerStyling}>
+          <div className={errorsectionStyling}>
             <p>Venue not found</p>
-            <Link to="/venues">Back</Link>
-          </article>
+            <Link className={buttonStyling} to="/venues">
+              Create New Venue
+            </Link>
+          </div>
         );
       }
     }
 
     if (isLoading) {
       return (
-        <div className={loadingContainerStyling}>
+        <div className={loadingsectionStyling}>
           <p className={loadingTextStyling}>Loading athletes...</p>
         </div>
       );
@@ -132,22 +137,22 @@ export const VenueRegister: FC = () => {
 
     if (errorMessage) {
       return (
-        <div className={errorContainerStyling}>
+        <div className={errorsectionStyling}>
           <p>{errorMessage}</p>
         </div>
       );
     }
 
     return (
-      <section className={containerStyling}>
-        <header className={titleContainerStyling}>
+      <section className={sectionStyling}>
+        <header className={titlesectionStyling}>
           <h3 className={titleStyling}>
             {isEditMode ? `Edit Venue: ${venue?.name}` : "Register New Venue"}
           </h3>
         </header>
 
-        <form className={formContainerStyling} onSubmit={handleRegister}>
-          <div className={inputContainerStyling}>
+        <form className={formsectionStyling} onSubmit={handleRegister}>
+          <div className={inputsectionStyling}>
             <label
               htmlFor="venue-name"
               className="text-sm font-medium text-gray-700"
@@ -164,7 +169,7 @@ export const VenueRegister: FC = () => {
             />
           </div>
 
-          <div className={inputContainerStyling}>
+          <div className={inputsectionStyling}>
             <label
               htmlFor="venue-capacity"
               className="text-sm font-medium text-gray-700"
@@ -181,7 +186,7 @@ export const VenueRegister: FC = () => {
             />
           </div>
 
-          <div className={inputContainerStyling}>
+          <div className={inputsectionStyling}>
             <label
               htmlFor="venue-image"
               className="text-sm font-medium text-gray-700"

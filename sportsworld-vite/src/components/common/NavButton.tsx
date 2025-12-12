@@ -45,9 +45,9 @@ const NavButton: FC<INavButtonProps> = ({ destination }) => {
   }
 
   // Styling variabler
-  const navClasses = "hidden lg:flex justify-center mt-14 mb-14";
+  const navClasses = "hidden lg:flex justify-center";
   const linkClasses =
-    "bg-[#4C0000] text-white lg:text-xl xl:text-2xl font-bold hover:bg-[#870000] lg:px-4 lg:py-2 xl:px-8 xl:py-3 rounded w-full lg:max-w-md xl:max-w-xl text-center hover:shadow-md hover:shadow-black/40 hover:scale-[1.05] -mt-8";
+    "bg-[#4C0000] text-white lg:text-xl xl:text-2xl font-bold hover:bg-[#870000] px-4 py-2 rounded w-full lg:max-w-md xl:max-w-xl text-center hover:shadow-md hover:shadow-black/40 hover:scale-[1.05]";
 
   return (
     <nav className={navClasses}>

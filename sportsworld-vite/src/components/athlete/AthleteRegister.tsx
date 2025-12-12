@@ -104,14 +104,14 @@ export const AthleteRegister: FC = () => {
 
   // --- Tailwind styling variabler ---
   const sectionStyling =
-    "col-span-9 col-start-3 sm:col-span-6 lg:col-span-4 p-4";
+    "col-span-9 col-start-3 sm:col-span-6 lg:col-span-4 py-6 pt-12";
   const titleContainerStyling =
     "rounded-sm shadow-md shadow-black/40 px-4 py-2 bg-black text-black w-full";
   const titleStyling = "text-lg text-white font-bold";
   const inputStyling =
     "flex-1 px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#4C0000] min-w-0";
   const buttonStyling =
-    "bg-[#4C0000] text-white px-6 p-2 rounded font-bold hover:shadow hover:cursor-pointer hover:bg-[#870000] mb-8";
+    "bg-[#4C0000] text-white p-2 rounded font-bold hover:shadow hover:cursor-pointer hover:bg-[#870000]";
   const formContainerStyling = "flex flex-col gap-4 p-4";
   const inputContainerStyling = "flex flex-col gap-1";
 
@@ -126,18 +126,24 @@ export const AthleteRegister: FC = () => {
       const idNumber = Number(athleteId);
       if (isNaN(idNumber)) {
         return (
-          <article className={errorContainerStyling}>
-            <p>Invalid id</p>
-            <Link to="/register">Back</Link>
-          </article>
+          <section className={sectionStyling}>
+            <div className={errorContainerStyling}>
+              <p>Invalid id</p>
+              <Link to="/register">Back</Link>
+            </div>
+          </section>
         );
       }
       if (!athlete || athlete === undefined) {
         return (
-          <article className={errorContainerStyling}>
-            <p>Athlete not found</p>
-            <Link to="/register">Back</Link>
-          </article>
+          <section className={sectionStyling}>
+            <div className={errorContainerStyling}>
+              <p>Athlete not found</p>
+              <Link className={buttonStyling} to="/register">
+                Create New Athlete
+              </Link>
+            </div>
+          </section>
         );
       }
     }
@@ -145,18 +151,22 @@ export const AthleteRegister: FC = () => {
     // Innhold laser inn
     if (athleteIsLoading) {
       return (
-        <div className={loadingContainerStyling}>
-          <p className={loadingTextStyling}>Loading athletes...</p>
-        </div>
+        <section className={sectionStyling}>
+          <div className={loadingContainerStyling}>
+            <p className={loadingTextStyling}>Loading athletes...</p>
+          </div>
+        </section>
       );
     }
 
     // Dersom feilmelding oppstår
     if (athleteErrorMessage) {
       return (
-        <div className={errorContainerStyling}>
-          <p>{athleteErrorMessage}</p>
-        </div>
+        <section className={sectionStyling}>
+          <div className={errorContainerStyling}>
+            <p>{athleteErrorMessage}</p>
+          </div>
+        </section>
       );
     }
 

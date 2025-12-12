@@ -1,4 +1,4 @@
-import { useContext, useState, type FC } from "react";
+import { useContext, useState, type FC, type FormEvent } from "react";
 import { VenueContext } from "../../contexts/VenueContext";
 import type { IVenueContext } from "../../interfaces/contexts/IVenueContext";
 import type { IVenueListProps } from "../../interfaces/components/IVenueListProps";
@@ -20,6 +20,8 @@ export const VenueList: FC<IVenueListProps> = ({
   const [confirmingId, setConfirmingId] = useState<number | null>(null);
 
   // --- Styling variabler ---
+  const sectionContainerStyling = "py-12";
+
   const headerContainerStyling =
     "flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 p-2 px-8 bg-black";
   const titleStyling = "text-2xl text-white font-bold mb-2 sm:mb-0 text-center";
@@ -33,20 +35,21 @@ export const VenueList: FC<IVenueListProps> = ({
 
   const loadingContainerStyling = "flex justify-center items-center py-12";
   const loadingTextStyling = "text-gray-500 text-lg";
+
   const errorContainerStyling =
     "bg-red-50 border border-red-400 text-red-700 px-4 py-3 my-10 rounded max-w-[200px] mx-auto";
-  const cardsContainerBaseStyling = "grid grid-cols-12 gap-6 p-4 mb-8";
 
+  const cardsContainerBaseStyling = "grid grid-cols-12 gap-6 p-4 mb-8";
   // Venues-page ikke får horizontal scroll på lg-breakpoint
   const cardsContainerLgStyling =
     layoutVariant === "horizontal"
       ? "lg:flex lg:flex-row lg:overflow-x-auto lg:gap-4 lg:p-4"
       : ""; // default styling (grid)
-
   // Går tilbake til vanlig grid-layout på xl
   const cardsContainerXlStyling = "xl:grid xl:overflow-visible xl:p-4";
+  const cardsContainerStyling = `${cardsContainerBaseStyling} ${cardsContainerLgStyling} ${cardsContainerXlStyling}`;
 
-  const handleSearch = (e: React.FormEvent) => {
+  const handleSearch = (e: FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
       searchByName(searchQuery);
@@ -63,20 +66,20 @@ export const VenueList: FC<IVenueListProps> = ({
   let displayTitle;
   switch (cardVariant) {
     case "view":
-      displayTitle = "Featured venues";
+      displayTitle = "Featured Venues";
       break;
     case "manage":
-      displayTitle = "All venues";
+      displayTitle = "All Venues";
       break;
     default:
-      displayTitle = "All venues";
+      displayTitle = "All Venues";
       break;
   }
 
   const renderJsx = () => {
     if (isLoading) {
       return (
-        <>
+        <section className={sectionContainerStyling}>
           <div className={headerContainerStyling}>
             <h2 className={titleStyling}>{displayTitle}</h2>
             <form onSubmit={handleSearch} className={searchContainerStyling}>
@@ -95,11 +98,11 @@ export const VenueList: FC<IVenueListProps> = ({
           <div className={loadingContainerStyling}>
             <div className={loadingTextStyling}>Loading venues...</div>
           </div>
-        </>
+        </section>
       );
     }
 
-    // Feilmelding eller tom liste
+    // Prioriteter å vise feilmld, ellers tilpasset brukermelding basert på om bruker søker eller ikke
     if (errorMessage || displayVenues.length === 0) {
       const errorMsg = errorMessage
         ? errorMessage
@@ -108,35 +111,21 @@ export const VenueList: FC<IVenueListProps> = ({
         : "No venues available";
 
       return (
-        <>
+        <section className={sectionContainerStyling}>
           <div className={headerContainerStyling}>
             <h2 className={titleStyling}>{displayTitle}</h2>
-            <form onSubmit={handleSearch} className={searchContainerStyling}>
-              <input
-                type="text"
-                placeholder="Search venues..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className={searchInputStyling}
-              />
-              <button type="submit" className={searchButtonStyling}>
-                Search
-              </button>
-            </form>
           </div>
           <div className={errorContainerStyling}>
             <p>{errorMsg}</p>
           </div>
-        </>
+        </section>
       );
     }
 
-    const cardsContainerStyling = `${cardsContainerBaseStyling} ${cardsContainerLgStyling} ${cardsContainerXlStyling}`;
-
-    // Viser kun 4 venue-cards
+    // Viser kun 4 venue-cards på forsiden
     if (isLimited) {
       return (
-        <>
+        <section className={sectionContainerStyling}>
           <div className={headerContainerStyling}>
             <h2 className={titleStyling}>{displayTitle}</h2>
           </div>
@@ -145,12 +134,12 @@ export const VenueList: FC<IVenueListProps> = ({
               <VenueCard key={venue.id} venue={venue} variant={cardVariant} />
             ))}
           </div>
-        </>
+        </section>
       );
     }
 
     return (
-      <>
+      <section className={sectionContainerStyling}>
         <div className={headerContainerStyling}>
           <h2 className={titleStyling}>{displayTitle}</h2>
           <form onSubmit={handleSearch} className={searchContainerStyling}>
@@ -183,7 +172,7 @@ export const VenueList: FC<IVenueListProps> = ({
             />
           ))}
         </div>
-      </>
+      </section>
     );
   };
 

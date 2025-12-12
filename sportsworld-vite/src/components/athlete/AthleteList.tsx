@@ -26,10 +26,26 @@ export const AthleteList: FC<IAthleteListProps> = ({
   // Dette gjør at dersom man trykker på delete et annet sted, mens et bekreftelsesvindu er åpent, vil det forrige lukkes automatisk
   const [confirmingId, setConfirmingId] = useState<number | null>(null);
 
+  const errorMessage = athleteErrorMessage
+    ? athleteErrorMessage
+    : isSearchActive
+    ? `No fighters found matching "${searchQuery}"`
+    : filterType === "owned"
+    ? "No fighters signed yet"
+    : "No fighters available";
+
   // --- Styling variabler ---
+  const errorContainerStyling =
+    "bg-red-50 border border-red-400 text-red-700 px-4 py-3 my-10 rounded max-w-[200px] mx-auto";
+
+  // Needs conditional extra padding against header if its closest to header
+  const extraPadding = filterType === "all" ? "pt-12" : "";
+  const sectionContainerStyling = `py-12 ${extraPadding}`;
+
   const headerContainerStyling =
     "flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 p-2 px-8 bg-black";
   const titleStyling = "text-2xl text-white font-bold mb-2 sm:mb-0 text-center";
+
   const searchContainerStyling =
     "flex flex-col sm:flex-row py-2 sm:py-0 gap-2 w-full sm:w-auto";
   const searchInputStyling =
@@ -39,32 +55,21 @@ export const AthleteList: FC<IAthleteListProps> = ({
   // sr-only: screen-reader only.
   // klasse som gjør innhold usynlig for seende brukere, men tilgjengelig for screen readers
   const searchBarLabelStyling = "sr-only";
+
   const loadingContainerStyling = "flex justify-center items-center py-12";
   const loadingTextStyling = "text-gray-500 text-lg";
-  const errorContainerStyling =
-    "bg-red-50 border border-red-400 text-red-700 px-4 py-3 my-10 rounded max-w-[200px] mx-auto";
-  const cardsContainerBaseStyling = "grid grid-cols-12 gap-6 p-4 mb-8";
-  const errorMessage = athleteErrorMessage
-    ? athleteErrorMessage
-    : isSearchActive
-    ? `No fighters found matching "${searchQuery}"`
-    : filterType === "owned"
-    ? "No fighters signed yet"
-    : "No fighters available";
 
+  const cardsContainerBaseStyling = "grid grid-cols-12 gap-6 px-6";
   // Endre layout basert på layoutVariant, slik at admin-page ikke får horizontal scroll på lg-breakpoint
   const cardsContainerLgStyling =
     layoutVariant === "horizontal"
-      ? "lg:flex lg:flex-row lg:overflow-x-auto lg:gap-4 lg:p-4"
+      ? "lg:flex lg:flex-row lg:overflow-x-auto lg:gap-4"
       : ""; // default styling (grid)
-
   // Går tilbake til vanlig grid-layout på xl
-  const cardsContainerXlStyling = "xl:grid xl:overflow-visible xl:p-4";
-
+  const cardsContainerXlStyling = "xl:grid xl:overflow-visible";
   const cardsContainerStyling = `${cardsContainerBaseStyling} ${cardsContainerLgStyling} ${cardsContainerXlStyling}`;
 
   const handleSearch = (e: FormEvent) => {
-    // e.preventDefault har ingen effekt her, men lar stå for nå
     e.preventDefault();
     if (searchQuery.trim()) {
       searchByName(searchQuery);
@@ -102,7 +107,7 @@ export const AthleteList: FC<IAthleteListProps> = ({
   const renderJsx = () => {
     if (athleteIsLoading) {
       return (
-        <>
+        <section className={sectionContainerStyling}>
           <div className={headerContainerStyling}>
             <h2 className={titleStyling}>{displayTitle}</h2>
             <form onSubmit={handleSearch} className={searchContainerStyling}>
@@ -121,25 +126,25 @@ export const AthleteList: FC<IAthleteListProps> = ({
           <div className={loadingContainerStyling}>
             <div className={loadingTextStyling}>Loading fighters...</div>
           </div>
-        </>
+        </section>
       );
     }
 
     if (athleteErrorMessage || filteredAthletes.length === 0) {
       return (
-        <>
+        <section className={sectionContainerStyling}>
           <div className={headerContainerStyling}>
             <h2 className={titleStyling}>{displayTitle}</h2>
           </div>
           <div className={errorContainerStyling}>
             <p>{errorMessage}</p>
           </div>
-        </>
+        </section>
       );
     }
 
     return (
-      <>
+      <section className={sectionContainerStyling}>
         <div className={headerContainerStyling}>
           <h2 className={titleStyling}>{displayTitle}</h2>
           <form onSubmit={handleSearch} className={searchContainerStyling}>
@@ -172,7 +177,7 @@ export const AthleteList: FC<IAthleteListProps> = ({
             />
           ))}
         </div>
-      </>
+      </section>
     );
   };
 

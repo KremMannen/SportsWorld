@@ -32,8 +32,8 @@ export const FinanceLoanWindow: FC = () => {
   const loadingContainer = "text-center";
   const loadingText = "text-xl text-gray-600";
 
-  const errorContainer = "text-center";
-  const errorText = "text-xl text-red-600";
+  const errorContainer =
+    "bg-red-50 border border-red-400 text-red-700 px-4 py-3 my-10 rounded max-w-[200px] mx-auto";
 
   // --- Knapp handler ---
   const handleLoanRequest = async (e: FormEvent) => {
@@ -72,7 +72,7 @@ export const FinanceLoanWindow: FC = () => {
     if (financeErrorMessage) {
       return (
         <div className={errorContainer}>
-          <p className={errorText}>{financeErrorMessage}</p>
+          <p>{financeErrorMessage}</p>
         </div>
       );
     }
@@ -83,7 +83,6 @@ export const FinanceLoanWindow: FC = () => {
           <div className={titleContainerStyling}>
             <h3 className={titleStyling}>Loan Portal</h3>
           </div>
-          {/* Bruker .toLocaleString() for å få pen formattering på store tall */}
           <p className={debtTextStyling}>
             Total debt: ${finances.debt.toLocaleString()}
           </p>

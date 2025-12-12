@@ -21,9 +21,10 @@ export const FinanceDashboard: FC<IFinanceDashboardProps> = ({
   // --- Styling ---
   const loadingContainer = "text-center";
   const loadingText = "text-xl text-gray-600";
-  const errorContainer = "text-center";
-  const errorText = "text-xl text-red-600";
-  const sectionBase = "w-full px-4 grid grid-cols-12 gap-6 text-center mb-8";
+  const errorContainer =
+    "bg-red-50 border border-red-400 text-red-700 px-4 py-3 my-10 rounded max-w-[200px] mx-auto";
+  const sectionBase = "w-full pt-12 grid grid-cols-12 gap-6 text-center";
+  const sectionErrorBase = "pt-12";
   const containerStyling = "col-span-12 lg:col-span-6 grid grid-cols-12 gap-6";
 
   // --- Kalkulerte visningsverdier ---
@@ -67,19 +68,21 @@ export const FinanceDashboard: FC<IFinanceDashboardProps> = ({
     // Loading
     if (athleteIsLoading || financeIsLoading) {
       return (
-        <div className={loadingContainer}>
-          <p className={loadingText}>Loading dashboard...</p>
-        </div>
+        <section className={sectionErrorBase}>
+          <div className={loadingContainer}>
+            <p className={loadingText}>Loading dashboard...</p>
+          </div>
+        </section>
       );
     }
     // Error
     if (athleteErrorMessage || financeErrorMessage) {
       return (
-        <div className={errorContainer}>
-          <p className={errorText}>
-            {athleteErrorMessage || financeErrorMessage}
-          </p>
-        </div>
+        <section className={sectionErrorBase}>
+          <div className={errorContainer}>
+            <p>{athleteErrorMessage || financeErrorMessage}</p>
+          </div>
+        </section>
       );
     }
     // Begrenset variant som vises kun på forsiden (homepage)
