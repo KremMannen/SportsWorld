@@ -165,7 +165,9 @@ export const AthleteRegister: FC = () => {
       <section className={sectionStyling}>
         <div className={titleContainerStyling}>
           <h3 className={titleStyling}>
-            {isEditMode ? "Edit Athlete" : "Register New Athlete"}
+            {isEditMode
+              ? `Edit Athlete: ${athlete?.name}`
+              : "Register New Athlete"}
           </h3>
         </div>
 
@@ -226,7 +228,7 @@ export const AthleteRegister: FC = () => {
               htmlFor="athlete-image"
               className="text-sm font-medium text-gray-700"
             >
-              Profile Image
+              Athlete Image
             </label>
             <input
               id="athlete-image"

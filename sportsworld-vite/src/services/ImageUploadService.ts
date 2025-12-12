@@ -35,7 +35,6 @@ const uploadImage = async (
         error: "Failed to upload image.",
       };
     }
-
     return {
       success: true,
       fileName: response.data,
@@ -45,6 +44,7 @@ const uploadImage = async (
     return {
       success: false,
       fileName: null,
+      error: "Failed to upload image.",
     };
   } finally {
     formData.delete("file");

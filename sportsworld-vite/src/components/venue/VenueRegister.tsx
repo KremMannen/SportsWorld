@@ -142,7 +142,7 @@ export const VenueRegister: FC = () => {
       <section className={containerStyling}>
         <header className={titleContainerStyling}>
           <h3 className={titleStyling}>
-            {isEditMode ? "Edit Venue" : "Register New Venue"}
+            {isEditMode ? `Edit Venue: ${venue?.name}` : "Register New Venue"}
           </h3>
         </header>
 
