@@ -14,8 +14,9 @@ export const VenueCard: FC<IVenueCardProps> = ({
 }) => {
   const { deleteVenueById } = useContext(VenueContext) as IVenueContext;
 
-  // --- Styling ---
   const isView = variant === "view";
+
+  // --- Styling ---
 
   const baseCardClasses =
     "rounded-lg shadow-md overflow-hidden transition-transform duration-200";

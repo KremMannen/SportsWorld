@@ -39,14 +39,14 @@ export const VenueList: FC<IVenueListProps> = ({
   const errorContainerStyling =
     "bg-red-50 border border-red-400 text-red-700 px-4 py-3 my-10 rounded max-w-[200px] mx-auto";
 
-  const cardsContainerBaseStyling = "grid grid-cols-12 gap-6 p-4 mb-8";
+  const cardsContainerBaseStyling = "grid grid-cols-12 gap-6 px-6";
   // Venues-page ikke får horizontal scroll på lg-breakpoint
   const cardsContainerLgStyling =
     layoutVariant === "horizontal"
-      ? "lg:flex lg:flex-row lg:overflow-x-auto lg:gap-4 lg:p-4"
+      ? "lg:flex lg:flex-row lg:overflow-x-auto lg:gap-4"
       : ""; // default styling (grid)
   // Går tilbake til vanlig grid-layout på xl
-  const cardsContainerXlStyling = "xl:grid xl:overflow-visible xl:p-4";
+  const cardsContainerXlStyling = "xl:grid xl:overflow-visible";
   const cardsContainerStyling = `${cardsContainerBaseStyling} ${cardsContainerLgStyling} ${cardsContainerXlStyling}`;
 
   const handleSearch = (e: FormEvent) => {
