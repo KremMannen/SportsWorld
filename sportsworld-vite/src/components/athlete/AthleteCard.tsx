@@ -39,7 +39,6 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
       ? "hover:scale-[1.05] hover:shadow-black/40"
       : "hover:shadow-black/40";
 
-  // Grid layout for admin page vs horizontal scroll for andre pages
   const cardGridClasses =
     layoutVariant === "grid"
       ? "col-span-12 sm:col-span-6 lg:col-span-4 xl:col-span-3"
@@ -56,7 +55,7 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
 
   const viewCardHref = isPurchased ? "/admin" : "/finances";
 
-  // --- Separate stylinger for bekreftelses-kortet til delete-knappen  ---
+  // --- Stylinger for bekreftelses-vinduet ved delete  ---
   const deleteContentClasses = "p-4 h-full flex flex-col justify-between";
   const deleteTextClasses =
     "flex-1 flex items-center justify-center text-center";
@@ -79,14 +78,16 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
     const updatedAthlete = { ...athlete, purchased: !isPurchased };
 
     if (isPurchased) {
-      // Selger athlete
       updatedFinance.moneyLeft += athlete.price;
     } else {
       if (updatedFinance.moneyLeft < athlete.price) {
-        alert("Insufficient funds to sign this athlete.");
+        alert(
+          `Insufficient funds to sign this athlete. Missing ${(
+            athlete.price - updatedFinance.moneyLeft
+          ).toLocaleString()} $`
+        );
         return;
       }
-      // Kjøper athlete
       updatedFinance.moneyLeft -= athlete.price;
       updatedFinance.moneySpent += athlete.price;
     }
@@ -94,11 +95,11 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
     await updateAthlete(updatedAthlete);
     await updateFinance(updatedFinance);
   };
-  // Sjekker onConfirmingChange i renderJsx og gir bruker et bekreftelses vindu før sletting.
+  // Bekreftelses vindu før sletting.
   const handleDeleteClick = () => onConfirmingChange?.(true);
   // Kansellere handling
   const handleCancel = () => onConfirmingChange?.(false);
-
+  // Gjennomfør sletting
   const handleConfirmDelete = () => {
     deleteAthleteById(athlete.id);
     onConfirmingChange?.(false);
@@ -171,7 +172,7 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
       <div className={contentContainerClasses}>
         <div>
           <h3 className={titleClasses}>{athlete.name}</h3>
-          <p>Price: {athlete.price} $</p>
+          <p>Price: {athlete.price.toLocaleString()} $</p>
           <p>Gender: {athlete.gender}</p>
         </div>
 

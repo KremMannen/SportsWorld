@@ -17,9 +17,12 @@ export const VenueCard: FC<IVenueCardProps> = ({
   // --- Styling ---
   const isView = variant === "view";
 
-  const baseCardClasses = "rounded-lg shadow-md overflow-hidden transition-transform duration-200";
+  const baseCardClasses =
+    "rounded-lg shadow-md overflow-hidden transition-transform duration-200";
   const cardColorClasses = "bg-[#252828] text-white";
-  const cardHoverClasses = isView ? "hover:scale-[1.05] hover:cursor-pointer" : "";
+  const cardHoverClasses = isView
+    ? "hover:scale-[1.05] hover:cursor-pointer"
+    : "";
 
   const cardGridSpan =
     layoutVariant === "grid"
@@ -37,7 +40,8 @@ export const VenueCard: FC<IVenueCardProps> = ({
   const venueViewCardHref = "/venues";
 
   // --- Button styling ---
-  const buttonBase = "w-full px-4 py-2 rounded transition duration-200 text-white";
+  const buttonBase =
+    "w-full px-4 py-2 rounded transition duration-200 text-white";
   const buttonColor = "bg-black";
   const deleteButtonColor = "bg-[#4C0000]";
   const buttonHover = "hover:bg-[#870000] hover:shadow hover:cursor-pointer";
@@ -51,8 +55,8 @@ export const VenueCard: FC<IVenueCardProps> = ({
 
   // --- Separate stylinger for bekreftelses-kortet til delete-knappen  ---
   const deleteContentClasses = "p-4 h-full flex flex-col justify-between";
-  const deleteTextClasses = "flex-1 flex items-center justify-center text-center";
-
+  const deleteTextClasses =
+    "flex-1 flex items-center justify-center text-center";
 
   // Delete-knappen åpner bekreftelse-popup i kortet
   // Knappene i popuppen kaller på deleteVenueById fra context, eller lukker staten og går tilbake til vanlig kort
@@ -69,7 +73,6 @@ export const VenueCard: FC<IVenueCardProps> = ({
         return null;
 
       case "manage":
-
         // Hvis bruker har trykket på delete-knappen vises knappene under i et nytt kort
         if (confirming) {
           return (
@@ -127,7 +130,7 @@ export const VenueCard: FC<IVenueCardProps> = ({
       <div className={contentContainerClasses}>
         <div>
           <h3 className={titleClasses}>{venue.name}</h3>
-          <p>Capacity: {venue.capacity}</p>
+          <p>Capacity: {venue.capacity.toLocaleString()}</p>
         </div>
 
         <div className={buttonContainerStyling}>{renderButtons()}</div>
@@ -142,9 +145,9 @@ export const VenueCard: FC<IVenueCardProps> = ({
       return (
         <article className={deleteCardClasses}>
           <div className={deleteContentClasses}>
-              <p className={deleteTextClasses}> 
-                Deleting: {venue.name}. Are you sure? 
-              </p> 
+            <p className={deleteTextClasses}>
+              Deleting: {venue.name}. Are you sure?
+            </p>
             {renderButtons()}
           </div>
         </article>
