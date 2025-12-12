@@ -27,6 +27,8 @@ export const FinanceLoanWindow: FC = () => {
   const inputContainerStyling =
     "flex flex-col sm:flex-row gap-4 items-stretch sm:items-center lg:-mt-11";
 
+  const loanInputLabelStyling = "sr-only";
+
   const loadingContainer = "text-center";
   const loadingText = "text-xl text-gray-600";
 
@@ -89,6 +91,9 @@ export const FinanceLoanWindow: FC = () => {
 
         <section className={sectionBase}>
           <div className={inputContainerStyling}>
+            <label htmlFor="loan-input" className={loanInputLabelStyling}>
+              Input loan amount
+            </label>
             <input
               type="number"
               value={loanAmount}

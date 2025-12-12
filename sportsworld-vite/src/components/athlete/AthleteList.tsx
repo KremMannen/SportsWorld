@@ -36,11 +36,21 @@ export const AthleteList: FC<IAthleteListProps> = ({
     "px-4 py-2 rounded bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#870000] w-full sm:w-64";
   const searchButtonStyling =
     "w-full sm:w-auto px-4 py-2 rounded bg-[#4C0000] text-white font-bold hover:bg-[#870000] transition-colors cursor-pointer";
+  // sr-only: screen-reader only.
+  // klasse som gjør innhold usynlig for seende brukere, men tilgjengelig for screen readers
+  const searchBarLabelStyling = "sr-only";
   const loadingContainerStyling = "flex justify-center items-center py-12";
   const loadingTextStyling = "text-gray-500 text-lg";
   const errorContainerStyling =
     "bg-red-50 border border-red-400 text-red-700 px-4 py-3 my-10 rounded max-w-[200px] mx-auto";
   const cardsContainerBaseStyling = "grid grid-cols-12 gap-6 p-4 mb-8";
+  const errorMessage = athleteErrorMessage
+    ? athleteErrorMessage
+    : isSearchActive
+    ? `No fighters found matching "${searchQuery}"`
+    : filterType === "owned"
+    ? "No fighters signed yet"
+    : "No fighters available";
 
   // Endre layout basert på layoutVariant, slik at admin-page ikke får horizontal scroll på lg-breakpoint
   const cardsContainerLgStyling =
@@ -116,30 +126,10 @@ export const AthleteList: FC<IAthleteListProps> = ({
     }
 
     if (athleteErrorMessage || filteredAthletes.length === 0) {
-      const errorMessage = athleteErrorMessage
-        ? athleteErrorMessage
-        : isSearchActive
-        ? `No fighters found matching "${searchQuery}"`
-        : filterType === "owned"
-        ? "No fighters signed yet"
-        : "No fighters available";
-
       return (
         <>
           <div className={headerContainerStyling}>
             <h2 className={titleStyling}>{displayTitle}</h2>
-            <form onSubmit={handleSearch} className={searchContainerStyling}>
-              <input
-                type="text"
-                placeholder="Search fighters..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className={searchInputStyling}
-              />
-              <button type="submit" className={searchButtonStyling}>
-                Search
-              </button>
-            </form>
           </div>
           <div className={errorContainerStyling}>
             <p>{errorMessage}</p>
@@ -153,6 +143,9 @@ export const AthleteList: FC<IAthleteListProps> = ({
         <div className={headerContainerStyling}>
           <h2 className={titleStyling}>{displayTitle}</h2>
           <form onSubmit={handleSearch} className={searchContainerStyling}>
+            <label htmlFor="athlete-search" className={searchBarLabelStyling}>
+              Search athletes
+            </label>
             <input
               type="text"
               placeholder="Search fighters..."
