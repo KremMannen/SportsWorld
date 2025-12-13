@@ -14,8 +14,8 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
   variant,
   layoutVariant = "horizontal",
   confirming = false,
-  onActionFeedback,
   onConfirmingChange,
+  onActionFeedback,
 }) => {
   // Unngår prop drilling ved å bruke context direkte
   const { updateAthlete, deleteAthleteById } = useContext(

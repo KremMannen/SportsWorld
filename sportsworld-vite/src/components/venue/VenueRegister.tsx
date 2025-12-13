@@ -10,6 +10,8 @@ import {
 import { Link, useParams } from "react-router-dom";
 import { VenueContext } from "../../contexts/VenueContext";
 import type { IVenueContext } from "../../interfaces/contexts/IVenueContext";
+import type { IVenue } from "../../interfaces/objects/IVenue";
+import type { IVenueResponseSingle } from "../../interfaces/IServiceResponses";
 
 export const VenueRegister: FC = () => {
   const { venues, initError, addVenue, updateVenue, isLoading } = useContext(
@@ -27,6 +29,8 @@ export const VenueRegister: FC = () => {
   const [capacity, setCapacity] = useState("");
   const [image, setImage] = useState<File | null>(null);
 
+  const [actionFeedback, setActionFeedback] = useState("");
+
   const [operationSuccess, setOperationSuccess] = useState<boolean | null>(
     true
   );
@@ -35,40 +39,46 @@ export const VenueRegister: FC = () => {
   const handleRegister = async (e: FormEvent) => {
     e.preventDefault();
     setOperationSuccess(null);
+    setActionFeedback("");
     setOperationError("");
     if (venue === undefined) {
       if (!name || !capacity || !image) {
-        alert("Please fill in all fields.");
+        setActionFeedback("Please fill in all fields.");
         return;
       }
-      const newVenue = {
+      const newVenue: Omit<IVenue, "image" | "id"> = {
         name,
         capacity: Number(capacity),
-        image,
       };
-      const response = await addVenue(newVenue, image);
+      const response: IVenueResponseSingle = await addVenue(newVenue, image);
+      if (response.success) {
+        setActionFeedback("Successfully added venue!");
+      }
       setOperationSuccess(response.success);
       setOperationError(response.error ?? "");
     } else {
       // image kan være tom, da beholdes gamle bildet
       if (!name || !capacity) {
-        alert("Please fill in all fields.");
+        setActionFeedback("Please fill in all fields.");
         return;
       }
-      const updatedVenue = {
+      const updatedVenue: IVenue = {
         id: venue.id,
         name,
         capacity: Number(capacity),
         image: venue.image,
       };
-      const response = image
+      const response: IVenueResponseSingle = image
         ? await updateVenue(updatedVenue, image)
         : await updateVenue(updatedVenue);
+
+      if (response.success) {
+        setActionFeedback("Successfully updated venue!");
+      }
 
       setOperationSuccess(response.success);
       setOperationError(response.error ?? "");
     }
-
     setName("");
     setImage(null);
     setCapacity("");
@@ -87,6 +97,9 @@ export const VenueRegister: FC = () => {
     "bg-[#4C0000] text-white px-6 py-2 rounded font-bold hover:shadow hover:cursor-pointer hover:bg-[#870000]";
   const formsectionStyling = "flex flex-col gap-4 p-4";
   const inputsectionStyling = "flex flex-col gap-1";
+
+  const feedbackStyling = "text-sm text-black text-center";
+  const feedbackContainerStyling = `gap-2 rounded-sm px-2 py-1 border border-gray-300 shadow bg-white flex items-center justify-center max-w-[400px] mx-auto mt-4`;
 
   const errorsectionStyling =
     "flex  flex-col gap-4 max-w-[200px] mx-auto mx-auto bg-red-50 border border-red-400 text-red-700 p-2 mb-10 rounded";
@@ -234,6 +247,12 @@ export const VenueRegister: FC = () => {
             {isEditMode ? "Update Venue" : "Register Venue"}
           </button>
         </form>
+
+        {actionFeedback && (
+          <div className={feedbackContainerStyling}>
+            <p className={feedbackStyling}>{actionFeedback}</p>
+          </div>
+        )}
       </section>
     );
   };

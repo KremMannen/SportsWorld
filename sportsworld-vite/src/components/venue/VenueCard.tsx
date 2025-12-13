@@ -11,6 +11,7 @@ export const VenueCard: FC<IVenueCardProps> = ({
   layoutVariant = "horizontal",
   confirming = false,
   onConfirmingChange,
+  onActionFeedback,
 }) => {
   const { deleteVenueById } = useContext(VenueContext) as IVenueContext;
 
@@ -61,10 +62,13 @@ export const VenueCard: FC<IVenueCardProps> = ({
 
   // Delete-knappen åpner bekreftelse-popup i kortet
   // Knappene i popuppen kaller på deleteVenueById fra context, eller lukker staten og går tilbake til vanlig kort
-  const handleDeleteClick = () => onConfirmingChange?.(true);
+  const handleDeleteClick = () => {
+    onConfirmingChange?.(true);
+  };
   const handleCancel = () => onConfirmingChange?.(false);
   const handleConfirmDelete = () => {
     deleteVenueById(venue.id);
+    onActionFeedback?.(`${venue.name} successfully deleted`);
     onConfirmingChange?.(false);
   };
 

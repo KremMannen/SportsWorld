@@ -48,7 +48,8 @@ export const AthleteList: FC<IAthleteListProps> = ({
   const headerContainerStyling =
     "flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 p-2 px-8 bg-black";
   const titleStyling = "text-2xl text-white font-bold mb-2 sm:mb-0 text-center";
-  const feedbackStyling = "text-green-500 font-bold mb-2 sm:mb-0 text-center";
+  const feedbackStyling = "text-sm text-black text-center";
+  const feedbackContainerStyling = `gap-2 rounded-sm px-2 py-1 border border-gray-300 shadow bg-white flex items-center justify-center max-w-[400px] mx-auto mt-4`;
 
   const searchContainerStyling =
     "flex flex-col sm:flex-row py-2 sm:py-0 gap-2 w-full sm:w-auto";
@@ -81,13 +82,12 @@ export const AthleteList: FC<IAthleteListProps> = ({
 
     if (searchQuery.trim()) {
       const response: IAthleteResponseList = await searchByName(searchQuery);
-      console.log(response.error);
       // Tomt resultat gir også false på success, så må sjekke etter error message for å vite om noe teknisk gikk galt
       if (!response.success && response.error) {
-        setOperationSuccess(false);
+        setOperationSuccess(response.success);
         setOperationError(response.error);
       } else {
-        setOperationSuccess(true);
+        setOperationSuccess(null);
       }
       setIsSearchActive(true);
     } else {
@@ -154,7 +154,6 @@ export const AthleteList: FC<IAthleteListProps> = ({
         <section className={sectionContainerStyling}>
           <div className={headerContainerStyling}>
             <h2 className={titleStyling}>{displayTitle}</h2>
-            <p className={feedbackStyling}>{actionFeedback}</p>
             {filterType === "all" && (
               <form onSubmit={handleSearch} className={searchContainerStyling}>
                 <label
@@ -179,6 +178,9 @@ export const AthleteList: FC<IAthleteListProps> = ({
           <div className={errorContainerStyling}>
             <p>{errorMessage}</p>
           </div>
+          <div className={feedbackContainerStyling}>
+            <p className={feedbackStyling}>{actionFeedback}</p>
+          </div>
         </section>
       );
     }
@@ -187,7 +189,6 @@ export const AthleteList: FC<IAthleteListProps> = ({
       <section className={sectionContainerStyling}>
         <div className={headerContainerStyling}>
           <h2 className={titleStyling}>{displayTitle}</h2>
-          <p className={feedbackStyling}>{actionFeedback}</p>
           {filterType === "all" && (
             <form onSubmit={handleSearch} className={searchContainerStyling}>
               <label htmlFor="athlete-search" className={searchBarLabelStyling}>
@@ -214,15 +215,21 @@ export const AthleteList: FC<IAthleteListProps> = ({
               variant={cardVariant}
               layoutVariant={layoutVariant}
               confirming={confirmingId === athlete.id}
-              onActionFeedback={(feedback) => {
-                setActionFeedback(feedback);
-              }}
               onConfirmingChange={(isConfirming) =>
                 setConfirmingId(isConfirming ? athlete.id : null)
               }
+              onActionFeedback={(feedback) => {
+                setActionFeedback(feedback);
+              }}
             />
           ))}
         </div>
+
+        {actionFeedback && (
+          <div className={feedbackContainerStyling}>
+            <p className={feedbackStyling}>{actionFeedback}</p>
+          </div>
+        )}
       </section>
     );
   };

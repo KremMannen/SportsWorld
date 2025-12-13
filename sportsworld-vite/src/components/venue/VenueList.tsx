@@ -3,6 +3,7 @@ import { VenueContext } from "../../contexts/VenueContext";
 import type { IVenueContext } from "../../interfaces/contexts/IVenueContext";
 import type { IVenueListProps } from "../../interfaces/components/IVenueListProps";
 import { VenueCard } from "./VenueCard";
+import type { IVenueResponseList } from "../../interfaces/IServiceResponses";
 
 export const VenueList: FC<IVenueListProps> = ({
   cardVariant = "view",
@@ -14,6 +15,7 @@ export const VenueList: FC<IVenueListProps> = ({
 
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearchActive, setIsSearchActive] = useState(false);
+  const [actionFeedback, setActionFeedback] = useState("");
 
   const [operationSuccess, setOperationSuccess] = useState<boolean | null>(
     null
@@ -37,6 +39,9 @@ export const VenueList: FC<IVenueListProps> = ({
   const searchButtonStyling =
     "w-full sm:w-auto px-4 py-2 rounded bg-[#4C0000] text-white font-bold hover:bg-[#870000] transition-colors cursor-pointer";
   const searchBarLabelStyling = "sr-only";
+
+  const feedbackStyling = "text-sm text-black text-center";
+  const feedbackContainerStyling = `gap-2 rounded-sm px-2 py-1 border border-gray-300 shadow bg-white flex items-center justify-center max-w-[400px] mx-auto mt-4`;
 
   const loadingContainerStyling = "flex justify-center items-center py-12";
   const loadingTextStyling = "text-gray-500 text-lg";
@@ -62,12 +67,17 @@ export const VenueList: FC<IVenueListProps> = ({
   const handleSearch = async (e: FormEvent) => {
     e.preventDefault();
     setOperationSuccess(null);
+    setActionFeedback("");
     setOperationError("");
     if (searchQuery.trim()) {
-      const response = await searchByName(searchQuery);
+      const response: IVenueResponseList = await searchByName(searchQuery);
+      if (!response.success && response.error) {
+        setOperationSuccess(response.success);
+        setOperationError(response.error);
+      } else {
+        setOperationSuccess(null);
+      }
       setIsSearchActive(true);
-      setOperationSuccess(response.success);
-      setOperationError(response.error ?? "");
     } else {
       // Hvis søkefeltet er tomt, vis alle venues igjen
       setIsSearchActive(false);
@@ -203,9 +213,18 @@ export const VenueList: FC<IVenueListProps> = ({
               onConfirmingChange={(isConfirming) =>
                 setConfirmingId(isConfirming ? venue.id : null)
               }
+              onActionFeedback={(feedback) => {
+                setActionFeedback(feedback);
+              }}
             />
           ))}
         </div>
+
+        {actionFeedback && (
+          <div className={feedbackContainerStyling}>
+            <p className={feedbackStyling}>{actionFeedback}</p>
+          </div>
+        )}
       </section>
     );
   };

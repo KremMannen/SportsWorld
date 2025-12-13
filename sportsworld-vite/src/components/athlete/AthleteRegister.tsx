@@ -10,6 +10,7 @@ import { AthleteContext } from "../../contexts/AthleteContext";
 import type { IAthleteContext } from "../../interfaces/contexts/IAthleteContext";
 import { Link, useParams } from "react-router-dom";
 import type { IAthleteResponseSingle } from "../../interfaces/IServiceResponses";
+import type { IAthlete } from "../../interfaces/objects/IAthlete";
 
 // Registrerer nye atleter om url parameteret er undefined
 // Om id er passert som parameter, oppdateres den assosierte athleten
@@ -54,14 +55,17 @@ export const AthleteRegister: FC = () => {
         alert("Please fill in all fields.");
         return;
       }
-      const newAthlete = {
+      const newAthlete: Omit<IAthlete, "image" | "id"> = {
         name,
         price: Number(price),
         gender,
         purchased: false,
       };
 
-      const response = await addAthlete(newAthlete, image);
+      const response: IAthleteResponseSingle = await addAthlete(
+        newAthlete,
+        image
+      );
       if (response.success === true) {
         setActionFeedback(
           `Athlete ${response.data?.name} successfully created `
@@ -76,7 +80,7 @@ export const AthleteRegister: FC = () => {
         return;
       }
 
-      const updatedAthlete = {
+      const updatedAthlete: IAthlete = {
         id: athlete.id,
         name,
         price: Number(price),
@@ -131,9 +135,10 @@ export const AthleteRegister: FC = () => {
     "flex gap-12 rounded-sm px-4 py-2 bg-black text-black w-full";
   const titleStyling = "text-lg text-white font-bold";
   const feedbackStyling = "text-sm text-black text-center";
-  const feedbackCheckmarkStyling = "text-base  text-green-500 text-s ";
-  const feedbackContainerStyling =
-    "gap-2 rounded-sm px-2 py-1 border border-gray-300 shadow bg-white flex items-center justify-center gap-2 max-w-[400px] mx-auto ";
+  const feedbackContainerStyling = `gap-2 rounded-sm px-2 py-1 border border-gray-300 shadow bg-white flex items-center justify-center gap-2 max-w-[400px] mx-auto ${
+    actionFeedback ? "" : "hidden"
+  }`;
+
   const inputStyling =
     "flex-1 px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#4C0000] min-w-0";
   const buttonStyling =
@@ -290,7 +295,6 @@ export const AthleteRegister: FC = () => {
         </form>
         <div className={feedbackContainerStyling}>
           <p className={feedbackStyling}>{actionFeedback}</p>
-          <p className={feedbackCheckmarkStyling}>✓</p>
         </div>
       </section>
     );

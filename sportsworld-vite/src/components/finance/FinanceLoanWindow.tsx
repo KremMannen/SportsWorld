@@ -1,6 +1,7 @@
 import { useContext, useState, type FC, type FormEvent } from "react";
 import type { IFinanceContext } from "../../interfaces/contexts/IFinanceContext";
 import { FinanceContext } from "../../contexts/FinanceContext";
+import type { IFinanceResponseSingle } from "../../interfaces/IServiceResponses";
 
 export const FinanceLoanWindow: FC = () => {
   const { finances, updateFinance } = useContext(
@@ -8,9 +9,10 @@ export const FinanceLoanWindow: FC = () => {
   ) as IFinanceContext;
 
   const [loanAmount, setLoanAmount] = useState("");
+  const [actionFeedback, setActionFeedback] = useState("");
 
   const [operationSuccess, setOperationSuccess] = useState<boolean | null>(
-    true
+    null
   );
   const [operationError, setOperationError] = useState<string>("");
 
@@ -23,6 +25,9 @@ export const FinanceLoanWindow: FC = () => {
 
   const debtTextStyling =
     "text-2xl font-bold mt-3 text-[#4C0000] bg-transparent";
+
+  const feedbackStyling = "text-sm text-black text-center";
+  const feedbackContainerStyling = `gap-2 rounded-sm px-2 py-1 border border-gray-300 shadow bg-white flex items-center justify-center max-w-[400px] mx-auto mt-4`;
 
   const inputBase =
     "flex-1 px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#4C0000] min-w-0";
@@ -41,16 +46,17 @@ export const FinanceLoanWindow: FC = () => {
   // --- Knapp handler ---
   const handleLoanRequest = async (e: FormEvent) => {
     e.preventDefault();
-    setOperationSuccess(null);
+    setActionFeedback("");
     setOperationError("");
+
     if (loanAmount.trim() === "" || isNaN(Number(loanAmount))) {
-      alert("Please enter a valid loan amount.");
+      setActionFeedback("Please enter a valid loan amount.");
       return;
     }
 
     const loanValue = Number(loanAmount);
     if (loanValue <= 0) {
-      alert("Loan amount must be greater than 0.");
+      setActionFeedback("Loan amount must be greater than 0.");
       return;
     }
 
@@ -60,9 +66,20 @@ export const FinanceLoanWindow: FC = () => {
       moneyLeft: finances.moneyLeft + loanValue,
     };
 
-    const response = await updateFinance(updatedFinance);
-    setOperationSuccess(response.success);
-    setOperationError(response.error ?? "");
+    const response: IFinanceResponseSingle = await updateFinance(
+      updatedFinance
+    );
+
+    if (response.success) {
+      setActionFeedback(
+        `Successfully borrowed: $${loanValue.toLocaleString()}`
+      );
+      setOperationSuccess(true);
+    } else {
+      setOperationSuccess(false);
+      setOperationError(response.error ?? "Failed to process loan");
+    }
+
     setLoanAmount("");
   };
 
@@ -107,6 +124,11 @@ export const FinanceLoanWindow: FC = () => {
               Request Loan
             </button>
           </div>
+          {actionFeedback && (
+            <div className={feedbackContainerStyling}>
+              <p className={feedbackStyling}>{actionFeedback}</p>
+            </div>
+          )}
         </section>
       </>
     );

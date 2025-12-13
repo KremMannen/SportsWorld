@@ -11,4 +11,5 @@ export interface IVenueCardProps {
   layoutVariant?: LayoutVariant;
   confirming?: boolean;
   onConfirmingChange?: (confirming: boolean) => void;
+  onActionFeedback?: (feedback: string) => void;
 }
