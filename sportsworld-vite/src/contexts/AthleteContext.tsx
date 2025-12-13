@@ -15,6 +15,7 @@ import type {
   IAthleteResponseList,
   IAthleteResponseSingle,
   IDefaultResponse,
+  IUploadResponse,
 } from "../interfaces/IServiceResponses";
 
 export const AthleteContext = createContext<IAthleteContext | null>(null);
@@ -26,14 +27,16 @@ export const AthleteProvider: FC<IProviderProps> = ({ children }) => {
   // isLoading tilbyr en sentralisert variabel å vise loading message fra, så slipper komponentene å ha lokale variabler for det
   const [athleteIsLoading, setAthleteIsLoading] = useState<boolean>(false);
 
-  // Denne forhindrer "race conditions" under initialisering. Foruten blir initializeAthletes kalt to ganger.
-  // Vi bruker useRef fordi den ikke skal trigge re-render, og vi trenger at den oppdateres med en gang.
-  const isInitializing = useRef(false);
+  // Vi vil at context skal initialize uten en component, så for at component skal ha tilgang
+  // til errors som oppstår under init bruker vi denne
+  const initError = useRef<string | null>(null);
+  // Unngår race condition
+  const hasInitialized = useRef(false);
 
   const searchByID = async (id: number): Promise<IAthleteResponseSingle> => {
     setAthleteIsLoading(true);
 
-    const response = await getAthleteById(id);
+    const response: IAthleteResponseSingle = await getAthleteById(id);
     if (response.success && response.data) {
       setSearchResults([response.data]);
       setAthleteIsLoading(false);
@@ -45,11 +48,8 @@ export const AthleteProvider: FC<IProviderProps> = ({ children }) => {
 
   const searchByName = async (name: string): Promise<IAthleteResponseList> => {
     setAthleteIsLoading(true);
-    const response = await getAthletesByName(name);
-    if (response.success && response.data) {
-      setSearchResults(response.data);
-    }
-
+    const response: IAthleteResponseList = await getAthletesByName(name);
+    setSearchResults(response.data);
     setAthleteIsLoading(false);
     return response;
   };
@@ -58,7 +58,8 @@ export const AthleteProvider: FC<IProviderProps> = ({ children }) => {
     athlete: Omit<IAthlete, "image" | "id">,
     img: File
   ): Promise<IAthleteResponseSingle> => {
-    const uploadResponse = await ImageUploadService.uploadAthleteImage(img);
+    const uploadResponse: IUploadResponse =
+      await ImageUploadService.uploadAthleteImage(img);
     if (!uploadResponse.success || uploadResponse.fileName === null) {
       // Konverterer IUploadResponse til IAthleteResponseSingle
       return {
@@ -67,8 +68,13 @@ export const AthleteProvider: FC<IProviderProps> = ({ children }) => {
         data: null,
       };
     }
-    const athleteWithImage = { ...athlete, image: uploadResponse.fileName };
-    const postResponse = await postAthlete(athleteWithImage);
+    const athleteWithImage: Omit<IAthlete, "id"> = {
+      ...athlete,
+      image: uploadResponse.fileName,
+    };
+    const postResponse: IAthleteResponseSingle = await postAthlete(
+      athleteWithImage
+    );
 
     if (postResponse.data) {
       // updatedAthlete har ID'en fra backend
@@ -80,7 +86,7 @@ export const AthleteProvider: FC<IProviderProps> = ({ children }) => {
   };
 
   const deleteAthleteById = async (id: number): Promise<IDefaultResponse> => {
-    const response = await deleteAthlete(id);
+    const response: IDefaultResponse = await deleteAthlete(id);
     if (!response.success) {
       return response;
     }
@@ -97,7 +103,8 @@ export const AthleteProvider: FC<IProviderProps> = ({ children }) => {
     let fileName = athlete.image;
 
     if (img) {
-      const uploadResponse = await ImageUploadService.uploadAthleteImage(img);
+      const uploadResponse: IUploadResponse =
+        await ImageUploadService.uploadAthleteImage(img);
 
       if (!uploadResponse.success || uploadResponse.fileName === null) {
         return {
@@ -109,8 +116,10 @@ export const AthleteProvider: FC<IProviderProps> = ({ children }) => {
       fileName = uploadResponse.fileName;
     }
 
-    const athleteWithImage = { ...athlete, image: fileName };
-    const updateResponse = await putAthlete(athleteWithImage);
+    const athleteWithImage: IAthlete = { ...athlete, image: fileName };
+    const updateResponse: IAthleteResponseSingle = await putAthlete(
+      athleteWithImage
+    );
 
     if (updateResponse.data) {
       const updatedAthlete: IAthlete = updateResponse.data;
@@ -123,21 +132,22 @@ export const AthleteProvider: FC<IProviderProps> = ({ children }) => {
 
   // Seeding av databasen ved førstegangsoppstart
   const initializeAthletes = async () => {
-    if (isInitializing.current) return;
-    isInitializing.current = true;
+    // Unngår dobbel kjøring
+    if (hasInitialized.current) return;
+    hasInitialized.current = true;
     setAthleteIsLoading(true);
 
-    const getResponse = await getAthletes();
+    const getResponse: IAthleteResponseList = await getAthletes();
 
     if (!getResponse.success) {
-      isInitializing.current = false;
+      initError.current = getResponse.error ?? "Failed to load fighters";
       setAthleteIsLoading(false);
       return;
     }
 
     if (getResponse.data.length === 0) {
       console.log(`Seeding database with athletes`);
-      const seedAthletes = [
+      const seedAthletes: Omit<IAthlete, "id">[] = [
         {
           name: "Jon Jones",
           price: 100000,
@@ -213,23 +223,21 @@ export const AthleteProvider: FC<IProviderProps> = ({ children }) => {
       const seededAthletes: IAthlete[] = [];
 
       for (const athlete of seedAthletes) {
-        const postResponse = await postAthlete(athlete);
+        const postResponse: IAthleteResponseSingle = await postAthlete(athlete);
         if (!postResponse.success) {
+          initError.current = postResponse.error ?? "Failed to seed fighters";
           setAthleteIsLoading(false);
-          isInitializing.current = false;
           return;
         }
-        if (postResponse.data) {
+        if (postResponse.data && postResponse.success) {
           const updatedAthlete: IAthlete = postResponse.data;
           seededAthletes.push(updatedAthlete);
         }
       }
       setAthletes(seededAthletes);
-      isInitializing.current = false;
       setAthleteIsLoading(false);
       return;
     }
-    isInitializing.current = false;
     setAthletes(getResponse.data);
     setAthleteIsLoading(false);
   };
@@ -244,6 +252,7 @@ export const AthleteProvider: FC<IProviderProps> = ({ children }) => {
         athletes,
         searchResults,
         athleteIsLoading,
+        initError: initError.current,
         searchByID,
         searchByName,
         addAthlete,

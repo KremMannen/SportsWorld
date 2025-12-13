@@ -14,7 +14,7 @@ export const FinanceDashboard: FC<IFinanceDashboardProps> = ({
     AthleteContext
   ) as IAthleteContext;
 
-  const { finances, financeIsLoading } = useContext(
+  const { finances, initError, financeIsLoading } = useContext(
     FinanceContext
   ) as IFinanceContext;
 
@@ -22,10 +22,12 @@ export const FinanceDashboard: FC<IFinanceDashboardProps> = ({
   const loadingContainer = "text-center";
   const loadingText = "text-xl text-gray-600";
   const errorContainer =
-    "bg-red-50 border border-red-400 text-red-700 px-4 py-3 my-10 rounded max-w-[200px] mx-auto";
+    "bg-red-50 border border-red-400 text-red-700 px-4 py-3 mb-10 rounded max-w-[200px] mx-auto";
   const sectionBase = "w-full pt-12 grid grid-cols-12 gap-6 text-center";
   const sectionErrorBase = "pt-12";
   const containerStyling = "col-span-12 lg:col-span-6 grid grid-cols-12 gap-6";
+
+  const sectionContainerStyling = `py-12`;
 
   // --- Kalkulerte visningsverdier ---
   const purchasedAthletes = athletes.filter((a) => a.purchased);
@@ -65,7 +67,16 @@ export const FinanceDashboard: FC<IFinanceDashboardProps> = ({
   };
 
   const renderJsx = () => {
-    // Loading
+    if (initError) {
+      return (
+        <section className={sectionContainerStyling}>
+          <div className={errorContainer}>
+            <p>{initError}</p>
+          </div>
+        </section>
+      );
+    }
+
     if (athleteIsLoading || financeIsLoading) {
       return (
         <section className={sectionErrorBase}>

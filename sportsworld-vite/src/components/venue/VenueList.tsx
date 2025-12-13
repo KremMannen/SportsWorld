@@ -9,9 +9,8 @@ export const VenueList: FC<IVenueListProps> = ({
   isLimited = false,
   layoutVariant = "horizontal",
 }) => {
-  const { venues, searchResults, isLoading, searchByName } = useContext(
-    VenueContext
-  ) as IVenueContext;
+  const { venues, initError, searchResults, isLoading, searchByName } =
+    useContext(VenueContext) as IVenueContext;
 
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearchActive, setIsSearchActive] = useState(false);
@@ -107,6 +106,19 @@ export const VenueList: FC<IVenueListProps> = ({
       );
     }
 
+    if (initError) {
+      return (
+        <section className={sectionContainerStyling}>
+          <div className={headerContainerStyling}>
+            <h2 className={titleStyling}>{displayTitle}</h2>
+          </div>
+          <div className={errorContainerStyling}>
+            <p>{initError}</p>
+          </div>
+        </section>
+      );
+    }
+
     // Prioriteter å vise feilmld, ellers tilpasset brukermelding basert på om bruker søker eller ikke
     if (operationSuccess === false || displayVenues.length === 0) {
       const errorMsg = operationError
@@ -119,21 +131,23 @@ export const VenueList: FC<IVenueListProps> = ({
         <section className={sectionContainerStyling}>
           <div className={headerContainerStyling}>
             <h2 className={titleStyling}>{displayTitle}</h2>
-            <form onSubmit={handleSearch} className={searchContainerStyling}>
-              <label htmlFor="venue-search" className={searchBarLabelStyling}>
-                Search venues
-              </label>
-              <input
-                type="text"
-                placeholder="Search venues..."
-                value={searchQuery}
-                onChange={handleSearchInputChange}
-                className={searchInputStyling}
-              />
-              <button type="submit" className={searchButtonStyling}>
-                Search
-              </button>
-            </form>
+            {isLimited === false && (
+              <form onSubmit={handleSearch} className={searchContainerStyling}>
+                <label htmlFor="venue-search" className={searchBarLabelStyling}>
+                  Search venues
+                </label>
+                <input
+                  type="text"
+                  placeholder="Search venues..."
+                  value={searchQuery}
+                  onChange={handleSearchInputChange}
+                  className={searchInputStyling}
+                />
+                <button type="submit" className={searchButtonStyling}>
+                  Search
+                </button>
+              </form>
+            )}
           </div>
           <div className={errorContainerStyling}>
             <p>{errorMsg}</p>

@@ -9,16 +9,18 @@ import {
 import { AthleteContext } from "../../contexts/AthleteContext";
 import type { IAthleteContext } from "../../interfaces/contexts/IAthleteContext";
 import { Link, useParams } from "react-router-dom";
+import type { IAthleteResponseSingle } from "../../interfaces/IServiceResponses";
 
 // Registrerer nye atleter om url parameteret er undefined
 // Om id er passert som parameter, oppdateres den assosierte athleten
 
 export const AthleteRegister: FC = () => {
-  const { athletes, updateAthlete, addAthlete, athleteIsLoading } = useContext(
-    AthleteContext
-  ) as IAthleteContext;
+  const { athletes, initError, updateAthlete, addAthlete, athleteIsLoading } =
+    useContext(AthleteContext) as IAthleteContext;
 
   const { athleteId } = useParams<{ athleteId: string }>();
+
+  const [actionFeedback, setActionFeedback] = useState("");
 
   // Redigeringsmodus om det er passert parameter i url (athlete.id)
   const isEditMode = athleteId !== undefined;
@@ -60,6 +62,11 @@ export const AthleteRegister: FC = () => {
       };
 
       const response = await addAthlete(newAthlete, image);
+      if (response.success === true) {
+        setActionFeedback(
+          `Athlete ${response.data?.name} successfully created `
+        );
+      }
       setOperationError(response.error ?? "");
       setOperationSuccess(response.success);
     } else {
@@ -78,15 +85,17 @@ export const AthleteRegister: FC = () => {
         purchased: athlete.purchased,
       };
 
-      if (image) {
-        const updateResponse = await updateAthlete(updatedAthlete, image);
-        setOperationError(updateResponse.error ?? "");
-        setOperationSuccess(updateResponse.success);
-      } else {
-        const updateResponse = await updateAthlete(updatedAthlete);
-        setOperationError(updateResponse.error ?? "");
-        setOperationSuccess(updateResponse.success);
+      const updateResponse: IAthleteResponseSingle = image
+        ? await updateAthlete(updatedAthlete, image)
+        : await updateAthlete(updatedAthlete);
+
+      if (updateResponse.success === true) {
+        setActionFeedback(
+          `Athlete ${updateResponse.data?.name} successfully updated `
+        );
       }
+      setOperationError(updateResponse.error ?? "");
+      setOperationSuccess(updateResponse.success);
     }
 
     setName("");
@@ -117,10 +126,14 @@ export const AthleteRegister: FC = () => {
 
   // --- Tailwind styling variabler ---
   const sectionStyling =
-    "col-span-9 col-start-3 sm:col-span-6 lg:col-span-4 py-6 pt-12";
+    "col-span-9 col-start-3 sm:col-span-6 lg:col-span-4 py-6 pt-12 ";
   const titleContainerStyling =
-    "rounded-sm shadow-md shadow-black/40 px-4 py-2 bg-black text-black w-full";
+    "flex gap-12 rounded-sm px-4 py-2 bg-black text-black w-full";
   const titleStyling = "text-lg text-white font-bold";
+  const feedbackStyling = "text-sm text-black text-center";
+  const feedbackCheckmarkStyling = "text-base  text-green-500 text-s ";
+  const feedbackContainerStyling =
+    "gap-2 rounded-sm px-2 py-1 border border-gray-300 shadow bg-white flex items-center justify-center gap-2 max-w-[400px] mx-auto ";
   const inputStyling =
     "flex-1 px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#4C0000] min-w-0";
   const buttonStyling =
@@ -129,11 +142,20 @@ export const AthleteRegister: FC = () => {
   const inputContainerStyling = "flex flex-col gap-1";
 
   const errorContainerStyling =
-    "bg-red-50 border border-red-400 text-red-700 px-4 py-3 mb-10 rounded";
+    "bg-red-50 border border-red-400 text-red-700 px-4 py-3 mb-10 rounded max-w-[200px] mx-auto";
   const loadingContainerStyling = "flex justify-center items-center py-12";
   const loadingTextStyling = "text-gray-500 text-lg";
 
   const renderJsx = () => {
+    if (initError) {
+      return (
+        <section className={sectionStyling}>
+          <div className={errorContainerStyling}>
+            <p>{initError}</p>
+          </div>
+        </section>
+      );
+    }
     // Vi sjekker kun etter id- og athlete- relaterte feil når ID er passert og komponenten skal være i redigeringsmodus
     if (isEditMode) {
       const idNumber = Number(athleteId);
@@ -266,6 +288,10 @@ export const AthleteRegister: FC = () => {
             {isEditMode ? "Update Athlete" : "Register Athlete"}
           </button>
         </form>
+        <div className={feedbackContainerStyling}>
+          <p className={feedbackStyling}>{actionFeedback}</p>
+          <p className={feedbackCheckmarkStyling}>✓</p>
+        </div>
       </section>
     );
   };

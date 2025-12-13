@@ -12,7 +12,7 @@ import { VenueContext } from "../../contexts/VenueContext";
 import type { IVenueContext } from "../../interfaces/contexts/IVenueContext";
 
 export const VenueRegister: FC = () => {
-  const { venues, addVenue, updateVenue, isLoading } = useContext(
+  const { venues, initError, addVenue, updateVenue, isLoading } = useContext(
     VenueContext
   ) as IVenueContext;
 
@@ -89,7 +89,7 @@ export const VenueRegister: FC = () => {
   const inputsectionStyling = "flex flex-col gap-1";
 
   const errorsectionStyling =
-    "flex flex-col gap-4 max-w-[250px] mx-auto bg-red-50 border border-red-400 text-red-700 p-2 mb-10 rounded";
+    "flex  flex-col gap-4 max-w-[200px] mx-auto mx-auto bg-red-50 border border-red-400 text-red-700 p-2 mb-10 rounded";
 
   const loadingsectionStyling = "flex justify-center items-center py-12";
   const loadingTextStyling = "text-gray-500 text-lg";
@@ -151,11 +151,23 @@ export const VenueRegister: FC = () => {
       );
     }
 
+    if (initError) {
+      return (
+        <section className={sectionStyling}>
+          <div className={errorsectionStyling}>
+            <p>{initError}</p>
+          </div>
+        </section>
+      );
+    }
+
     if (operationSuccess === false) {
       return (
-        <div className={errorsectionStyling}>
-          <p>{operationError}</p>
-        </div>
+        <section className={sectionStyling}>
+          <div className={errorsectionStyling}>
+            <p>{operationError}</p>
+          </div>
+        </section>
       );
     }
 

@@ -9,6 +9,7 @@ export interface IAthleteContext {
   athletes: IAthlete[];
   searchResults: IAthlete[];
   athleteIsLoading: boolean;
+  initError: string | null;
   searchByID: (id: number) => Promise<IAthleteResponseSingle>;
   searchByName: (name: string) => Promise<IAthleteResponseList>;
   addAthlete: (

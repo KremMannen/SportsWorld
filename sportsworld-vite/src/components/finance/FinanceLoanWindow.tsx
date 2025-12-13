@@ -67,11 +67,13 @@ export const FinanceLoanWindow: FC = () => {
   };
 
   const renderJsx = () => {
-    if (!operationSuccess) {
+    if (operationSuccess === false) {
       return (
-        <div className={errorContainer}>
-          <p>{operationError}</p>
-        </div>
+        <section className={sectionBase}>
+          <div className={errorContainer}>
+            <p>{operationError}</p>
+          </div>{" "}
+        </section>
       );
     }
 

@@ -9,6 +9,7 @@ export interface IVenueContext {
   venues: IVenue[];
   searchResults: IVenue[];
   isLoading: boolean;
+  initError: string | null;
   searchByID: (id: number) => Promise<IVenueResponseSingle>;
   searchByName: (name: string) => Promise<IVenueResponseList>;
   addVenue: (

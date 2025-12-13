@@ -7,7 +7,10 @@ import {
 } from "../services/SportsWorldService";
 import type { IFinanceContext } from "../interfaces/contexts/IFinanceContext";
 import type { IFinance } from "../interfaces/objects/IFinance";
-import type { IFinanceResponseSingle } from "../interfaces/IServiceResponses";
+import type {
+  IFinanceResponseList,
+  IFinanceResponseSingle,
+} from "../interfaces/IServiceResponses";
 
 // Vi bruker denne for å slippe å sette | null i finances useState
 // Fungerer som standardverdier som vises mens innhold laster
@@ -24,14 +27,16 @@ export const FinanceContext = createContext<IFinanceContext | null>(null);
 export const FinanceProvider: FC<IProviderProps> = ({ children }) => {
   const [finances, setFinance] = useState<IFinance>(defaultFinance);
   const [financeIsLoading, setFinanceIsLoading] = useState(false);
-  const isInitializing = useRef(false);
+
+  const initError = useRef<string | null>(null);
+  const hasInitialized = useRef(false);
 
   const updateFinance = async (
     updatedFinance: IFinance
   ): Promise<IFinanceResponseSingle> => {
     setFinanceIsLoading(true);
 
-    const response = await putFinance(updatedFinance);
+    const response: IFinanceResponseSingle = await putFinance(updatedFinance);
 
     if (!response.success) {
       setFinanceIsLoading(false);
@@ -46,21 +51,19 @@ export const FinanceProvider: FC<IProviderProps> = ({ children }) => {
   };
 
   const initializeFinances = async (): Promise<void> => {
-    if (isInitializing.current) {
-      return;
-    }
-    isInitializing.current = true;
+    if (hasInitialized.current) return;
+    hasInitialized.current = true;
     setFinanceIsLoading(true);
 
-    const getResponse = await getFinances();
+    const getResponse: IFinanceResponseList = await getFinances();
 
     if (!getResponse.success) {
+      initError.current = getResponse.error ?? "Failed to load finances";
       setFinanceIsLoading(false);
-      isInitializing.current = false;
       return;
     }
 
-    const financeArray = getResponse.data;
+    const financeArray: IFinance[] = getResponse.data;
 
     if (financeArray.length === 0) {
       console.log(
@@ -68,7 +71,6 @@ export const FinanceProvider: FC<IProviderProps> = ({ children }) => {
       );
       await seedDatabase();
       setFinanceIsLoading(false);
-      isInitializing.current = false;
       return;
     }
 
@@ -78,33 +80,35 @@ export const FinanceProvider: FC<IProviderProps> = ({ children }) => {
       );
     }
 
-    const newestFinance = financeArray.reduce((latest, current) =>
+    const newestFinance: IFinance = financeArray.reduce((latest, current) =>
       current.id > latest.id ? current : latest
     );
 
     setFinance(newestFinance);
     setFinanceIsLoading(false);
-    isInitializing.current = false;
   };
 
   const seedDatabase = async () => {
     console.log(`Seeding database with finances`);
-    const seedFinances = {
+    const seedFinances: Omit<IFinance, "id"> = {
       moneyLeft: 100000,
       numberOfPurchases: 0,
       moneySpent: 0,
       debt: 0,
     };
 
-    const response = await postFinance(seedFinances);
+    const postResponse: IFinanceResponseSingle = await postFinance(
+      seedFinances
+    );
 
-    if (!response.success) {
+    if (!postResponse.success) {
       console.error("Failed to seed database.");
+      initError.current = postResponse.error ?? "Failed to seed finance";
       return;
     }
 
-    if (response.data) {
-      const updatedFinance: IFinance = response.data;
+    if (postResponse.data && postResponse.success) {
+      const updatedFinance: IFinance = postResponse.data;
       setFinance(updatedFinance);
       return;
     }
@@ -118,6 +122,7 @@ export const FinanceProvider: FC<IProviderProps> = ({ children }) => {
     <FinanceContext.Provider
       value={{
         finances,
+        initError: initError.current,
         financeIsLoading,
         updateFinance,
       }}

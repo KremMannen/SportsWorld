@@ -3,6 +3,7 @@ import { AthleteCard } from "./AthleteCard";
 import { AthleteContext } from "../../contexts/AthleteContext";
 import type { IAthleteContext } from "../../interfaces/contexts/IAthleteContext";
 import type { IAthleteListProps } from "../../interfaces/components/IAthleteListProps";
+import type { IAthleteResponseList } from "../../interfaces/IServiceResponses";
 
 // Håndterer visning av AthleteCards
 
@@ -11,7 +12,7 @@ export const AthleteList: FC<IAthleteListProps> = ({
   cardVariant = "view",
   layoutVariant = "horizontal",
 }) => {
-  const { athletes, searchResults, athleteIsLoading, searchByName } =
+  const { athletes, initError, searchResults, athleteIsLoading, searchByName } =
     useContext(AthleteContext) as IAthleteContext;
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -23,15 +24,15 @@ export const AthleteList: FC<IAthleteListProps> = ({
   const [confirmingId, setConfirmingId] = useState<number | null>(null);
 
   const [operationSuccess, setOperationSuccess] = useState<boolean | null>(
-    true
+    null
   );
   const [operationError, setOperationError] = useState<string>("");
 
   // Tilpasser errormessage til brukeren
   let errorMessage = "No fighters available";
-  if (operationError) {
+  if (operationSuccess === false) {
     errorMessage = operationError;
-  } else if (isSearchActive) {
+  } else if (isSearchActive && filterType === "all") {
     errorMessage = `No fighters found`;
   } else if (filterType === "owned") {
     errorMessage = "No fighters signed yet";
@@ -40,7 +41,7 @@ export const AthleteList: FC<IAthleteListProps> = ({
   const errorContainerStyling =
     "bg-red-50 border border-red-400 text-red-700 px-4 py-3 my-10 rounded max-w-[200px] mx-auto";
 
-  // Needs conditional extra padding against header if its closest to header
+  // Komponenter øverst på siden trenger ekstra top padding. denne er kun øverst når filtertypen er all
   const extraPadding = filterType === "all" ? "pt-12" : "";
   const sectionContainerStyling = `py-12 ${extraPadding}`;
 
@@ -75,12 +76,19 @@ export const AthleteList: FC<IAthleteListProps> = ({
   const handleSearch = async (e: FormEvent) => {
     e.preventDefault();
     setOperationSuccess(null);
+    setActionFeedback("");
     setOperationError("");
 
     if (searchQuery.trim()) {
-      const response = await searchByName(searchQuery);
-      setOperationSuccess(response.success);
-      setOperationError(response.error ?? "");
+      const response: IAthleteResponseList = await searchByName(searchQuery);
+      console.log(response.error);
+      // Tomt resultat gir også false på success, så må sjekke etter error message for å vite om noe teknisk gikk galt
+      if (!response.success && response.error) {
+        setOperationSuccess(false);
+        setOperationError(response.error);
+      } else {
+        setOperationSuccess(true);
+      }
       setIsSearchActive(true);
     } else {
       // Hvis søkefeltet er tomt, vis alle athletes igjen
@@ -128,27 +136,45 @@ export const AthleteList: FC<IAthleteListProps> = ({
       );
     }
 
+    if (initError) {
+      return (
+        <section className={sectionContainerStyling}>
+          <div className={headerContainerStyling}>
+            <h2 className={titleStyling}>{displayTitle}</h2>
+          </div>
+          <div className={errorContainerStyling}>
+            <p>{initError}</p>
+          </div>
+        </section>
+      );
+    }
+
     if (filteredAthletes.length === 0) {
       return (
         <section className={sectionContainerStyling}>
           <div className={headerContainerStyling}>
             <h2 className={titleStyling}>{displayTitle}</h2>
             <p className={feedbackStyling}>{actionFeedback}</p>
-            <form onSubmit={handleSearch} className={searchContainerStyling}>
-              <label htmlFor="athlete-search" className={searchBarLabelStyling}>
-                Search athletes
-              </label>
-              <input
-                type="text"
-                placeholder="Search fighters..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className={searchInputStyling}
-              />
-              <button type="submit" className={searchButtonStyling}>
-                Search
-              </button>
-            </form>
+            {filterType === "all" && (
+              <form onSubmit={handleSearch} className={searchContainerStyling}>
+                <label
+                  htmlFor="athlete-search"
+                  className={searchBarLabelStyling}
+                >
+                  Search fighters
+                </label>
+                <input
+                  type="text"
+                  placeholder="Search fighters..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className={searchInputStyling}
+                />
+                <button type="submit" className={searchButtonStyling}>
+                  Search
+                </button>
+              </form>
+            )}
           </div>
           <div className={errorContainerStyling}>
             <p>{errorMessage}</p>
@@ -162,21 +188,23 @@ export const AthleteList: FC<IAthleteListProps> = ({
         <div className={headerContainerStyling}>
           <h2 className={titleStyling}>{displayTitle}</h2>
           <p className={feedbackStyling}>{actionFeedback}</p>
-          <form onSubmit={handleSearch} className={searchContainerStyling}>
-            <label htmlFor="athlete-search" className={searchBarLabelStyling}>
-              Search athletes
-            </label>
-            <input
-              type="text"
-              placeholder="Search fighters..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className={searchInputStyling}
-            />
-            <button type="submit" className={searchButtonStyling}>
-              Search
-            </button>
-          </form>
+          {filterType === "all" && (
+            <form onSubmit={handleSearch} className={searchContainerStyling}>
+              <label htmlFor="athlete-search" className={searchBarLabelStyling}>
+                Search fighters
+              </label>
+              <input
+                type="text"
+                placeholder="Search fighters..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className={searchInputStyling}
+              />
+              <button type="submit" className={searchButtonStyling}>
+                Search
+              </button>
+            </form>
+          )}
         </div>
         <div className={cardsContainerStyling}>
           {filteredAthletes.map((athlete) => (

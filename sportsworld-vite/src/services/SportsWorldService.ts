@@ -35,6 +35,7 @@ const getAthletes = async (): Promise<IAthleteResponseList> => {
     return {
       success: false,
       data: [],
+      error: "Error connecting to database",
     };
   }
 };
@@ -52,10 +53,23 @@ const getAthleteById = async (id: number): Promise<IAthleteResponseSingle> => {
       data: response.data,
     };
   } catch (error) {
+    // Sjekker om det er Axios som slår feil
+    if (axios.isAxiosError(error) && error.response) {
+      // 404 må differansieres fra andre errors--dette er et forventet outcome og ikke feil.
+      if (error.response.status === 404) {
+        return {
+          success: true,
+          data: null,
+        };
+      }
+    }
+
+    // Andre tekniske feil
     console.error("getAthleteById: Failed to fetch athlete:", error);
     return {
       success: false,
       data: null,
+      error: "Error connecting to database",
     };
   }
 };
@@ -77,10 +91,23 @@ const getAthletesByName = async (
       data: response.data,
     };
   } catch (error) {
-    console.error("getAthletesByName: Failed to fetch athletes:", error);
+    // Sjekker om det er Axios som slår feil
+    if (axios.isAxiosError(error) && error.response) {
+      // 404 må differansieres fra andre errors--dette er et forventet outcome og ikke feil.
+      if (error.response.status === 404) {
+        return {
+          success: true,
+          data: [],
+        };
+      }
+    }
+
+    // Andre tekniske feil
+    console.error("getAthleteById: Failed to fetch athlete:", error);
     return {
       success: false,
       data: [],
+      error: "Error connecting to database",
     };
   }
 };
@@ -164,6 +191,7 @@ const getVenues = async (): Promise<IVenueResponseList> => {
     return {
       success: false,
       data: [],
+      error: "Error connecting to database",
     };
   }
 };
@@ -290,6 +318,7 @@ const getFinances = async (): Promise<IFinanceResponseList> => {
     return {
       success: false,
       data: [],
+      error: "Error connecting to database",
     };
   }
 };
