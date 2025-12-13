@@ -345,7 +345,8 @@ const putFinance = async (
 const validateResponseList = (
   response: AxiosResponse
 ): { isValid: boolean; error?: string } => {
-  // Sjekk om response status er 200 OK, andre statuskoder indikerer feil
+  // Sjekk om response status er 200 OK
+  // andre statuskoder indikerer feil
   if (response.status !== 200) {
     return { isValid: false, error: "Failed to fetch from server." };
   }

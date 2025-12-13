@@ -7,6 +7,7 @@ import {
 } from "../services/SportsWorldService";
 import type { IFinanceContext } from "../interfaces/contexts/IFinanceContext";
 import type { IFinance } from "../interfaces/objects/IFinance";
+import type { IFinanceResponseSingle } from "../interfaces/IServiceResponses";
 
 // Vi bruker denne for å slippe å sette | null i finances useState
 // Fungerer som standardverdier som vises mens innhold laster
@@ -22,40 +23,38 @@ export const FinanceContext = createContext<IFinanceContext | null>(null);
 
 export const FinanceProvider: FC<IProviderProps> = ({ children }) => {
   const [finances, setFinance] = useState<IFinance>(defaultFinance);
-  const [financeErrorMessage, setFinanceErrorMessage] = useState<string>("");
   const [financeIsLoading, setFinanceIsLoading] = useState(false);
   const isInitializing = useRef(false);
 
-  const updateFinance = async (updatedFinance: IFinance) => {
+  const updateFinance = async (
+    updatedFinance: IFinance
+  ): Promise<IFinanceResponseSingle> => {
     setFinanceIsLoading(true);
-    setFinanceErrorMessage("");
 
     const response = await putFinance(updatedFinance);
 
     if (!response.success) {
-      setFinanceErrorMessage(response.error ?? "Failed to update finances");
       setFinanceIsLoading(false);
-      return;
+      return response;
     }
     if (response.data) {
       const updatedFinance: IFinance = response.data;
       setFinance(updatedFinance);
     }
     setFinanceIsLoading(false);
+    return response;
   };
 
-  const initializeFinances = async () => {
+  const initializeFinances = async (): Promise<void> => {
     if (isInitializing.current) {
       return;
     }
     isInitializing.current = true;
     setFinanceIsLoading(true);
-    setFinanceErrorMessage("");
 
     const getResponse = await getFinances();
 
     if (!getResponse.success) {
-      setFinanceErrorMessage(getResponse.error ?? "Failed to load finances");
       setFinanceIsLoading(false);
       isInitializing.current = false;
       return;
@@ -100,12 +99,14 @@ export const FinanceProvider: FC<IProviderProps> = ({ children }) => {
     const response = await postFinance(seedFinances);
 
     if (!response.success) {
-      setFinanceErrorMessage(response.error ?? "Failed to seed finances");
+      console.error("Failed to seed database.");
+      return;
     }
 
     if (response.data) {
       const updatedFinance: IFinance = response.data;
       setFinance(updatedFinance);
+      return;
     }
   };
 
@@ -117,7 +118,6 @@ export const FinanceProvider: FC<IProviderProps> = ({ children }) => {
     <FinanceContext.Provider
       value={{
         finances,
-        financeErrorMessage,
         financeIsLoading,
         updateFinance,
       }}

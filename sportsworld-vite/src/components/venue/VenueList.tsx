@@ -9,11 +9,17 @@ export const VenueList: FC<IVenueListProps> = ({
   isLimited = false,
   layoutVariant = "horizontal",
 }) => {
-  const { venues, searchResults, errorMessage, isLoading, searchByName } =
-    useContext(VenueContext) as IVenueContext;
+  const { venues, searchResults, isLoading, searchByName } = useContext(
+    VenueContext
+  ) as IVenueContext;
 
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearchActive, setIsSearchActive] = useState(false);
+
+  const [operationSuccess, setOperationSuccess] = useState<boolean | null>(
+    null
+  );
+  const [operationError, setOperationError] = useState<string>("");
 
   // confirming-state er på foreldrenivå, ikke i VenueCard, slik at kun ett kort om gangen kan holde denne staten.
   // Dette gjør at dersom man trykker på delete et annet sted, mens et bekreftelsesvindu er åpent, vil det forrige lukkes automatisk
@@ -49,14 +55,25 @@ export const VenueList: FC<IVenueListProps> = ({
   const cardsContainerXlStyling = "xl:grid xl:overflow-visible";
   const cardsContainerStyling = `${cardsContainerBaseStyling} ${cardsContainerLgStyling} ${cardsContainerXlStyling}`;
 
-  const handleSearch = (e: FormEvent) => {
+  const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+    setOperationError(""); // ✅ Clear error when user starts typing
+  };
+
+  const handleSearch = async (e: FormEvent) => {
     e.preventDefault();
+    setOperationSuccess(null);
+    setOperationError("");
     if (searchQuery.trim()) {
-      searchByName(searchQuery);
+      const response = await searchByName(searchQuery);
       setIsSearchActive(true);
+      setOperationSuccess(response.success);
+      setOperationError(response.error ?? "");
     } else {
       // Hvis søkefeltet er tomt, vis alle venues igjen
       setIsSearchActive(false);
+      setOperationSuccess(null);
+      setOperationError("");
     }
   };
 
@@ -82,18 +99,6 @@ export const VenueList: FC<IVenueListProps> = ({
         <section className={sectionContainerStyling}>
           <div className={headerContainerStyling}>
             <h2 className={titleStyling}>{displayTitle}</h2>
-            <form onSubmit={handleSearch} className={searchContainerStyling}>
-              <input
-                type="text"
-                placeholder="Search venues..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className={searchInputStyling}
-              />
-              <button type="submit" className={searchButtonStyling}>
-                Search
-              </button>
-            </form>
           </div>
           <div className={loadingContainerStyling}>
             <div className={loadingTextStyling}>Loading venues...</div>
@@ -103,17 +108,32 @@ export const VenueList: FC<IVenueListProps> = ({
     }
 
     // Prioriteter å vise feilmld, ellers tilpasset brukermelding basert på om bruker søker eller ikke
-    if (errorMessage || displayVenues.length === 0) {
-      const errorMsg = errorMessage
-        ? errorMessage
+    if (operationSuccess === false || displayVenues.length === 0) {
+      const errorMsg = operationError
+        ? operationError
         : isSearchActive
-        ? `No venues found matching "${searchQuery}"`
+        ? `No venues found`
         : "No venues available";
 
       return (
         <section className={sectionContainerStyling}>
           <div className={headerContainerStyling}>
             <h2 className={titleStyling}>{displayTitle}</h2>
+            <form onSubmit={handleSearch} className={searchContainerStyling}>
+              <label htmlFor="venue-search" className={searchBarLabelStyling}>
+                Search venues
+              </label>
+              <input
+                type="text"
+                placeholder="Search venues..."
+                value={searchQuery}
+                onChange={handleSearchInputChange}
+                className={searchInputStyling}
+              />
+              <button type="submit" className={searchButtonStyling}>
+                Search
+              </button>
+            </form>
           </div>
           <div className={errorContainerStyling}>
             <p>{errorMsg}</p>
@@ -122,7 +142,7 @@ export const VenueList: FC<IVenueListProps> = ({
       );
     }
 
-    // Viser kun 4 venue-cards på forsiden
+    // Viser kun 4 venue-cards på forsiden, og ingen searchbar
     if (isLimited) {
       return (
         <section className={sectionContainerStyling}>
@@ -150,7 +170,7 @@ export const VenueList: FC<IVenueListProps> = ({
               type="text"
               placeholder="Search venues..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={handleSearchInputChange}
               className={searchInputStyling}
             />
             <button type="submit" className={searchButtonStyling}>

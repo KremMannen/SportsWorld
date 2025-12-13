@@ -11,29 +11,31 @@ export const AthleteList: FC<IAthleteListProps> = ({
   cardVariant = "view",
   layoutVariant = "horizontal",
 }) => {
-  const {
-    athletes,
-    searchResults,
-    athleteErrorMessage,
-    athleteIsLoading,
-    searchByName,
-  } = useContext(AthleteContext) as IAthleteContext;
+  const { athletes, searchResults, athleteIsLoading, searchByName } =
+    useContext(AthleteContext) as IAthleteContext;
 
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearchActive, setIsSearchActive] = useState(false);
+  const [actionFeedback, setActionFeedback] = useState("");
 
   // confirming-state er på foreldrenivå, ikke i AthleteCard, slik at kun ett kort om gangen kan holde denne staten.
   // Dette gjør at dersom man trykker på delete et annet sted, mens et bekreftelsesvindu er åpent, vil det forrige lukkes automatisk
   const [confirmingId, setConfirmingId] = useState<number | null>(null);
 
-  const errorMessage = athleteErrorMessage
-    ? athleteErrorMessage
-    : isSearchActive
-    ? `No fighters found matching "${searchQuery}"`
-    : filterType === "owned"
-    ? "No fighters signed yet"
-    : "No fighters available";
+  const [operationSuccess, setOperationSuccess] = useState<boolean | null>(
+    true
+  );
+  const [operationError, setOperationError] = useState<string>("");
 
+  // Tilpasser errormessage til brukeren
+  let errorMessage = "No fighters available";
+  if (operationError) {
+    errorMessage = operationError;
+  } else if (isSearchActive) {
+    errorMessage = `No fighters found`;
+  } else if (filterType === "owned") {
+    errorMessage = "No fighters signed yet";
+  }
   // --- Styling variabler ---
   const errorContainerStyling =
     "bg-red-50 border border-red-400 text-red-700 px-4 py-3 my-10 rounded max-w-[200px] mx-auto";
@@ -45,6 +47,7 @@ export const AthleteList: FC<IAthleteListProps> = ({
   const headerContainerStyling =
     "flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 p-2 px-8 bg-black";
   const titleStyling = "text-2xl text-white font-bold mb-2 sm:mb-0 text-center";
+  const feedbackStyling = "text-green-500 font-bold mb-2 sm:mb-0 text-center";
 
   const searchContainerStyling =
     "flex flex-col sm:flex-row py-2 sm:py-0 gap-2 w-full sm:w-auto";
@@ -63,20 +66,27 @@ export const AthleteList: FC<IAthleteListProps> = ({
   // Endre layout basert på layoutVariant, slik at admin-page ikke får horizontal scroll på lg-breakpoint
   const cardsContainerLgStyling =
     layoutVariant === "horizontal"
-      ? "lg:flex lg:flex-row lg:overflow-x-auto lg:gap-4"
+      ? "lg:flex lg:flex-row lg:overflow-x-auto lg:py-4 lg:gap-4 "
       : ""; // default styling (grid)
   // Går tilbake til vanlig grid-layout på xl
   const cardsContainerXlStyling = "xl:grid xl:overflow-visible";
   const cardsContainerStyling = `${cardsContainerBaseStyling} ${cardsContainerLgStyling} ${cardsContainerXlStyling}`;
 
-  const handleSearch = (e: FormEvent) => {
+  const handleSearch = async (e: FormEvent) => {
     e.preventDefault();
+    setOperationSuccess(null);
+    setOperationError("");
+
     if (searchQuery.trim()) {
-      searchByName(searchQuery);
+      const response = await searchByName(searchQuery);
+      setOperationSuccess(response.success);
+      setOperationError(response.error ?? "");
       setIsSearchActive(true);
     } else {
       // Hvis søkefeltet er tomt, vis alle athletes igjen
       setIsSearchActive(false);
+      setOperationSuccess(null);
+      setOperationError("");
     }
   };
 
@@ -110,7 +120,24 @@ export const AthleteList: FC<IAthleteListProps> = ({
         <section className={sectionContainerStyling}>
           <div className={headerContainerStyling}>
             <h2 className={titleStyling}>{displayTitle}</h2>
+          </div>
+          <div className={loadingContainerStyling}>
+            <div className={loadingTextStyling}>Loading fighters...</div>
+          </div>
+        </section>
+      );
+    }
+
+    if (filteredAthletes.length === 0) {
+      return (
+        <section className={sectionContainerStyling}>
+          <div className={headerContainerStyling}>
+            <h2 className={titleStyling}>{displayTitle}</h2>
+            <p className={feedbackStyling}>{actionFeedback}</p>
             <form onSubmit={handleSearch} className={searchContainerStyling}>
+              <label htmlFor="athlete-search" className={searchBarLabelStyling}>
+                Search athletes
+              </label>
               <input
                 type="text"
                 placeholder="Search fighters..."
@@ -123,19 +150,6 @@ export const AthleteList: FC<IAthleteListProps> = ({
               </button>
             </form>
           </div>
-          <div className={loadingContainerStyling}>
-            <div className={loadingTextStyling}>Loading fighters...</div>
-          </div>
-        </section>
-      );
-    }
-
-    if (athleteErrorMessage || filteredAthletes.length === 0) {
-      return (
-        <section className={sectionContainerStyling}>
-          <div className={headerContainerStyling}>
-            <h2 className={titleStyling}>{displayTitle}</h2>
-          </div>
           <div className={errorContainerStyling}>
             <p>{errorMessage}</p>
           </div>
@@ -147,6 +161,7 @@ export const AthleteList: FC<IAthleteListProps> = ({
       <section className={sectionContainerStyling}>
         <div className={headerContainerStyling}>
           <h2 className={titleStyling}>{displayTitle}</h2>
+          <p className={feedbackStyling}>{actionFeedback}</p>
           <form onSubmit={handleSearch} className={searchContainerStyling}>
             <label htmlFor="athlete-search" className={searchBarLabelStyling}>
               Search athletes
@@ -171,6 +186,9 @@ export const AthleteList: FC<IAthleteListProps> = ({
               variant={cardVariant}
               layoutVariant={layoutVariant}
               confirming={confirmingId === athlete.id}
+              onActionFeedback={(feedback) => {
+                setActionFeedback(feedback);
+              }}
               onConfirmingChange={(isConfirming) =>
                 setConfirmingId(isConfirming ? athlete.id : null)
               }

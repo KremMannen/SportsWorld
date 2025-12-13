@@ -11,6 +11,11 @@ import {
 import ImageUploadService from "../services/ImageUploadService";
 import type { IVenueContext } from "../interfaces/contexts/IVenueContext";
 import type { IVenue } from "../interfaces/objects/IVenue";
+import type {
+  IDefaultResponse,
+  IVenueResponseList,
+  IVenueResponseSingle,
+} from "../interfaces/IServiceResponses";
 
 export const VenueContext = createContext<IVenueContext | null>(null);
 
@@ -18,77 +23,67 @@ export const VenueProvider: FC<IProviderProps> = ({ children }) => {
   const [venues, setVenues] = useState<IVenue[]>([]);
   const [searchResults, setSearchResults] = useState<IVenue[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string>("");
 
   const isInitializing = useRef(false);
 
-  const searchByID = async (id: number) => {
+  const searchByID = async (id: number): Promise<IVenueResponseSingle> => {
     setIsLoading(true);
-    setErrorMessage("");
     const response = await getVenueById(id);
     if (response.success && response.data) {
       setSearchResults([response.data]);
-    } else {
-      setErrorMessage(response.error ?? "Venue not found");
     }
     setIsLoading(false);
+    return response;
   };
 
-  const searchByName = async (name: string) => {
+  const searchByName = async (name: string): Promise<IVenueResponseList> => {
     setIsLoading(true);
-    setErrorMessage("");
 
     const response = await getVenuesByName(name);
 
     if (response.success && response.data) {
       setSearchResults(response.data);
-    } else {
-      setErrorMessage(response.error ?? "No venues found");
     }
-
     setIsLoading(false);
+    return response;
   };
 
   const addVenue = async (
     newVenue: Omit<IVenue, "id" | "image">,
     img: File
-  ) => {
-    setErrorMessage("");
-
+  ): Promise<IVenueResponseSingle> => {
     const uploadResponse = await ImageUploadService.uploadVenueImage(img);
 
     if (!uploadResponse.success || uploadResponse.fileName === null) {
-      setErrorMessage(uploadResponse.error ?? "Image upload failed");
-      return;
+      return {
+        success: uploadResponse.success,
+        error: uploadResponse.error,
+        data: null,
+      };
     }
     const venueWithImage = { ...newVenue, image: uploadResponse.fileName };
     const postResponse = await postVenue(venueWithImage);
 
-    if (!postResponse.success) {
-      setErrorMessage(postResponse.error ?? "Failed to add venue");
-      return;
-    }
     if (postResponse.data) {
       // updatedAthlete har ID'en fra backend
       const updatedVenue: IVenue = postResponse.data;
       setVenues((prev) => [...prev, updatedVenue]);
     }
+    return postResponse;
   };
 
-  const deleteVenueById = async (id: number) => {
-    setErrorMessage("");
-
+  const deleteVenueById = async (id: number): Promise<IDefaultResponse> => {
     const response = await deleteVenue(id);
-
-    if (!response.success) {
-      setErrorMessage(response.error ?? "Failed to delete venue");
-      return;
+    if (response.success) {
+      setVenues((prev) => prev.filter((a) => a.id !== id));
     }
-    setVenues((prev) => prev.filter((a) => a.id !== id));
+    return response;
   };
 
-  const updateVenue = async (venue: IVenue, img?: File) => {
-    setErrorMessage("");
+  const updateVenue = async (
+    venue: IVenue,
+    img?: File
+  ): Promise<IVenueResponseSingle> => {
     setIsLoading(true);
 
     let fileName = venue.image;
@@ -96,18 +91,18 @@ export const VenueProvider: FC<IProviderProps> = ({ children }) => {
     if (img) {
       const uploadResponse = await ImageUploadService.uploadVenueImage(img);
       if (!uploadResponse.success || uploadResponse.fileName === null) {
-        setErrorMessage(uploadResponse.error ?? "Image upload failed");
-        return;
+        return {
+          success: uploadResponse.success,
+          error: uploadResponse.error,
+          data: null,
+        };
       }
       fileName = uploadResponse.fileName;
     }
 
     const venueWithImage = { ...venue, image: fileName };
     const updateResponse = await putVenue(venueWithImage);
-    if (!updateResponse.success) {
-      setErrorMessage(updateResponse.error ?? "Failed to update venue");
-      return;
-    }
+
     if (updateResponse.data) {
       const updatedVenue: IVenue = updateResponse.data;
       setVenues((prev) =>
@@ -115,19 +110,18 @@ export const VenueProvider: FC<IProviderProps> = ({ children }) => {
       );
     }
     setIsLoading(false);
+    return updateResponse;
   };
 
   const initializeVenues = async () => {
     if (isInitializing.current) return;
     isInitializing.current = true;
     setIsLoading(true);
-    setErrorMessage("");
 
     // Sjekk om det allerede finnes athletes
     const getResponse = await getVenues();
 
     if (!getResponse.success) {
-      setErrorMessage(getResponse.error ?? "Failed to connect to database");
       isInitializing.current = false;
       setIsLoading(false);
       return;
@@ -194,7 +188,6 @@ export const VenueProvider: FC<IProviderProps> = ({ children }) => {
       for (const venue of seedVenues) {
         const postResponse = await postVenue(venue);
         if (!postResponse.success) {
-          setErrorMessage(postResponse.error ?? "Failed to seed venues");
           isInitializing.current = false;
           setIsLoading(false);
           return;
@@ -223,7 +216,6 @@ export const VenueProvider: FC<IProviderProps> = ({ children }) => {
       value={{
         venues,
         searchResults,
-        errorMessage,
         isLoading,
         searchByID,
         searchByName,

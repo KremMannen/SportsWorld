@@ -10,11 +10,11 @@ import { FinanceLoanWindow } from "./FinanceLoanWindow";
 export const FinanceDashboard: FC<IFinanceDashboardProps> = ({
   limitedVariant = false,
 }) => {
-  const { athletes, athleteErrorMessage, athleteIsLoading } = useContext(
+  const { athletes, athleteIsLoading } = useContext(
     AthleteContext
   ) as IAthleteContext;
 
-  const { finances, financeErrorMessage, financeIsLoading } = useContext(
+  const { finances, financeIsLoading } = useContext(
     FinanceContext
   ) as IFinanceContext;
 
@@ -75,16 +75,7 @@ export const FinanceDashboard: FC<IFinanceDashboardProps> = ({
         </section>
       );
     }
-    // Error
-    if (athleteErrorMessage || financeErrorMessage) {
-      return (
-        <section className={sectionErrorBase}>
-          <div className={errorContainer}>
-            <p>{athleteErrorMessage || financeErrorMessage}</p>
-          </div>
-        </section>
-      );
-    }
+
     // Begrenset variant som vises kun på forsiden (homepage)
     if (limitedVariant) {
       return <section className={sectionBase}>{renderCards()}</section>;

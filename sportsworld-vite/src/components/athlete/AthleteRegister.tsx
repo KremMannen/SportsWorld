@@ -14,13 +14,9 @@ import { Link, useParams } from "react-router-dom";
 // Om id er passert som parameter, oppdateres den assosierte athleten
 
 export const AthleteRegister: FC = () => {
-  const {
-    athletes,
-    updateAthlete,
-    addAthlete,
-    athleteIsLoading,
-    athleteErrorMessage,
-  } = useContext(AthleteContext) as IAthleteContext;
+  const { athletes, updateAthlete, addAthlete, athleteIsLoading } = useContext(
+    AthleteContext
+  ) as IAthleteContext;
 
   const { athleteId } = useParams<{ athleteId: string }>();
 
@@ -31,6 +27,12 @@ export const AthleteRegister: FC = () => {
     ? athletes.find((a) => a.id === Number(athleteId))
     : undefined;
 
+  // Settes fra IDefaultResponse osv ved funksjonskall
+  const [operationSuccess, setOperationSuccess] = useState<boolean | null>(
+    null
+  );
+  const [operationError, setOperationError] = useState<string>("");
+
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [gender, setGender] = useState("");
@@ -39,9 +41,12 @@ export const AthleteRegister: FC = () => {
   const handleRegister = async (e: FormEvent) => {
     e.preventDefault();
 
+    setOperationSuccess(null);
+    setOperationError("");
+
     // Knappen poster ny athlet om vi ikke er i redigeringsmodus
-    // Ved å sjekke om athlete er undefined i stedet for å bruke isEditMode,
-    // kan updateAthlete trygt bruke athlete.id når vi er i redigeringsmodus.
+    // Ved å sjekke om athlete er undefined i stedet for å sjekke isEditMode,
+    // kan updateAthlete trygt bruke athlete.id når vi er i redigeringsmodus uten typescript klage.
     if (athlete === undefined) {
       if (!name || !price || !gender || !image) {
         alert("Please fill in all fields.");
@@ -53,7 +58,10 @@ export const AthleteRegister: FC = () => {
         gender,
         purchased: false,
       };
-      await addAthlete(newAthlete, image);
+
+      const response = await addAthlete(newAthlete, image);
+      setOperationError(response.error ?? "");
+      setOperationSuccess(response.success);
     } else {
       // image kan være tom, da beholdes gamle bildet
       if (!name || !price || !gender) {
@@ -67,12 +75,17 @@ export const AthleteRegister: FC = () => {
         price: Number(price),
         gender,
         image: athlete.image,
-        purchased: false,
+        purchased: athlete.purchased,
       };
+
       if (image) {
-        await updateAthlete(updatedAthlete, image);
+        const updateResponse = await updateAthlete(updatedAthlete, image);
+        setOperationError(updateResponse.error ?? "");
+        setOperationSuccess(updateResponse.success);
       } else {
-        await updateAthlete(updatedAthlete);
+        const updateResponse = await updateAthlete(updatedAthlete);
+        setOperationError(updateResponse.error ?? "");
+        setOperationSuccess(updateResponse.success);
       }
     }
 
@@ -159,12 +172,12 @@ export const AthleteRegister: FC = () => {
       );
     }
 
-    // Dersom feilmelding oppstår
-    if (athleteErrorMessage) {
+    // Dersom noe gikk galt (viktig å sjekke at den er false siden null er default)
+    if (operationSuccess === false) {
       return (
         <section className={sectionStyling}>
           <div className={errorContainerStyling}>
-            <p>{athleteErrorMessage}</p>
+            <p>{operationError}</p>
           </div>
         </section>
       );

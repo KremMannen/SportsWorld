@@ -12,7 +12,7 @@ import { VenueContext } from "../../contexts/VenueContext";
 import type { IVenueContext } from "../../interfaces/contexts/IVenueContext";
 
 export const VenueRegister: FC = () => {
-  const { venues, addVenue, updateVenue, isLoading, errorMessage } = useContext(
+  const { venues, addVenue, updateVenue, isLoading } = useContext(
     VenueContext
   ) as IVenueContext;
 
@@ -27,8 +27,15 @@ export const VenueRegister: FC = () => {
   const [capacity, setCapacity] = useState("");
   const [image, setImage] = useState<File | null>(null);
 
+  const [operationSuccess, setOperationSuccess] = useState<boolean | null>(
+    true
+  );
+  const [operationError, setOperationError] = useState<string>("");
+
   const handleRegister = async (e: FormEvent) => {
     e.preventDefault();
+    setOperationSuccess(null);
+    setOperationError("");
     if (venue === undefined) {
       if (!name || !capacity || !image) {
         alert("Please fill in all fields.");
@@ -39,7 +46,9 @@ export const VenueRegister: FC = () => {
         capacity: Number(capacity),
         image,
       };
-      await addVenue(newVenue, image);
+      const response = await addVenue(newVenue, image);
+      setOperationSuccess(response.success);
+      setOperationError(response.error ?? "");
     } else {
       // image kan være tom, da beholdes gamle bildet
       if (!name || !capacity) {
@@ -52,11 +61,12 @@ export const VenueRegister: FC = () => {
         capacity: Number(capacity),
         image: venue.image,
       };
-      if (image) {
-        await updateVenue(updatedVenue, image);
-      } else {
-        await updateVenue(updatedVenue);
-      }
+      const response = image
+        ? await updateVenue(updatedVenue, image)
+        : await updateVenue(updatedVenue);
+
+      setOperationSuccess(response.success);
+      setOperationError(response.error ?? "");
     }
 
     setName("");
@@ -109,36 +119,42 @@ export const VenueRegister: FC = () => {
       const idNumber = Number(venueId);
       if (isNaN(idNumber)) {
         return (
-          <div className={errorsectionStyling}>
-            <p>Invalid id</p>
-            <Link to="/venues">Back</Link>
-          </div>
+          <section className={sectionStyling}>
+            <div className={errorsectionStyling}>
+              <p>Invalid id</p>
+              <Link to="/venues">Back</Link>
+            </div>
+          </section>
         );
       }
       if (!venue || venue === undefined) {
         return (
-          <div className={errorsectionStyling}>
-            <p>Venue not found</p>
-            <Link className={buttonStyling} to="/venues">
-              Create New Venue
-            </Link>
-          </div>
+          <section className={sectionStyling}>
+            <div className={errorsectionStyling}>
+              <p>Venue not found</p>
+              <Link className={buttonStyling} to="/venues">
+                Create New Venue
+              </Link>
+            </div>
+          </section>
         );
       }
     }
 
     if (isLoading) {
       return (
-        <div className={loadingsectionStyling}>
-          <p className={loadingTextStyling}>Loading athletes...</p>
-        </div>
+        <section className={sectionStyling}>
+          <div className={loadingsectionStyling}>
+            <p className={loadingTextStyling}>Loading athletes...</p>
+          </div>
+        </section>
       );
     }
 
-    if (errorMessage) {
+    if (operationSuccess === false) {
       return (
         <div className={errorsectionStyling}>
-          <p>{errorMessage}</p>
+          <p>{operationError}</p>
         </div>
       );
     }

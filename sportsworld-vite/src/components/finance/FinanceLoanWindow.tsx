@@ -3,10 +3,16 @@ import type { IFinanceContext } from "../../interfaces/contexts/IFinanceContext"
 import { FinanceContext } from "../../contexts/FinanceContext";
 
 export const FinanceLoanWindow: FC = () => {
-  const { finances, financeErrorMessage, financeIsLoading, updateFinance } =
-    useContext(FinanceContext) as IFinanceContext;
+  const { finances, updateFinance } = useContext(
+    FinanceContext
+  ) as IFinanceContext;
 
   const [loanAmount, setLoanAmount] = useState("");
+
+  const [operationSuccess, setOperationSuccess] = useState<boolean | null>(
+    true
+  );
+  const [operationError, setOperationError] = useState<string>("");
 
   // --- Tailwind styling variables ---
   const sectionBase = "col-span-12";
@@ -29,16 +35,14 @@ export const FinanceLoanWindow: FC = () => {
 
   const loanInputLabelStyling = "sr-only";
 
-  const loadingContainer = "text-center";
-  const loadingText = "text-xl text-gray-600";
-
   const errorContainer =
     "bg-red-50 border border-red-400 text-red-700 px-4 py-3 my-10 rounded max-w-[200px] mx-auto";
 
   // --- Knapp handler ---
   const handleLoanRequest = async (e: FormEvent) => {
     e.preventDefault();
-
+    setOperationSuccess(null);
+    setOperationError("");
     if (loanAmount.trim() === "" || isNaN(Number(loanAmount))) {
       alert("Please enter a valid loan amount.");
       return;
@@ -56,23 +60,17 @@ export const FinanceLoanWindow: FC = () => {
       moneyLeft: finances.moneyLeft + loanValue,
     };
 
-    await updateFinance(updatedFinance);
+    const response = await updateFinance(updatedFinance);
+    setOperationSuccess(response.success);
+    setOperationError(response.error ?? "");
     setLoanAmount("");
   };
 
   const renderJsx = () => {
-    if (financeIsLoading) {
-      return (
-        <div className={loadingContainer}>
-          <p className={loadingText}>Loading dashboard...</p>
-        </div>
-      );
-    }
-
-    if (financeErrorMessage) {
+    if (!operationSuccess) {
       return (
         <div className={errorContainer}>
-          <p>{financeErrorMessage}</p>
+          <p>{operationError}</p>
         </div>
       );
     }

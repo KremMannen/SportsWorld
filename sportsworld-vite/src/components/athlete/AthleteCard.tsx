@@ -14,6 +14,7 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
   variant,
   layoutVariant = "horizontal",
   confirming = false,
+  onActionFeedback,
   onConfirmingChange,
 }) => {
   // Unngår prop drilling ved å bruke context direkte
@@ -79,30 +80,45 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
 
     if (isPurchased) {
       updatedFinance.moneyLeft += athlete.price;
-    } else {
-      if (updatedFinance.moneyLeft < athlete.price) {
-        alert(
-          `Insufficient funds to sign this athlete. Missing ${(
-            athlete.price - updatedFinance.moneyLeft
-          ).toLocaleString()} $`
-        );
-        return;
-      }
-      updatedFinance.moneyLeft -= athlete.price;
-      updatedFinance.moneySpent += athlete.price;
+      await updateAthlete(updatedAthlete);
+      await updateFinance(updatedFinance);
+      onActionFeedback?.(`${athlete.name} successfully sold`);
+      return;
     }
+
+    if (updatedFinance.moneyLeft < athlete.price) {
+      onActionFeedback?.(
+        `Insufficient funds. Missing ${(
+          athlete.price - updatedFinance.moneyLeft
+        ).toLocaleString()} $`
+      );
+      return;
+    }
+
+    updatedFinance.moneyLeft -= athlete.price;
+    updatedFinance.moneySpent += athlete.price;
 
     await updateAthlete(updatedAthlete);
     await updateFinance(updatedFinance);
+    onActionFeedback?.(`${athlete.name} successfully signed`);
   };
   // Bekreftelses vindu før sletting.
-  const handleDeleteClick = () => onConfirmingChange?.(true);
+  const handleDeleteClick = () => {
+    onConfirmingChange?.(true);
+    onActionFeedback?.("");
+  };
+
   // Kansellere handling
-  const handleCancel = () => onConfirmingChange?.(false);
+  const handleCancel = () => {
+    onConfirmingChange?.(false);
+    onActionFeedback?.("");
+  };
+
   // Gjennomfør sletting
   const handleConfirmDelete = () => {
     deleteAthleteById(athlete.id);
     onConfirmingChange?.(false);
+    onActionFeedback?.(`${athlete.name} successfully deleted`);
   };
 
   const renderButtons = () => {
@@ -128,7 +144,11 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
         // Manage-variant kort (edit og delete knapper)
         return (
           <>
-            <Link to={`/register/${athlete.id}`} className={buttonLink}>
+            <Link
+              to={`/register/${athlete.id}`}
+              className={buttonLink}
+              onClick={() => onActionFeedback?.("")}
+            >
               Edit
             </Link>
             <button

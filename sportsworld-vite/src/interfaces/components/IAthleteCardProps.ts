@@ -19,5 +19,6 @@ export interface IAthleteCardProps {
   variant: CardVariant;
   layoutVariant?: LayoutVariant;
   confirming?: boolean;
+  onActionFeedback?: (feedback: string) => void;
   onConfirmingChange?: (confirming: boolean) => void;
 }
