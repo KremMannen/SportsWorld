@@ -209,6 +209,15 @@ const getVenueById = async (id: number): Promise<IVenueResponseSingle> => {
       data: response.data,
     };
   } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      // 404 må differansieres fra andre errors--dette er et forventet outcome og ikke feil.
+      if (error.response.status === 404) {
+        return {
+          success: true,
+          data: null,
+        };
+      }
+    }
     console.error("getVenueById: Failed to fetch venue:", error);
     return {
       success: false,
@@ -232,6 +241,16 @@ const getVenuesByName = async (query: string): Promise<IVenueResponseList> => {
       data: response.data,
     };
   } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      // 404 må differansieres fra andre errors--dette er et forventet outcome og ikke feil.
+      if (error.response.status === 404) {
+        return {
+          success: true,
+          data: [],
+        };
+      }
+    }
+
     console.error("getVenueByName: Failed to fetch venues:", error);
     return {
       success: false,

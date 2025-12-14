@@ -1,9 +1,18 @@
-import { useContext, useState, type FC, type FormEvent } from "react";
+import {
+  useContext,
+  useState,
+  type ChangeEvent,
+  type FC,
+  type FormEvent,
+} from "react";
 import { VenueContext } from "../../contexts/VenueContext";
 import type { IVenueContext } from "../../interfaces/contexts/IVenueContext";
 import type { IVenueListProps } from "../../interfaces/components/IVenueListProps";
 import { VenueCard } from "./VenueCard";
-import type { IVenueResponseList } from "../../interfaces/IServiceResponses";
+import type {
+  IVenueResponseList,
+  IVenueResponseSingle,
+} from "../../interfaces/IServiceResponses";
 import type { IVenue } from "../../interfaces/objects/IVenue";
 
 export const VenueList: FC<IVenueListProps> = ({
@@ -18,6 +27,7 @@ export const VenueList: FC<IVenueListProps> = ({
     searchResults,
     isLoading,
     searchByName,
+    searchByID,
   } = useContext(VenueContext) as IVenueContext;
 
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -66,7 +76,7 @@ export const VenueList: FC<IVenueListProps> = ({
   const cardsContainerXlStyling = "xl:grid xl:overflow-visible";
   const cardsContainerStyling = `${cardsContainerBaseStyling} ${cardsContainerLgStyling} ${cardsContainerXlStyling}`;
 
-  const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearchInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
   };
 
@@ -75,25 +85,63 @@ export const VenueList: FC<IVenueListProps> = ({
     setOperationSuccess(null);
     setActionFeedback("");
     setOperationError("");
-    if (searchQuery.trim()) {
-      const response: IVenueResponseList = await searchByName(searchQuery);
+
+    // Hvis søkefeltet er tomt, vis alle venues igjen
+    if (!searchQuery.trim()) {
+      setIsSearchActive(false);
+      return;
+    }
+
+    const isNumericSearch = !isNaN(Number(searchQuery));
+
+    // Søk på ID hvis det er et tall
+    if (isNumericSearch) {
+      const response: IVenueResponseSingle = await searchByID(
+        Number(searchQuery)
+      );
+
       if (!response.success && response.error) {
-        setOperationSuccess(response.success);
+        setOperationSuccess(false);
         setOperationError(response.error);
-      } else if (response.success) {
-        setOperationSuccess(true);
-        setActionFeedback("Search performed.");
+        setIsSearchActive(true);
+        return;
       }
+
+      if (response.success) {
+        setOperationSuccess(true);
+        setIsSearchActive(true);
+
+        if (response.data === null) {
+          // Ingen treff på ID, prøv navn søk i tilfelle tallet var en del av navnet
+          await performNameSearch();
+        } else {
+          setActionFeedback("Search performed.");
+        }
+        return;
+      }
+    }
+
+    // Søk på navn
+    await performNameSearch();
+  };
+
+  const performNameSearch = async () => {
+    const response: IVenueResponseList = await searchByName(searchQuery);
+
+    if (!response.success && response.error) {
+      setOperationSuccess(false);
+      setOperationError(response.error);
+    } else if (response.success) {
+      setOperationSuccess(true);
+
       if (response.data.length === 0) {
         setActionFeedback("Search performed, no hits.");
+      } else {
+        setActionFeedback("Search performed.");
       }
-      setIsSearchActive(true);
-    } else {
-      // Hvis søkefeltet er tomt, vis alle venues igjen
-      setIsSearchActive(false);
-      setOperationSuccess(null);
-      setOperationError("");
     }
+
+    setIsSearchActive(true);
   };
 
   // Velg datakilde basert på om vi søker eller ikke
@@ -114,85 +162,11 @@ export const VenueList: FC<IVenueListProps> = ({
   }
 
   const renderJsx = () => {
-    if (initError) {
-      return (
-        <section className={sectionContainerStyling}>
-          <div className={headerContainerStyling}>
-            <h2 className={titleStyling}>{displayTitle}</h2>
-          </div>
-          <div className={errorContainerStyling}>
-            <p>{initError}</p>
-          </div>
-        </section>
-      );
-    }
-
-    if (!hasInitialized) {
-      return (
-        <section className={sectionContainerStyling}>
-          <div className={headerContainerStyling}>
-            <h2 className={titleStyling}>{displayTitle}</h2>
-          </div>
-          <div className={loadingContainerStyling}>
-            <div className={loadingTextStyling}>Loading venues...</div>
-          </div>
-        </section>
-      );
-    }
-
-    if (operationSuccess === false) {
-      return (
-        <section className={sectionContainerStyling}>
-          <div className={headerContainerStyling}>
-            <h2 className={titleStyling}>{displayTitle}</h2>
-            {isLimited === false && (
-              <form onSubmit={handleSearch} className={searchContainerStyling}>
-                <label htmlFor="venue-search" className={searchBarLabelStyling}>
-                  Search venues
-                </label>
-                <input
-                  type="text"
-                  placeholder="Search venues..."
-                  value={searchQuery}
-                  onChange={handleSearchInputChange}
-                  className={searchInputStyling}
-                />
-                <button type="submit" className={searchButtonStyling}>
-                  Search
-                </button>
-              </form>
-            )}
-          </div>
-          <div className={errorContainerStyling}>
-            <p>{operationError}</p>
-          </div>
-        </section>
-      );
-    }
-
-    // Viser kun 4 venue-cards på forsiden, og ingen searchbar
-    if (isLimited) {
-      return (
-        <section className={sectionContainerStyling}>
-          <div className={headerContainerStyling}>
-            <h2 className={titleStyling}>{displayTitle}</h2>
-          </div>
-          <div className={cardsContainerStyling}>
-            {displayVenues.slice(0, 4).map((venue) => (
-              <VenueCard key={venue.id} venue={venue} variant={cardVariant} />
-            ))}
-            {isLoading && (
-              <p className={loadingTextStyling}>Updating venues...</p>
-            )}
-          </div>
-        </section>
-      );
-    }
-
-    return (
-      <section className={sectionContainerStyling}>
-        <div className={headerContainerStyling}>
-          <h2 className={titleStyling}>{displayTitle}</h2>
+    // Header-seksjonen
+    const renderHeader = () => (
+      <header className={headerContainerStyling}>
+        <h2 className={titleStyling}>{displayTitle}</h2>
+        {isLimited === false && (
           <form onSubmit={handleSearch} className={searchContainerStyling}>
             <label htmlFor="venue-search" className={searchBarLabelStyling}>
               Search venues
@@ -200,7 +174,7 @@ export const VenueList: FC<IVenueListProps> = ({
             <input
               id="venue-search"
               type="text"
-              placeholder="Search venues..."
+              placeholder="Search venues by name or ID..."
               value={searchQuery}
               onChange={handleSearchInputChange}
               className={searchInputStyling}
@@ -209,7 +183,54 @@ export const VenueList: FC<IVenueListProps> = ({
               Search
             </button>
           </form>
-        </div>
+        )}
+      </header>
+    );
+
+    // Bestemmer hvilket innhold som skal vises
+    const getMainContent = () => {
+      if (initError) {
+        return (
+          <div className={errorContainerStyling}>
+            <p>{initError}</p>
+          </div>
+        );
+      }
+
+      // Context initialiserer, viser loading melding
+      if (!hasInitialized) {
+        return (
+          <div className={loadingContainerStyling}>
+            <div className={loadingTextStyling}>Loading venues...</div>
+          </div>
+        );
+      }
+
+      // Ved feil vises tilhørende feilmelding
+      if (operationSuccess === false) {
+        return (
+          <div className={errorContainerStyling}>
+            <p>{operationError}</p>
+          </div>
+        );
+      }
+
+      // Viser kun 4 venue-cards på forsiden
+      if (isLimited) {
+        return (
+          <div className={cardsContainerStyling}>
+            {displayVenues.slice(0, 4).map((venue) => (
+              <VenueCard key={venue.id} venue={venue} variant={cardVariant} />
+            ))}
+            {isLoading && (
+              <p className={loadingTextStyling}>Updating venues...</p>
+            )}
+          </div>
+        );
+      }
+
+      // Liste med venues
+      return (
         <div className={cardsContainerStyling}>
           {displayVenues.map((venue) => (
             <VenueCard
@@ -226,16 +247,39 @@ export const VenueList: FC<IVenueListProps> = ({
               }}
             />
           ))}
-          {isLoading && (
-            <p className={loadingTextStyling}>Updating venues...</p>
-          )}
+          {isLoading && <p className={loadingTextStyling}>Loading venues...</p>}
         </div>
+      );
+    };
 
-        {actionFeedback && (
-          <div className={feedbackContainerStyling}>
-            <p className={feedbackStyling}>{actionFeedback}</p>
-          </div>
-        )}
+    // Helper for å rendre feedback (kun når ikke i limited mode eller tekniske feil har skjedd)
+    const renderFeedback = () => {
+      if (
+        initError ||
+        !hasInitialized ||
+        operationSuccess === false ||
+        isLimited
+      ) {
+        return null;
+      }
+
+      return (
+        <>
+          {actionFeedback && (
+            <div className={feedbackContainerStyling}>
+              <p className={feedbackStyling}>{actionFeedback}</p>
+            </div>
+          )}
+        </>
+      );
+    };
+
+    // Returnerer resultat med section wrapper
+    return (
+      <section className={sectionContainerStyling}>
+        {renderHeader()}
+        {getMainContent()}
+        {renderFeedback()}
       </section>
     );
   };

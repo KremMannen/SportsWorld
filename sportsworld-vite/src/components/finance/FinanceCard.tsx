@@ -11,10 +11,10 @@ export const FinanceCard: FC<IFinanceCardProps> = ({
     ? "col-span-12 sm:col-span-12 md:col-span-4 w-full max-w-lg mx-auto"
     : "col-span-12 sm:col-span-6 ";
   const titleContainerStyling = limitedVariant
-    ? "rounded-sm shadow-md shadow-black/40 px-4 py-2 bg-[#252828] "
+    ? "rounded-sm shadow-md shadow-black/40 px-4 py-2 bg-black"
     : "rounded-sm shadow-md shadow-black/40 px-4 py-2 bg-black ";
   const titleStyling = "text-lg text-white font-bold";
-  const valueStyling = "text-2xl font-bold mt-3 text-[#4C0000] bg-transparent";
+  const valueStyling = "text-2xl font-bold mt-3 text-[#4C0000]";
 
   const renderJsx = () => {
     return (

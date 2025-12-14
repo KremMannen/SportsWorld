@@ -16,8 +16,14 @@ import type { IAthlete } from "../../interfaces/objects/IAthlete";
 // Om id er passert som parameter, oppdateres den assosierte athleten
 
 export const AthleteRegister: FC = () => {
-  const { athletes, initError, updateAthlete, addAthlete, athleteIsLoading } =
-    useContext(AthleteContext) as IAthleteContext;
+  const {
+    athletes,
+    initError,
+    hasInitialized,
+    updateAthlete,
+    addAthlete,
+    athleteIsLoading,
+  } = useContext(AthleteContext) as IAthleteContext;
 
   const { athleteId } = useParams<{ athleteId: string }>();
   const [name, setName] = useState<string>("");
@@ -131,7 +137,7 @@ export const AthleteRegister: FC = () => {
 
   // --- Tailwind styling variabler ---
   const sectionStyling =
-    "col-span-9 col-start-3 sm:col-span-6 lg:col-span-4 py-6 pt-12 ";
+    "col-span-9 col-start-3 sm:col-span-6 lg:col-span-4 py-6 pt-12";
   const titleContainerStyling =
     "flex gap-12 rounded-sm px-4 py-2 bg-black text-black w-full";
   const titleStyling = "text-lg text-white font-bold";
@@ -153,152 +159,153 @@ export const AthleteRegister: FC = () => {
   const loadingTextStyling = "text-gray-500 text-lg";
 
   const renderJsx = () => {
-    if (initError) {
-      return (
-        <section className={sectionStyling}>
+    const getMainContent = () => {
+      if (initError) {
+        return (
           <div className={errorContainerStyling}>
             <p>{initError}</p>
           </div>
-        </section>
-      );
-    }
-    // Vi sjekker kun etter id- og athlete- relaterte feil når ID er passert og komponenten skal være i redigeringsmodus
-    if (isEditMode) {
-      const idNumber = Number(athleteId);
-      if (isNaN(idNumber)) {
-        return (
-          <section className={sectionStyling}>
+        );
+      }
+
+      // Sjekker bare for ID feil om vi er i edit-mode
+      if (isEditMode) {
+        const idNumber = Number(athleteId);
+        if (isNaN(idNumber)) {
+          return (
             <div className={errorContainerStyling}>
               <p>Invalid id</p>
               <Link to="/register">Back</Link>
             </div>
-          </section>
-        );
-      }
-      if (!athlete || athlete === undefined) {
-        return (
-          <section className={sectionStyling}>
+          );
+        }
+        if (!athlete || athlete === undefined) {
+          return (
             <div className={errorContainerStyling}>
               <p>Athlete not found</p>
               <Link className={buttonStyling} to="/register">
                 Create New Athlete
               </Link>
             </div>
-          </section>
-        );
+          );
+        }
       }
-    }
 
-    // Innhold laser inn
-    if (athleteIsLoading) {
-      return (
-        <section className={sectionStyling}>
+      // Laster innhold
+      if (!hasInitialized) {
+        return (
           <div className={loadingContainerStyling}>
             <p className={loadingTextStyling}>Loading athletes...</p>
           </div>
-        </section>
-      );
-    }
+        );
+      }
 
-    // Dersom noe gikk galt (viktig å sjekke at den er false siden null er default)
-    if (operationSuccess === false) {
-      return (
-        <section className={sectionStyling}>
+      // Om feil oppsto ved en handling
+      if (operationSuccess === false) {
+        return (
           <div className={errorContainerStyling}>
             <p>{operationError}</p>
           </div>
-        </section>
+        );
+      }
+
+      // Redigerings vindu
+      return (
+        <>
+          <header className={titleContainerStyling}>
+            <h3 className={titleStyling}>
+              {isEditMode
+                ? `Edit Athlete: ${athlete?.name}`
+                : "Register New Athlete"}
+            </h3>
+          </header>
+
+          <form className={formContainerStyling} onSubmit={handleRegister}>
+            <div className={inputContainerStyling}>
+              <label
+                htmlFor="athlete-name"
+                className="text-sm font-medium text-gray-700"
+              >
+                Name
+              </label>
+              <input
+                id="athlete-name"
+                type="text"
+                placeholder="Enter athlete name"
+                value={name}
+                className={inputStyling}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </div>
+
+            <div className={inputContainerStyling}>
+              <label
+                htmlFor="athlete-price"
+                className="text-sm font-medium text-gray-700"
+              >
+                Price
+              </label>
+              <input
+                id="athlete-price"
+                type="number"
+                placeholder="Enter price"
+                value={price}
+                className={inputStyling}
+                onChange={(e) => setPrice(e.target.value)}
+              />
+            </div>
+
+            <div className={inputContainerStyling}>
+              <label
+                htmlFor="athlete-gender"
+                className="text-sm font-medium text-gray-700"
+              >
+                Gender
+              </label>
+              <input
+                id="athlete-gender"
+                type="text"
+                placeholder="Enter gender"
+                value={gender}
+                className={inputStyling}
+                onChange={(e) => setGender(e.target.value)}
+              />
+            </div>
+
+            <div className={inputContainerStyling}>
+              <label
+                htmlFor="athlete-image"
+                className="text-sm font-medium text-gray-700"
+              >
+                Athlete Image
+              </label>
+              <input
+                id="athlete-image"
+                type="file"
+                onChange={handleImageChange}
+                className="px-4 py-2 border border-gray-300 rounded cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-[#4C0000] file:text-white file:cursor-pointer hover:file:bg-[#870000]"
+                accept="image/*"
+              />
+            </div>
+
+            <button type="submit" className={buttonStyling}>
+              {isEditMode ? "Update Athlete" : "Register Athlete"}
+            </button>
+          </form>
+
+          {athleteIsLoading && (
+            <p className={loadingTextStyling}>Loading athletes...</p>
+          )}
+
+          <div className={feedbackContainerStyling}>
+            <p className={feedbackStyling}>{actionFeedback}</p>
+          </div>
+        </>
       );
-    }
+    };
 
-    // Redigerings vindu
-    return (
-      <section className={sectionStyling}>
-        <div className={titleContainerStyling}>
-          <h3 className={titleStyling}>
-            {isEditMode
-              ? `Edit Athlete: ${athlete?.name}`
-              : "Register New Athlete"}
-          </h3>
-        </div>
-
-        <form className={formContainerStyling} onSubmit={handleRegister}>
-          <div className={inputContainerStyling}>
-            <label
-              htmlFor="athlete-name"
-              className="text-sm font-medium text-gray-700"
-            >
-              Name
-            </label>
-            <input
-              id="athlete-name"
-              type="text"
-              placeholder="Enter athlete name"
-              value={name}
-              className={inputStyling}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </div>
-
-          <div className={inputContainerStyling}>
-            <label
-              htmlFor="athlete-price"
-              className="text-sm font-medium text-gray-700"
-            >
-              Price
-            </label>
-            <input
-              id="athlete-price"
-              type="number"
-              placeholder="Enter price"
-              value={price}
-              className={inputStyling}
-              onChange={(e) => setPrice(e.target.value)}
-            />
-          </div>
-
-          <div className={inputContainerStyling}>
-            <label
-              htmlFor="athlete-gender"
-              className="text-sm font-medium text-gray-700"
-            >
-              Gender
-            </label>
-            <input
-              id="athlete-gender"
-              type="text"
-              placeholder="Enter gender"
-              value={gender}
-              className={inputStyling}
-              onChange={(e) => setGender(e.target.value)}
-            />
-          </div>
-
-          <div className={inputContainerStyling}>
-            <label
-              htmlFor="athlete-image"
-              className="text-sm font-medium text-gray-700"
-            >
-              Athlete Image
-            </label>
-            <input
-              id="athlete-image"
-              type="file"
-              onChange={handleImageChange}
-              className="px-4 py-2 border border-gray-300 rounded cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-[#4C0000] file:text-white file:cursor-pointer hover:file:bg-[#870000]"
-              accept="image/*"
-            />
-          </div>
-
-          <button type="submit" className={buttonStyling}>
-            {isEditMode ? "Update Athlete" : "Register Athlete"}
-          </button>
-        </form>
-        <div className={feedbackContainerStyling}>
-          <p className={feedbackStyling}>{actionFeedback}</p>
-        </div>
-      </section>
-    );
+    // Returnerer resultat med section wrapper
+    return <section className={sectionStyling}>{getMainContent()}</section>;
   };
 
   return renderJsx();

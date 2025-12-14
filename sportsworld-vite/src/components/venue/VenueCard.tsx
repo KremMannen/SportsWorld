@@ -56,6 +56,8 @@ export const VenueCard: FC<IVenueCardProps> = ({
   const imageClasses = "w-full h-full object-cover";
   const contentContainerClasses = "p-4 flex flex-col justify-between";
   const titleClasses = "text-xl font-bold";
+  const idContainerClasses = "flex justify-between items-start";
+  const idTextClasses = "text-xs text-white-400 ";
 
   // --- Separate stylinger for bekreftelses-kortet til delete-knappen  ---
   const deleteContentClasses = "p-4 h-full flex flex-col justify-between";
@@ -144,7 +146,10 @@ export const VenueCard: FC<IVenueCardProps> = ({
 
       <div className={contentContainerClasses}>
         <div>
-          <h3 className={titleClasses}>{venue.name}</h3>
+          <div className={idContainerClasses}>
+            <h3 className={titleClasses}>{venue.name}</h3>
+            <span className={idTextClasses}>#{venue.id}</span>
+          </div>
           <p>Capacity: {venue.capacity.toLocaleString()}</p>
         </div>
 

@@ -99,7 +99,7 @@ export const VenueRegister: FC = () => {
   // --- Tailwind styling variabler ---
 
   const sectionStyling =
-    "col-span-9 col-start-3 sm:col-span-6 lg:col-span-4 py-6 pt-12";
+    "col-span-9 col-start-3 sm:col-span-6 lg:col-span-4 py-6 pt-12 ";
   const titlesectionStyling =
     "rounded-sm shadow-md shadow-black/40 px-4 py-2 bg-black text-black w-full gap-6";
   const titleStyling = "text-lg text-white font-bold";
@@ -140,135 +140,135 @@ export const VenueRegister: FC = () => {
   }, [venue, isEditMode]);
 
   const renderJsx = () => {
-    if (initError) {
-      return (
-        <section className={sectionStyling}>
+    // Bestemmer hvilket innhold som skal vises basert på tilstand
+    const getMainContent = () => {
+      if (initError) {
+        return (
           <div className={errorsectionStyling}>
             <p>{initError}</p>
           </div>
-        </section>
-      );
-    }
+        );
+      }
 
-    if (isEditMode) {
-      const idNumber = Number(venueId);
-      if (isNaN(idNumber)) {
-        return (
-          <section className={sectionStyling}>
+      // Sjekker etter id- og venue-relaterte feil når ID er passert og komponenten skal være i redigeringsmodus
+      if (isEditMode) {
+        const idNumber = Number(venueId);
+        if (isNaN(idNumber)) {
+          return (
             <div className={errorsectionStyling}>
               <p>Invalid id</p>
               <Link to="/venues">Back</Link>
             </div>
-          </section>
-        );
-      }
-      if (!venue || venue === undefined) {
-        return (
-          <section className={sectionStyling}>
+          );
+        }
+        if (!venue || venue === undefined) {
+          return (
             <div className={errorsectionStyling}>
               <p>Venue not found</p>
               <Link className={buttonStyling} to="/venues">
                 Create New Venue
               </Link>
             </div>
-          </section>
-        );
+          );
+        }
       }
-    }
 
-    if (!hasInitialized) {
-      return (
-        <section className={sectionStyling}>
+      // Laster innhold
+      if (!hasInitialized) {
+        return (
           <div className={loadingsectionStyling}>
             <p className={loadingTextStyling}>Loading athletes...</p>
           </div>
-        </section>
-      );
-    }
+        );
+      }
 
-    if (operationSuccess === false) {
-      return (
-        <section className={sectionStyling}>
+      // Dersom noe gikk galt (viktig å sjekke at den er false siden null er default)
+      if (operationSuccess === false) {
+        return (
           <div className={errorsectionStyling}>
             <p>{operationError}</p>
           </div>
-        </section>
+        );
+      }
+
+      // Redigerings vindu
+      return (
+        <>
+          <header className={titlesectionStyling}>
+            <h3 className={titleStyling}>
+              {isEditMode ? `Edit Venue: ${venue?.name}` : "Register New Venue"}
+            </h3>
+          </header>
+
+          <form className={formsectionStyling} onSubmit={handleRegister}>
+            <div className={inputsectionStyling}>
+              <label
+                htmlFor="venue-name"
+                className="text-sm font-medium text-gray-700"
+              >
+                Name
+              </label>
+              <input
+                id="venue-name"
+                type="text"
+                placeholder="Enter venue name"
+                value={name}
+                className={inputStyling}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </div>
+
+            <div className={inputsectionStyling}>
+              <label
+                htmlFor="venue-capacity"
+                className="text-sm font-medium text-gray-700"
+              >
+                Capacity
+              </label>
+              <input
+                id="venue-capacity"
+                type="number"
+                placeholder="Enter capacity"
+                value={capacity}
+                className={inputStyling}
+                onChange={(e) => setCapacity(e.target.value)}
+              />
+            </div>
+
+            <div className={inputsectionStyling}>
+              <label
+                htmlFor="venue-image"
+                className="text-sm font-medium text-gray-700"
+              >
+                Venue Image
+              </label>
+              <input
+                id="venue-image"
+                type="file"
+                onChange={handleImageChange}
+                className="px-4 py-2 border border-gray-300 rounded cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-[#4C0000] file:text-white file:cursor-pointer hover:file:bg-[#870000]"
+                accept="image/*"
+              />
+            </div>
+
+            <button type="submit" className={buttonStyling}>
+              {isEditMode ? "Update Venue" : "Register Venue"}
+            </button>
+          </form>
+
+          {isLoading && <p className={loadingTextStyling}>Loading venues...</p>}
+
+          {actionFeedback && (
+            <div className={feedbackContainerStyling}>
+              <p className={feedbackStyling}>{actionFeedback}</p>
+            </div>
+          )}
+        </>
       );
-    }
+    };
 
-    return (
-      <section className={sectionStyling}>
-        <header className={titlesectionStyling}>
-          <h3 className={titleStyling}>
-            {isEditMode ? `Edit Venue: ${venue?.name}` : "Register New Venue"}
-          </h3>
-        </header>
-
-        <form className={formsectionStyling} onSubmit={handleRegister}>
-          <div className={inputsectionStyling}>
-            <label
-              htmlFor="venue-name"
-              className="text-sm font-medium text-gray-700"
-            >
-              Name
-            </label>
-            <input
-              id="venue-name"
-              type="text"
-              placeholder="Enter venue name"
-              value={name}
-              className={inputStyling}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </div>
-
-          <div className={inputsectionStyling}>
-            <label
-              htmlFor="venue-capacity"
-              className="text-sm font-medium text-gray-700"
-            >
-              Capacity
-            </label>
-            <input
-              id="venue-capacity"
-              type="number"
-              placeholder="Enter capacity"
-              value={capacity}
-              className={inputStyling}
-              onChange={(e) => setCapacity(e.target.value)}
-            />
-          </div>
-
-          <div className={inputsectionStyling}>
-            <label
-              htmlFor="venue-image"
-              className="text-sm font-medium text-gray-700"
-            >
-              Venue Image
-            </label>
-            <input
-              id="venue-image"
-              type="file"
-              onChange={handleImageChange}
-              className="px-4 py-2 border border-gray-300 rounded cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-[#4C0000] file:text-white file:cursor-pointer hover:file:bg-[#870000]"
-              accept="image/*"
-            />
-          </div>
-
-          <button type="submit" className={buttonStyling}>
-            {isEditMode ? "Update Venue" : "Register Venue"}
-          </button>
-        </form>
-
-        {isLoading && <p className={loadingTextStyling}>Updating venues...</p>}
-
-        {actionFeedback && (
-          <div className={feedbackContainerStyling}>
-            <p className={feedbackStyling}>{actionFeedback}</p>
-          </div>
-        )}
-      </section>
-    );
+    // Returnerer resultat med section wrapper
+    return <section className={sectionStyling}>{getMainContent()}</section>;
   };
 
   return renderJsx();

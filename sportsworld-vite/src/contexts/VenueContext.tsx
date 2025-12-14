@@ -30,6 +30,7 @@ export const VenueProvider: FC<IProviderProps> = ({ children }) => {
 
   const searchByID = async (id: number): Promise<IVenueResponseSingle> => {
     setIsLoading(true);
+    setSearchResults([]);
     const response: IVenueResponseSingle = await getVenueById(id);
     if (response.success && response.data) {
       setSearchResults([response.data]);
@@ -40,6 +41,7 @@ export const VenueProvider: FC<IProviderProps> = ({ children }) => {
 
   const searchByName = async (name: string): Promise<IVenueResponseList> => {
     setIsLoading(true);
+    setSearchResults([]);
     const response: IVenueResponseList = await getVenuesByName(name);
 
     if (response.success && response.data) {

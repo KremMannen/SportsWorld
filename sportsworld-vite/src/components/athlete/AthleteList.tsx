@@ -140,100 +140,59 @@ export const AthleteList: FC<IAthleteListProps> = ({
   }
 
   const renderJsx = () => {
-    // Sjekker initError først: ved error trenger vi ikke gå gjennom initialiserer hver gang
-    if (initError) {
-      return (
-        <section className={sectionContainerStyling}>
-          <div className={headerContainerStyling}>
-            <h2 className={titleStyling}>{displayTitle}</h2>
-          </div>
+    // Generer header og evt søkefelt i header
+    const renderHeader = () => (
+      <header className={headerContainerStyling}>
+        <h2 className={titleStyling}>{displayTitle}</h2>
+        {filterType === "all" && (
+          <form onSubmit={handleSearch} className={searchContainerStyling}>
+            <label htmlFor="athlete-search" className={searchBarLabelStyling}>
+              Search fighters
+            </label>
+            <input
+              id="athlete-search"
+              type="text"
+              placeholder="Search fighters..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className={searchInputStyling}
+            />
+            <button type="submit" className={searchButtonStyling}>
+              Search
+            </button>
+          </form>
+        )}
+      </header>
+    );
+
+    // Viser hovedinnhold, evt ved teknisk feil feilmeldinger
+    const getMainContent = () => {
+      if (initError) {
+        return (
           <div className={errorContainerStyling}>
             <p>{initError}</p>
           </div>
-        </section>
-      );
-    }
-    // Context initialiserer, viser loading melding
-    if (!hasInitialized) {
-      return (
-        <section className={sectionContainerStyling}>
-          <div className={headerContainerStyling}>
-            <h2 className={titleStyling}>{displayTitle}</h2>
-          </div>
+        );
+      }
+
+      if (!hasInitialized) {
+        return (
           <div className={loadingContainerStyling}>
             <div className={loadingTextStyling}>Loading fighters...</div>
           </div>
-        </section>
-      );
-    }
+        );
+      }
 
-    // Ved feil vises tilhørende feilmelding
-    if (operationSuccess === false) {
-      return (
-        <section className={sectionContainerStyling}>
-          <div className={headerContainerStyling}>
-            <h2 className={titleStyling}>{displayTitle}</h2>
-            {filterType === "all" && (
-              <form onSubmit={handleSearch} className={searchContainerStyling}>
-                <label
-                  htmlFor="athlete-search"
-                  className={searchBarLabelStyling}
-                >
-                  Search fighters
-                </label>
-                <input
-                  id="athlete-search"
-                  type="text"
-                  placeholder="Search fighters..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className={searchInputStyling}
-                />
-                <button type="submit" className={searchButtonStyling}>
-                  Search
-                </button>
-              </form>
-            )}
-          </div>
+      if (operationSuccess === false) {
+        return (
           <div className={errorContainerStyling}>
             <p>{operationError}</p>
           </div>
-          {athleteIsLoading && (
-            <p className={loadingTextStyling}>Updating athletes</p>
-          )}
-          {actionFeedback && (
-            <div className={feedbackContainerStyling}>
-              <p className={feedbackStyling}>{actionFeedback}</p>
-            </div>
-          )}
-        </section>
-      );
-    }
+        );
+      }
 
-    // Liste med athletes
-    return (
-      <section className={sectionContainerStyling}>
-        <div className={headerContainerStyling}>
-          <h2 className={titleStyling}>{displayTitle}</h2>
-          {filterType === "all" && (
-            <form onSubmit={handleSearch} className={searchContainerStyling}>
-              <label htmlFor="athlete-search" className={searchBarLabelStyling}>
-                Search fighters
-              </label>
-              <input
-                id="athlete-search"
-                type="text"
-                placeholder="Search fighters..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className={searchInputStyling}
-              />
-              <button type="submit" className={searchButtonStyling}>
-                Search
-              </button>
-            </form>
-          )}
-        </div>
+      // Viser Athlete kortene
+      return (
         <div className={cardsContainerStyling}>
           {filteredAthletes.map((athlete) => (
             <AthleteCard
@@ -250,19 +209,36 @@ export const AthleteList: FC<IAthleteListProps> = ({
               }}
             />
           ))}
-
-          {athleteIsLoading && (
-            <p className={loadingTextStyling}>Updating athletes...</p>
-          )}
         </div>
+      );
+    };
 
-        {(actionFeedback || getEmptyStateMessage()) && (
-          <div className={feedbackContainerStyling}>
-            <p className={feedbackStyling}>
-              {actionFeedback || getEmptyStateMessage()}
-            </p>
-          </div>
-        )}
+    // Generer feedback til bruker
+    const renderFeedback = () => {
+      if (initError || !hasInitialized) return null;
+
+      return (
+        <>
+          {athleteIsLoading && (
+            <p className={loadingTextStyling}>Loading athletes...</p>
+          )}
+          {(actionFeedback || getEmptyStateMessage()) && (
+            <div className={feedbackContainerStyling}>
+              <p className={feedbackStyling}>
+                {actionFeedback || getEmptyStateMessage()}
+              </p>
+            </div>
+          )}
+        </>
+      );
+    };
+
+    // Returnerer resultat med section wrapper
+    return (
+      <section className={sectionContainerStyling}>
+        {renderHeader()}
+        {getMainContent()}
+        {renderFeedback()}
       </section>
     );
   };
