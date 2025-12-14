@@ -14,27 +14,30 @@ import type { IVenue } from "../../interfaces/objects/IVenue";
 import type { IVenueResponseSingle } from "../../interfaces/IServiceResponses";
 
 export const VenueRegister: FC = () => {
-  const { venues, initError, addVenue, updateVenue, isLoading } = useContext(
-    VenueContext
-  ) as IVenueContext;
+  const {
+    venues,
+    initError,
+    hasInitialized,
+    addVenue,
+    updateVenue,
+    isLoading,
+  } = useContext(VenueContext) as IVenueContext;
 
   const { venueId } = useParams<{ venueId: string }>();
-
-  const isEditMode = venueId !== undefined;
-  const venue = isEditMode
-    ? venues.find((v) => v.id === Number(venueId))
-    : undefined;
-
-  const [name, setName] = useState("");
-  const [capacity, setCapacity] = useState("");
+  const [name, setName] = useState<string>("");
+  const [capacity, setCapacity] = useState<string>("");
   const [image, setImage] = useState<File | null>(null);
 
   const [actionFeedback, setActionFeedback] = useState("");
-
   const [operationSuccess, setOperationSuccess] = useState<boolean | null>(
     true
   );
   const [operationError, setOperationError] = useState<string>("");
+
+  const isEditMode: boolean = venueId !== undefined;
+  const venue: IVenue | undefined = isEditMode
+    ? venues.find((v) => v.id === Number(venueId))
+    : undefined;
 
   const handleRegister = async (e: FormEvent) => {
     e.preventDefault();
@@ -52,7 +55,10 @@ export const VenueRegister: FC = () => {
       };
       const response: IVenueResponseSingle = await addVenue(newVenue, image);
       if (response.success) {
-        setActionFeedback("Successfully added venue!");
+        setActionFeedback(`Venue ${response.data?.name} successfully created `);
+      }
+      if (!response.success) {
+        setActionFeedback(`Failed to create venue `);
       }
       setOperationSuccess(response.success);
       setOperationError(response.error ?? "");
@@ -68,16 +74,22 @@ export const VenueRegister: FC = () => {
         capacity: Number(capacity),
         image: venue.image,
       };
-      const response: IVenueResponseSingle = image
+      const updateResponse: IVenueResponseSingle = image
         ? await updateVenue(updatedVenue, image)
         : await updateVenue(updatedVenue);
 
-      if (response.success) {
-        setActionFeedback("Successfully updated venue!");
+      if (updateResponse.success) {
+        setActionFeedback(
+          `Venue ${updateResponse.data?.name} successfully updated `
+        );
+      } else if (!updateResponse.success) {
+        setActionFeedback(`Venue failed to update`);
+        setOperationError(updateResponse.error ?? "");
+        setOperationSuccess(updateResponse.success);
       }
 
-      setOperationSuccess(response.success);
-      setOperationError(response.error ?? "");
+      setOperationSuccess(updateResponse.success);
+      setOperationError(updateResponse.error ?? "");
     }
     setName("");
     setImage(null);
@@ -128,6 +140,16 @@ export const VenueRegister: FC = () => {
   }, [venue, isEditMode]);
 
   const renderJsx = () => {
+    if (initError) {
+      return (
+        <section className={sectionStyling}>
+          <div className={errorsectionStyling}>
+            <p>{initError}</p>
+          </div>
+        </section>
+      );
+    }
+
     if (isEditMode) {
       const idNumber = Number(venueId);
       if (isNaN(idNumber)) {
@@ -154,21 +176,11 @@ export const VenueRegister: FC = () => {
       }
     }
 
-    if (isLoading) {
+    if (!hasInitialized) {
       return (
         <section className={sectionStyling}>
           <div className={loadingsectionStyling}>
             <p className={loadingTextStyling}>Loading athletes...</p>
-          </div>
-        </section>
-      );
-    }
-
-    if (initError) {
-      return (
-        <section className={sectionStyling}>
-          <div className={errorsectionStyling}>
-            <p>{initError}</p>
           </div>
         </section>
       );
@@ -247,6 +259,8 @@ export const VenueRegister: FC = () => {
             {isEditMode ? "Update Venue" : "Register Venue"}
           </button>
         </form>
+
+        {isLoading && <p className={loadingTextStyling}>Updating venues...</p>}
 
         {actionFeedback && (
           <div className={feedbackContainerStyling}>

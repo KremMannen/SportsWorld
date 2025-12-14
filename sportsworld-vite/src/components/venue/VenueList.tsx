@@ -4,18 +4,25 @@ import type { IVenueContext } from "../../interfaces/contexts/IVenueContext";
 import type { IVenueListProps } from "../../interfaces/components/IVenueListProps";
 import { VenueCard } from "./VenueCard";
 import type { IVenueResponseList } from "../../interfaces/IServiceResponses";
+import type { IVenue } from "../../interfaces/objects/IVenue";
 
 export const VenueList: FC<IVenueListProps> = ({
   cardVariant = "view",
   isLimited = false,
   layoutVariant = "horizontal",
 }) => {
-  const { venues, initError, searchResults, isLoading, searchByName } =
-    useContext(VenueContext) as IVenueContext;
+  const {
+    venues,
+    initError,
+    hasInitialized,
+    searchResults,
+    isLoading,
+    searchByName,
+  } = useContext(VenueContext) as IVenueContext;
 
-  const [searchQuery, setSearchQuery] = useState("");
-  const [isSearchActive, setIsSearchActive] = useState(false);
-  const [actionFeedback, setActionFeedback] = useState("");
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [isSearchActive, setIsSearchActive] = useState<boolean>(false);
+  const [actionFeedback, setActionFeedback] = useState<string>("");
 
   const [operationSuccess, setOperationSuccess] = useState<boolean | null>(
     null
@@ -61,7 +68,6 @@ export const VenueList: FC<IVenueListProps> = ({
 
   const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
-    setOperationError(""); // ✅ Clear error when user starts typing
   };
 
   const handleSearch = async (e: FormEvent) => {
@@ -74,8 +80,12 @@ export const VenueList: FC<IVenueListProps> = ({
       if (!response.success && response.error) {
         setOperationSuccess(response.success);
         setOperationError(response.error);
-      } else {
-        setOperationSuccess(null);
+      } else if (response.success) {
+        setOperationSuccess(true);
+        setActionFeedback("Search performed.");
+      }
+      if (response.data.length === 0) {
+        setActionFeedback("Search performed, no hits.");
       }
       setIsSearchActive(true);
     } else {
@@ -87,9 +97,10 @@ export const VenueList: FC<IVenueListProps> = ({
   };
 
   // Velg datakilde basert på om vi søker eller ikke
-  let displayVenues = isSearchActive ? searchResults : venues;
+  let displayVenues: IVenue[] = isSearchActive ? searchResults : venues;
 
-  let displayTitle;
+  let displayTitle: string;
+
   switch (cardVariant) {
     case "view":
       displayTitle = "Featured Venues";
@@ -103,19 +114,6 @@ export const VenueList: FC<IVenueListProps> = ({
   }
 
   const renderJsx = () => {
-    if (isLoading) {
-      return (
-        <section className={sectionContainerStyling}>
-          <div className={headerContainerStyling}>
-            <h2 className={titleStyling}>{displayTitle}</h2>
-          </div>
-          <div className={loadingContainerStyling}>
-            <div className={loadingTextStyling}>Loading venues...</div>
-          </div>
-        </section>
-      );
-    }
-
     if (initError) {
       return (
         <section className={sectionContainerStyling}>
@@ -129,14 +127,20 @@ export const VenueList: FC<IVenueListProps> = ({
       );
     }
 
-    // Prioriteter å vise feilmld, ellers tilpasset brukermelding basert på om bruker søker eller ikke
-    if (operationSuccess === false || displayVenues.length === 0) {
-      const errorMsg = operationError
-        ? operationError
-        : isSearchActive
-        ? `No venues found`
-        : "No venues available";
+    if (!hasInitialized) {
+      return (
+        <section className={sectionContainerStyling}>
+          <div className={headerContainerStyling}>
+            <h2 className={titleStyling}>{displayTitle}</h2>
+          </div>
+          <div className={loadingContainerStyling}>
+            <div className={loadingTextStyling}>Loading venues...</div>
+          </div>
+        </section>
+      );
+    }
 
+    if (operationSuccess === false) {
       return (
         <section className={sectionContainerStyling}>
           <div className={headerContainerStyling}>
@@ -160,7 +164,7 @@ export const VenueList: FC<IVenueListProps> = ({
             )}
           </div>
           <div className={errorContainerStyling}>
-            <p>{errorMsg}</p>
+            <p>{operationError}</p>
           </div>
         </section>
       );
@@ -177,6 +181,9 @@ export const VenueList: FC<IVenueListProps> = ({
             {displayVenues.slice(0, 4).map((venue) => (
               <VenueCard key={venue.id} venue={venue} variant={cardVariant} />
             ))}
+            {isLoading && (
+              <p className={loadingTextStyling}>Updating venues...</p>
+            )}
           </div>
         </section>
       );
@@ -191,6 +198,7 @@ export const VenueList: FC<IVenueListProps> = ({
               Search venues
             </label>
             <input
+              id="venue-search"
               type="text"
               placeholder="Search venues..."
               value={searchQuery}
@@ -218,6 +226,9 @@ export const VenueList: FC<IVenueListProps> = ({
               }}
             />
           ))}
+          {isLoading && (
+            <p className={loadingTextStyling}>Updating venues...</p>
+          )}
         </div>
 
         {actionFeedback && (

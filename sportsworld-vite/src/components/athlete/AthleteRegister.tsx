@@ -20,26 +20,23 @@ export const AthleteRegister: FC = () => {
     useContext(AthleteContext) as IAthleteContext;
 
   const { athleteId } = useParams<{ athleteId: string }>();
+  const [name, setName] = useState<string>("");
+  const [price, setPrice] = useState<string>("");
+  const [gender, setGender] = useState<string>("");
+  const [image, setImage] = useState<File | null>(null);
 
   const [actionFeedback, setActionFeedback] = useState("");
-
-  // Redigeringsmodus om det er passert parameter i url (athlete.id)
-  const isEditMode = athleteId !== undefined;
-
-  const athlete = isEditMode
-    ? athletes.find((a) => a.id === Number(athleteId))
-    : undefined;
-
-  // Settes fra IDefaultResponse osv ved funksjonskall
   const [operationSuccess, setOperationSuccess] = useState<boolean | null>(
     null
   );
   const [operationError, setOperationError] = useState<string>("");
 
-  const [name, setName] = useState("");
-  const [price, setPrice] = useState("");
-  const [gender, setGender] = useState("");
-  const [image, setImage] = useState<File | null>(null);
+  // Redigeringsmodus om det er passert parameter i url (athlete.id)
+  const isEditMode: boolean = athleteId !== undefined;
+
+  const athlete: IAthlete | undefined = isEditMode
+    ? athletes.find((a) => a.id === Number(athleteId))
+    : undefined;
 
   const handleRegister = async (e: FormEvent) => {
     e.preventDefault();
@@ -66,10 +63,13 @@ export const AthleteRegister: FC = () => {
         newAthlete,
         image
       );
-      if (response.success === true) {
+      if (response.success) {
         setActionFeedback(
           `Athlete ${response.data?.name} successfully created `
         );
+      }
+      if (!response.success) {
+        setActionFeedback(`Failed to create athlete `);
       }
       setOperationError(response.error ?? "");
       setOperationSuccess(response.success);
@@ -93,15 +93,16 @@ export const AthleteRegister: FC = () => {
         ? await updateAthlete(updatedAthlete, image)
         : await updateAthlete(updatedAthlete);
 
-      if (updateResponse.success === true) {
+      if (updateResponse.success) {
         setActionFeedback(
           `Athlete ${updateResponse.data?.name} successfully updated `
         );
+      } else if (!updateResponse.success) {
+        setActionFeedback(`Athlete failed to update`);
+        setOperationError(updateResponse.error ?? "");
+        setOperationSuccess(updateResponse.success);
       }
-      setOperationError(updateResponse.error ?? "");
-      setOperationSuccess(updateResponse.success);
     }
-
     setName("");
     setPrice("");
     setGender("");
@@ -125,7 +126,7 @@ export const AthleteRegister: FC = () => {
       setPrice("");
       setGender("");
       setImage(null);
-    } // useEffect kjøres om disse verdiene endrer seg for å oppdatere inputfeltene
+    } // useEffect kjøres om disse verdiene endrer seg for å oppdatere inputfeltene ved åpning av siden
   }, [athlete, isEditMode]);
 
   // --- Tailwind styling variabler ---

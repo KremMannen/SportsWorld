@@ -10,6 +10,7 @@ export interface IVenueContext {
   searchResults: IVenue[];
   isLoading: boolean;
   initError: string | null;
+  hasInitialized: boolean;
   searchByID: (id: number) => Promise<IVenueResponseSingle>;
   searchByName: (name: string) => Promise<IVenueResponseList>;
   addVenue: (

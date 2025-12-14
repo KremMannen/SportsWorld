@@ -4,6 +4,7 @@ import { AthleteContext } from "../../contexts/AthleteContext";
 import type { IAthleteContext } from "../../interfaces/contexts/IAthleteContext";
 import type { IAthleteListProps } from "../../interfaces/components/IAthleteListProps";
 import type { IAthleteResponseList } from "../../interfaces/IServiceResponses";
+import type { IAthlete } from "../../interfaces/objects/IAthlete";
 
 // Håndterer visning av AthleteCards
 
@@ -12,31 +13,30 @@ export const AthleteList: FC<IAthleteListProps> = ({
   cardVariant = "view",
   layoutVariant = "horizontal",
 }) => {
-  const { athletes, initError, searchResults, athleteIsLoading, searchByName } =
-    useContext(AthleteContext) as IAthleteContext;
+  const {
+    athletes,
+    initError,
+    hasInitialized,
+    searchResults,
+    athleteIsLoading,
+    searchByName,
+  } = useContext(AthleteContext) as IAthleteContext;
 
-  const [searchQuery, setSearchQuery] = useState("");
-  const [isSearchActive, setIsSearchActive] = useState(false);
-  const [actionFeedback, setActionFeedback] = useState("");
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [isSearchActive, setIsSearchActive] = useState<boolean>(false);
+  const [actionFeedback, setActionFeedback] = useState<string>("");
 
   // confirming-state er på foreldrenivå, ikke i AthleteCard, slik at kun ett kort om gangen kan holde denne staten.
   // Dette gjør at dersom man trykker på delete et annet sted, mens et bekreftelsesvindu er åpent, vil det forrige lukkes automatisk
   const [confirmingId, setConfirmingId] = useState<number | null>(null);
 
+  // Mellomlagring av success-proppen fra service responsene ved funksjonskall
   const [operationSuccess, setOperationSuccess] = useState<boolean | null>(
     null
   );
+  // Mellomlagring av error-proppen fra service responsene
   const [operationError, setOperationError] = useState<string>("");
 
-  // Tilpasser errormessage til brukeren
-  let errorMessage = "No fighters available";
-  if (operationSuccess === false) {
-    errorMessage = operationError;
-  } else if (isSearchActive && filterType === "all") {
-    errorMessage = `No fighters found`;
-  } else if (filterType === "owned") {
-    errorMessage = "No fighters signed yet";
-  }
   // --- Styling variabler ---
   const errorContainerStyling =
     "bg-red-50 border border-red-400 text-red-700 px-4 py-3 my-10 rounded max-w-[200px] mx-auto";
@@ -82,13 +82,17 @@ export const AthleteList: FC<IAthleteListProps> = ({
 
     if (searchQuery.trim()) {
       const response: IAthleteResponseList = await searchByName(searchQuery);
-      // Tomt resultat gir også false på success, så må sjekke etter error message for å vite om noe teknisk gikk galt
       if (!response.success && response.error) {
         setOperationSuccess(response.success);
         setOperationError(response.error);
-      } else {
-        setOperationSuccess(null);
+      } else if (response.success) {
+        setOperationSuccess(true);
+        setActionFeedback("Search performed.");
+        if (response.data.length === 0) {
+          setActionFeedback("Search performed, no hits.");
+        }
       }
+
       setIsSearchActive(true);
     } else {
       // Hvis søkefeltet er tomt, vis alle athletes igjen
@@ -98,11 +102,24 @@ export const AthleteList: FC<IAthleteListProps> = ({
     }
   };
 
-  // Velg datakilde basert på om vi søker eller ikke
-  let filteredAthletes = isSearchActive ? searchResults : athletes;
+  // Bruker actionfeedback til å vise beskjed til bruker dersom ingen athleter er signed eller available på forsiden
+  const getEmptyStateMessage = () => {
+    if (filteredAthletes.length > 0) return "";
 
+    if (filterType === "owned") {
+      return "No fighters signed yet";
+    }
+    if (filterType === "available") {
+      return "No fighters available";
+    }
+    return "";
+  };
+
+  // Velg datakilde basert på om vi søker eller ikke
+  let filteredAthletes: IAthlete[] = isSearchActive ? searchResults : athletes;
   // Filtrer og sett tittel basert på listens filtertype
-  let displayTitle;
+  let displayTitle: string;
+
   switch (filterType) {
     case "owned":
       filteredAthletes = filteredAthletes.filter(
@@ -123,19 +140,7 @@ export const AthleteList: FC<IAthleteListProps> = ({
   }
 
   const renderJsx = () => {
-    if (athleteIsLoading) {
-      return (
-        <section className={sectionContainerStyling}>
-          <div className={headerContainerStyling}>
-            <h2 className={titleStyling}>{displayTitle}</h2>
-          </div>
-          <div className={loadingContainerStyling}>
-            <div className={loadingTextStyling}>Loading fighters...</div>
-          </div>
-        </section>
-      );
-    }
-
+    // Sjekker initError først: ved error trenger vi ikke gå gjennom initialiserer hver gang
     if (initError) {
       return (
         <section className={sectionContainerStyling}>
@@ -148,8 +153,22 @@ export const AthleteList: FC<IAthleteListProps> = ({
         </section>
       );
     }
+    // Context initialiserer, viser loading melding
+    if (!hasInitialized) {
+      return (
+        <section className={sectionContainerStyling}>
+          <div className={headerContainerStyling}>
+            <h2 className={titleStyling}>{displayTitle}</h2>
+          </div>
+          <div className={loadingContainerStyling}>
+            <div className={loadingTextStyling}>Loading fighters...</div>
+          </div>
+        </section>
+      );
+    }
 
-    if (filteredAthletes.length === 0) {
+    // Ved feil vises tilhørende feilmelding
+    if (operationSuccess === false) {
       return (
         <section className={sectionContainerStyling}>
           <div className={headerContainerStyling}>
@@ -163,6 +182,7 @@ export const AthleteList: FC<IAthleteListProps> = ({
                   Search fighters
                 </label>
                 <input
+                  id="athlete-search"
                   type="text"
                   placeholder="Search fighters..."
                   value={searchQuery}
@@ -176,15 +196,21 @@ export const AthleteList: FC<IAthleteListProps> = ({
             )}
           </div>
           <div className={errorContainerStyling}>
-            <p>{errorMessage}</p>
+            <p>{operationError}</p>
           </div>
-          <div className={feedbackContainerStyling}>
-            <p className={feedbackStyling}>{actionFeedback}</p>
-          </div>
+          {athleteIsLoading && (
+            <p className={loadingTextStyling}>Updating athletes</p>
+          )}
+          {actionFeedback && (
+            <div className={feedbackContainerStyling}>
+              <p className={feedbackStyling}>{actionFeedback}</p>
+            </div>
+          )}
         </section>
       );
     }
 
+    // Liste med athletes
     return (
       <section className={sectionContainerStyling}>
         <div className={headerContainerStyling}>
@@ -195,6 +221,7 @@ export const AthleteList: FC<IAthleteListProps> = ({
                 Search fighters
               </label>
               <input
+                id="athlete-search"
                 type="text"
                 placeholder="Search fighters..."
                 value={searchQuery}
@@ -223,11 +250,17 @@ export const AthleteList: FC<IAthleteListProps> = ({
               }}
             />
           ))}
+
+          {athleteIsLoading && (
+            <p className={loadingTextStyling}>Updating athletes...</p>
+          )}
         </div>
 
-        {actionFeedback && (
+        {(actionFeedback || getEmptyStateMessage()) && (
           <div className={feedbackContainerStyling}>
-            <p className={feedbackStyling}>{actionFeedback}</p>
+            <p className={feedbackStyling}>
+              {actionFeedback || getEmptyStateMessage()}
+            </p>
           </div>
         )}
       </section>

@@ -2,19 +2,15 @@ import { useContext, useState, type FC, type FormEvent } from "react";
 import type { IFinanceContext } from "../../interfaces/contexts/IFinanceContext";
 import { FinanceContext } from "../../contexts/FinanceContext";
 import type { IFinanceResponseSingle } from "../../interfaces/IServiceResponses";
+import type { IFinance } from "../../interfaces/objects/IFinance";
 
 export const FinanceLoanWindow: FC = () => {
-  const { finances, updateFinance } = useContext(
+  const { finances, updateFinance, initError, hasInitialized } = useContext(
     FinanceContext
   ) as IFinanceContext;
 
-  const [loanAmount, setLoanAmount] = useState("");
-  const [actionFeedback, setActionFeedback] = useState("");
-
-  const [operationSuccess, setOperationSuccess] = useState<boolean | null>(
-    null
-  );
-  const [operationError, setOperationError] = useState<string>("");
+  const [loanAmount, setLoanAmount] = useState<string>("");
+  const [actionFeedback, setActionFeedback] = useState<string>("");
 
   // --- Tailwind styling variables ---
   const sectionBase = "col-span-12";
@@ -22,7 +18,6 @@ export const FinanceLoanWindow: FC = () => {
   const titleContainerStyling =
     "rounded-sm shadow-md shadow-black/40 px-4 py-2 bg-black text-black w-full";
   const titleStyling = "text-lg text-white font-bold";
-
   const debtTextStyling =
     "text-2xl font-bold mt-3 text-[#4C0000] bg-transparent";
 
@@ -40,6 +35,10 @@ export const FinanceLoanWindow: FC = () => {
 
   const loanInputLabelStyling = "sr-only";
 
+  const loadingText = "text-xl text-gray-600";
+  const loadingContainer = "text-center";
+
+  const sectionErrorBase = "pt-12";
   const errorContainer =
     "bg-red-50 border border-red-400 text-red-700 px-4 py-3 my-10 rounded max-w-[200px] mx-auto";
 
@@ -47,7 +46,6 @@ export const FinanceLoanWindow: FC = () => {
   const handleLoanRequest = async (e: FormEvent) => {
     e.preventDefault();
     setActionFeedback("");
-    setOperationError("");
 
     if (loanAmount.trim() === "" || isNaN(Number(loanAmount))) {
       setActionFeedback("Please enter a valid loan amount.");
@@ -60,7 +58,7 @@ export const FinanceLoanWindow: FC = () => {
       return;
     }
 
-    const updatedFinance = {
+    const updatedFinance: IFinance = {
       ...finances,
       debt: finances.debt + loanValue,
       moneyLeft: finances.moneyLeft + loanValue,
@@ -74,22 +72,29 @@ export const FinanceLoanWindow: FC = () => {
       setActionFeedback(
         `Successfully borrowed: $${loanValue.toLocaleString()}`
       );
-      setOperationSuccess(true);
-    } else {
-      setOperationSuccess(false);
-      setOperationError(response.error ?? "Failed to process loan");
+    } else if (!response.success) {
+      setActionFeedback(`Failed to process loan`);
     }
-
     setLoanAmount("");
   };
 
   const renderJsx = () => {
-    if (operationSuccess === false) {
+    if (initError) {
       return (
         <section className={sectionBase}>
           <div className={errorContainer}>
-            <p>{operationError}</p>
-          </div>{" "}
+            <p>{initError}</p>
+          </div>
+        </section>
+      );
+    }
+
+    if (!hasInitialized) {
+      return (
+        <section className={sectionErrorBase}>
+          <div className={loadingContainer}>
+            <p className={loadingText}>Loading Loan Window...</p>
+          </div>
         </section>
       );
     }
@@ -107,22 +112,23 @@ export const FinanceLoanWindow: FC = () => {
 
         <section className={sectionBase}>
           <div className={inputContainerStyling}>
-            <label htmlFor="loan-input" className={loanInputLabelStyling}>
-              Input loan amount
-            </label>
-            <input
-              type="number"
-              value={loanAmount}
-              onChange={(e) => setLoanAmount(e.target.value)}
-              placeholder="Enter amount"
-              className={inputBase}
-            />
-            <button
-              onClick={handleLoanRequest}
-              className={`${buttonBase} ${buttonHover}`}
-            >
-              Request Loan
-            </button>
+            <form onSubmit={handleLoanRequest}>
+              <label htmlFor="loan-input" className={loanInputLabelStyling}>
+                Input loan amount
+              </label>
+              <input
+                id="loan-input"
+                type="number"
+                value={loanAmount}
+                onChange={(e) => setLoanAmount(e.target.value)}
+                placeholder="Enter amount"
+                className={inputBase}
+              />
+
+              <button type="submit" className={`${buttonBase} ${buttonHover}`}>
+                Request Loan
+              </button>
+            </form>
           </div>
           {actionFeedback && (
             <div className={feedbackContainerStyling}>

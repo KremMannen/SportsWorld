@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import type { IVenueCardProps } from "../../interfaces/components/IVenueCardProps";
 import type { IVenueContext } from "../../interfaces/contexts/IVenueContext";
 import { VenueContext } from "../../contexts/VenueContext";
+import type { IDefaultResponse } from "../../interfaces/IServiceResponses";
 
 export const VenueCard: FC<IVenueCardProps> = ({
   venue,
@@ -32,6 +33,7 @@ export const VenueCard: FC<IVenueCardProps> = ({
       : "col-span-12 sm:col-span-6 lg:flex-shrink-0 lg:w-[400px] xl:col-span-3 xl:w-auto";
 
   const cardClasses = `${baseCardClasses} ${cardColorClasses} ${cardGridSpan} ${cardHoverClasses} shadow-black/20`;
+  const linkCardClasses = `${cardGridSpan}`;
 
   const deleteCardClasses = `
     bg-[#252828] text-white text-lg font-bold rounded-lg shadow-md overflow-hidden
@@ -64,12 +66,20 @@ export const VenueCard: FC<IVenueCardProps> = ({
   // Knappene i popuppen kaller på deleteVenueById fra context, eller lukker staten og går tilbake til vanlig kort
   const handleDeleteClick = () => {
     onConfirmingChange?.(true);
+    onActionFeedback?.("");
   };
-  const handleCancel = () => onConfirmingChange?.(false);
-  const handleConfirmDelete = () => {
-    deleteVenueById(venue.id);
-    onActionFeedback?.(`${venue.name} successfully deleted`);
+  const handleCancel = () => {
     onConfirmingChange?.(false);
+    onActionFeedback?.("Cancelled deleting athlete.");
+  };
+  const handleConfirmDelete = async () => {
+    const deleteResponse: IDefaultResponse = await deleteVenueById(venue.id);
+    onConfirmingChange?.(false);
+    if (deleteResponse.success) {
+      onActionFeedback?.(`${venue.name} successfully deleted`);
+    } else {
+      onActionFeedback?.(`Failed to delete ${venue.name}`);
+    }
   };
 
   const renderButtons = () => {
@@ -78,7 +88,7 @@ export const VenueCard: FC<IVenueCardProps> = ({
         return null;
 
       case "manage":
-        // Hvis bruker har trykket på delete-knappen vises knappene under i et nytt kort
+        // Manage-variant confirm delete buttons
         if (confirming) {
           return (
             <div className={buttonContainerStyling}>
@@ -98,7 +108,7 @@ export const VenueCard: FC<IVenueCardProps> = ({
           );
         }
 
-        // Vanlig manage-variant kort så sant ingenting er trykket på
+        // Manage-variant venue card buttons
         return (
           <>
             <Link
@@ -143,7 +153,7 @@ export const VenueCard: FC<IVenueCardProps> = ({
     </>
   );
 
-  // Grid column span må håndteres her for å fungere med AthleteLists grid-col-12.
+  // Grid column span må håndteres her for å fungere med Venuelists grid-col-12.
   // Vanligvis vil vi ha all column-logikk samlet i en komponent, men vi tillater dette for nå.
   const renderJsx = () => {
     if (confirming) {
@@ -161,8 +171,8 @@ export const VenueCard: FC<IVenueCardProps> = ({
 
     if (variant === "view") {
       return (
-        <Link to={venueViewCardHref} className={cardClasses}>
-          {content}
+        <Link to={venueViewCardHref} className={linkCardClasses}>
+          <article className={cardClasses}>{content}</article>
         </Link>
       );
     } else {

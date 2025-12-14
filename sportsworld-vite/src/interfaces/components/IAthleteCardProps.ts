@@ -13,12 +13,11 @@ import type { LayoutVariant } from "./IAthleteListProps";
 // For å sikre type safety bruker vi String Literal Union som type annotation for variant:
 export type CardVariant = "view" | "manage" | "finance";
 
-// Vi bruker en confirming-variabel og en onConfirmingChange-funksjon for å kontrollere om brukeren trykker på "delete" knappen
 export interface IAthleteCardProps {
   athlete: IAthlete;
   variant: CardVariant;
   layoutVariant?: LayoutVariant;
   confirming?: boolean;
-  onActionFeedback?: (feedback: string) => void;
   onConfirmingChange?: (confirming: boolean) => void;
+  onActionFeedback?: (feedback: string) => void;
 }

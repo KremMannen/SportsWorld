@@ -10,6 +10,7 @@ export interface IAthleteContext {
   searchResults: IAthlete[];
   athleteIsLoading: boolean;
   initError: string | null;
+  hasInitialized: boolean;
   searchByID: (id: number) => Promise<IAthleteResponseSingle>;
   searchByName: (name: string) => Promise<IAthleteResponseList>;
   addAthlete: (

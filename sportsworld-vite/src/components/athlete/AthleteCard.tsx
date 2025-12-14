@@ -5,6 +5,13 @@ import { AthleteContext } from "../../contexts/AthleteContext.tsx";
 import type { IAthleteContext } from "../../interfaces/contexts/IAthleteContext.ts";
 import { FinanceContext } from "../../contexts/FinanceContext.tsx";
 import type { IFinanceContext } from "../../interfaces/contexts/IFinanceContext.ts";
+import type { IFinance } from "../../interfaces/objects/IFinance.ts";
+import type { IAthlete } from "../../interfaces/objects/IAthlete.ts";
+import type {
+  IAthleteResponseSingle,
+  IDefaultResponse,
+  IFinanceResponseSingle,
+} from "../../interfaces/IServiceResponses.ts";
 
 // Modulær komponent som genererer forskjellige varianter (view-, manage- og finance-cards) av athletes.
 // Håndterer alle i en komponent ihht DRY.
@@ -26,12 +33,11 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
     FinanceContext
   ) as IFinanceContext;
 
-  const isPurchased = athlete.purchased;
+  // --- Card Styling ---
   const isManageOrFinance = variant === "manage" || variant === "finance";
 
-  // --- Card Styling ---
   const baseCardClasses = "flex rounded-lg shadow-md overflow-hidden";
-  const cardColorClasses = isPurchased
+  const cardColorClasses = athlete.purchased
     ? "bg-white text-black"
     : "bg-[#3D4645] text-white";
   const cardHeightClasses = isManageOrFinance ? "h-48" : "h-32";
@@ -46,6 +52,7 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
       : "col-span-12 sm:col-span-6 lg:flex-shrink-0 lg:w-[400px] xl:col-span-3 xl:w-auto";
 
   const cardClasses = `${baseCardClasses} ${cardColorClasses} ${cardHeightClasses} ${cardHoverClasses} ${cardGridClasses} shadow-black/20`;
+  const linkCardClasses = `${cardGridClasses}`;
 
   const imageContainerClasses = isManageOrFinance ? "w-32 h-48" : "w-32 h-32";
   const imageClasses = "w-full h-full object-cover";
@@ -54,9 +61,9 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
   const titleClasses = "text-xl font-bold";
   const buttonContainerClasses = "flex gap-2";
 
-  const viewCardHref = isPurchased ? "/admin" : "/finances";
+  const viewCardHref = athlete.purchased ? "/admin" : "/finances";
 
-  // --- Stylinger for bekreftelses-vinduet ved delete  ---
+  // --- Confirm-Delete Styling ---
   const deleteContentClasses = "p-4 h-full flex flex-col justify-between";
   const deleteTextClasses =
     "flex-1 flex items-center justify-center text-center";
@@ -68,21 +75,33 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
   const buttonPrimary = `${buttonBase} bg-black`;
   const buttonDelete = `${buttonBase} bg-[#4C0000]`;
   const buttonSell =
-    isPurchased && variant === "finance" ? buttonDelete : buttonPrimary;
+    athlete.purchased && variant === "finance" ? buttonDelete : buttonPrimary;
   const buttonLink = `${buttonPrimary} text-center`;
 
   // --- Knapp handlers ---
   const handleFinanceClick = async () => {
     if (!finances) return;
 
-    const updatedFinance = { ...finances };
-    const updatedAthlete = { ...athlete, purchased: !isPurchased };
+    const updatedFinance: IFinance = { ...finances };
+    const updatedAthlete: IAthlete = {
+      ...athlete,
+      purchased: !athlete.purchased,
+    };
 
-    if (isPurchased) {
+    if (athlete.purchased) {
       updatedFinance.moneyLeft += athlete.price;
-      await updateAthlete(updatedAthlete);
-      await updateFinance(updatedFinance);
-      onActionFeedback?.(`${athlete.name} successfully sold`);
+      const updateAthleteResponse: IAthleteResponseSingle = await updateAthlete(
+        updatedAthlete
+      );
+      const updateFinanceResponse: IFinanceResponseSingle = await updateFinance(
+        updatedFinance
+      );
+
+      if (updateAthleteResponse.success && updateFinanceResponse.success) {
+        onActionFeedback?.(`${athlete.name} successfully sold`);
+      } else {
+        onActionFeedback?.(`Failed to sell ${athlete.name}`);
+      }
       return;
     }
 
@@ -98,9 +117,17 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
     updatedFinance.moneyLeft -= athlete.price;
     updatedFinance.moneySpent += athlete.price;
 
-    await updateAthlete(updatedAthlete);
-    await updateFinance(updatedFinance);
-    onActionFeedback?.(`${athlete.name} successfully signed`);
+    const updateAthleteResponse: IAthleteResponseSingle = await updateAthlete(
+      updatedAthlete
+    );
+    const updateFinanceResponse: IFinanceResponseSingle = await updateFinance(
+      updatedFinance
+    );
+    if (updateAthleteResponse.success && updateFinanceResponse.success) {
+      onActionFeedback?.(`${athlete.name} successfully signed`);
+    } else {
+      onActionFeedback?.(`Failed to sign ${athlete.name}`);
+    }
   };
   // Bekreftelses vindu før sletting.
   const handleDeleteClick = () => {
@@ -111,14 +138,21 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
   // Kansellere handling
   const handleCancel = () => {
     onConfirmingChange?.(false);
-    onActionFeedback?.("");
+    onActionFeedback?.("Cancelled deleting athlete.");
   };
 
   // Gjennomfør sletting
-  const handleConfirmDelete = () => {
-    deleteAthleteById(athlete.id);
+  const handleConfirmDelete = async () => {
+    const deleteResponse: IDefaultResponse = await deleteAthleteById(
+      athlete.id
+    );
     onConfirmingChange?.(false);
-    onActionFeedback?.(`${athlete.name} successfully deleted`);
+
+    if (deleteResponse.success) {
+      onActionFeedback?.(`${athlete.name} successfully deleted`);
+    } else {
+      onActionFeedback?.(`Failed to delete ${athlete.name}`);
+    }
   };
 
   const renderButtons = () => {
@@ -169,7 +203,7 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
             onClick={handleFinanceClick}
             className={buttonSell}
           >
-            {isPurchased ? "Sell Athlete" : "Sign Athlete"}
+            {athlete.purchased ? "Sell Athlete" : "Sign Athlete"}
           </button>
         );
 
@@ -180,6 +214,7 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
 
   // Athlete Kortet
   const content = (
+    // Bruker React fragments <> siden vi må wrappe content i andre tags conditionally etterpå
     <>
       <div className={imageContainerClasses}>
         <img
@@ -221,8 +256,8 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
       // Grid column span (cardClasses) må settes på ytterste element for å svare AthleteLists grid-col-12.
       // Vanligvis er column-logikk samlet i en komponent, men vi tillater dette siden AthleteCard alltid er child av AthleteList
       return (
-        <Link to={viewCardHref} className={cardClasses}>
-          {content}
+        <Link to={viewCardHref} className={linkCardClasses}>
+          <article className={cardClasses}>{content}</article>
         </Link>
       );
     } else {
