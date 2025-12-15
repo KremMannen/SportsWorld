@@ -139,12 +139,12 @@ export const AthleteRegister: FC = () => {
   const sectionStyling =
     "col-span-9 col-start-3 sm:col-span-6 lg:col-span-4 py-6 pt-12";
   const titleContainerStyling =
-    "flex gap-12 rounded-sm px-4 py-2 bg-black text-black w-full";
-  const titleStyling = "text-lg text-white font-bold";
+    "flex gap-12 rounded-sm px-4 py-2 bg-black text-black w-full ";
+  const titleStyling = isEditMode
+    ? "text-lg text-blue-500 font-bold "
+    : "text-lg text-white font-bold ";
   const feedbackStyling = "text-sm text-black text-center";
-  const feedbackContainerStyling = `gap-2 rounded-sm px-2 py-1 border border-gray-300 shadow bg-white flex items-center justify-center gap-2 max-w-[400px] mx-auto ${
-    actionFeedback ? "" : "hidden"
-  }`;
+  const feedbackContainerStyling = `gap-2 rounded-sm px-2 py-1 border border-gray-300 shadow bg-white flex items-center justify-center gap-2 max-w-[400px] mx-auto`;
 
   const inputStyling =
     "flex-1 px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#4C0000] min-w-0";
@@ -159,6 +159,18 @@ export const AthleteRegister: FC = () => {
   const loadingTextStyling = "text-gray-500 text-lg";
 
   const renderJsx = () => {
+    // Generer header
+    const renderHeader = () => (
+      <header className={titleContainerStyling}>
+        <h3 className={titleStyling}>
+          {isEditMode
+            ? `Editing Athlete: ${athlete?.name}`
+            : "Register New Athlete"}
+        </h3>
+      </header>
+    );
+
+    // Viser hovedinnhold, evt ved teknisk feil feilmeldinger
     const getMainContent = () => {
       if (initError) {
         return (
@@ -200,7 +212,6 @@ export const AthleteRegister: FC = () => {
         );
       }
 
-      // Om feil oppsto ved en handling
       if (operationSuccess === false) {
         return (
           <div className={errorContainerStyling}>
@@ -211,101 +222,107 @@ export const AthleteRegister: FC = () => {
 
       // Redigerings vindu
       return (
+        <form className={formContainerStyling} onSubmit={handleRegister}>
+          <div className={inputContainerStyling}>
+            <label
+              htmlFor="athlete-name"
+              className="text-sm font-medium text-gray-700"
+            >
+              Name
+            </label>
+            <input
+              id="athlete-name"
+              type="text"
+              placeholder="Enter athlete name"
+              value={name}
+              className={inputStyling}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
+
+          <div className={inputContainerStyling}>
+            <label
+              htmlFor="athlete-price"
+              className="text-sm font-medium text-gray-700"
+            >
+              Price
+            </label>
+            <input
+              id="athlete-price"
+              type="number"
+              placeholder="Enter price"
+              value={price}
+              className={inputStyling}
+              onChange={(e) => setPrice(e.target.value)}
+            />
+          </div>
+
+          <div className={inputContainerStyling}>
+            <label
+              htmlFor="athlete-gender"
+              className="text-sm font-medium text-gray-700"
+            >
+              Gender
+            </label>
+            <input
+              id="athlete-gender"
+              type="text"
+              placeholder="Enter gender"
+              value={gender}
+              className={inputStyling}
+              onChange={(e) => setGender(e.target.value)}
+            />
+          </div>
+
+          <div className={inputContainerStyling}>
+            <label
+              htmlFor="athlete-image"
+              className="text-sm font-medium text-gray-700"
+            >
+              Athlete Image
+            </label>
+            <input
+              id="athlete-image"
+              type="file"
+              onChange={handleImageChange}
+              className="px-4 py-2 border border-gray-300 rounded cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-[#4C0000] file:text-white file:cursor-pointer hover:file:bg-[#870000]"
+              accept="image/*"
+            />
+          </div>
+
+          <button type="submit" className={buttonStyling}>
+            {isEditMode ? "Update Athlete" : "Register Athlete"}
+          </button>
+        </form>
+      );
+    };
+
+    // Generer feedback til bruker
+    const renderFeedback = () => {
+      if (initError || !hasInitialized) return null;
+
+      return (
         <>
-          <header className={titleContainerStyling}>
-            <h3 className={titleStyling}>
-              {isEditMode
-                ? `Edit Athlete: ${athlete?.name}`
-                : "Register New Athlete"}
-            </h3>
-          </header>
-
-          <form className={formContainerStyling} onSubmit={handleRegister}>
-            <div className={inputContainerStyling}>
-              <label
-                htmlFor="athlete-name"
-                className="text-sm font-medium text-gray-700"
-              >
-                Name
-              </label>
-              <input
-                id="athlete-name"
-                type="text"
-                placeholder="Enter athlete name"
-                value={name}
-                className={inputStyling}
-                onChange={(e) => setName(e.target.value)}
-              />
-            </div>
-
-            <div className={inputContainerStyling}>
-              <label
-                htmlFor="athlete-price"
-                className="text-sm font-medium text-gray-700"
-              >
-                Price
-              </label>
-              <input
-                id="athlete-price"
-                type="number"
-                placeholder="Enter price"
-                value={price}
-                className={inputStyling}
-                onChange={(e) => setPrice(e.target.value)}
-              />
-            </div>
-
-            <div className={inputContainerStyling}>
-              <label
-                htmlFor="athlete-gender"
-                className="text-sm font-medium text-gray-700"
-              >
-                Gender
-              </label>
-              <input
-                id="athlete-gender"
-                type="text"
-                placeholder="Enter gender"
-                value={gender}
-                className={inputStyling}
-                onChange={(e) => setGender(e.target.value)}
-              />
-            </div>
-
-            <div className={inputContainerStyling}>
-              <label
-                htmlFor="athlete-image"
-                className="text-sm font-medium text-gray-700"
-              >
-                Athlete Image
-              </label>
-              <input
-                id="athlete-image"
-                type="file"
-                onChange={handleImageChange}
-                className="px-4 py-2 border border-gray-300 rounded cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-[#4C0000] file:text-white file:cursor-pointer hover:file:bg-[#870000]"
-                accept="image/*"
-              />
-            </div>
-
-            <button type="submit" className={buttonStyling}>
-              {isEditMode ? "Update Athlete" : "Register Athlete"}
-            </button>
-          </form>
-
           {athleteIsLoading && (
             <p className={loadingTextStyling}>Loading athletes...</p>
           )}
-
-          <div className={feedbackContainerStyling}>
-            <p className={feedbackStyling}>{actionFeedback}</p>
-          </div>
+          {actionFeedback && (
+            <div className={feedbackContainerStyling}>
+              <p className={feedbackStyling}>{actionFeedback}</p>
+            </div>
+          )}
         </>
       );
     };
 
     // Returnerer resultat med section wrapper
-    return <section className={sectionStyling}>{getMainContent()}</section>;
+    return (
+      <section className={sectionStyling}>
+        {renderHeader()}
+        {getMainContent()}
+        {renderFeedback()}
+      </section>
+    );
   };
 
   return renderJsx();

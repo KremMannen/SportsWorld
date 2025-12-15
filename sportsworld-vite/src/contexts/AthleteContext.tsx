@@ -35,12 +35,11 @@ export const AthleteProvider: FC<IProviderProps> = ({ children }) => {
 
   const searchByID = async (id: number): Promise<IAthleteResponseSingle> => {
     setAthleteIsLoading(true);
+    setSearchResults([]);
 
     const response: IAthleteResponseSingle = await getAthleteById(id);
     if (response.success && response.data) {
       setSearchResults([response.data]);
-      setAthleteIsLoading(false);
-      return response;
     }
     setAthleteIsLoading(false);
     return response;
@@ -48,6 +47,7 @@ export const AthleteProvider: FC<IProviderProps> = ({ children }) => {
 
   const searchByName = async (name: string): Promise<IAthleteResponseList> => {
     setAthleteIsLoading(true);
+    setSearchResults([]);
     const response: IAthleteResponseList = await getAthletesByName(name);
     setSearchResults(response.data);
     setAthleteIsLoading(false);
