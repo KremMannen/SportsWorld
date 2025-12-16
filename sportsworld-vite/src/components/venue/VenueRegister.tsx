@@ -39,91 +39,70 @@ export const VenueRegister: FC = () => {
     ? venues.find((v) => v.id === Number(venueId))
     : undefined;
 
+  const handleAddVenue = async () => {
+    if (!name || !capacity || !image) {
+      setActionFeedback("Please fill in all fields.");
+      return;
+    }
+    const newVenue: Omit<IVenue, "image" | "id"> = {
+      name,
+      capacity: Number(capacity),
+    };
+    const response: IVenueResponseSingle = await addVenue(newVenue, image);
+    if (response.success) {
+      setActionFeedback(`Venue ${response.data?.name} successfully created `);
+    }
+    if (!response.success) {
+      setActionFeedback(`Failed to create venue `);
+    }
+    setOperationSuccess(response.success);
+    setOperationError(response.error ?? "");
+  };
+
+  const handleUpdateVenue = async () => {
+    // vil aldri forekomme, tilfredsstiller IDE'en / TS
+    if (!venue) return;
+    // image kan være tom, da beholdes gamle bildet
+    if (!name || !capacity) {
+      setActionFeedback("Please fill in all fields.");
+      return;
+    }
+    const updatedVenue: IVenue = {
+      id: venue.id,
+      name,
+      capacity: Number(capacity),
+      image: venue.image,
+    };
+    const updateResponse: IVenueResponseSingle = image
+      ? await updateVenue(updatedVenue, image)
+      : await updateVenue(updatedVenue);
+
+    if (updateResponse.success) {
+      setActionFeedback(
+        `Venue ${updateResponse.data?.name} successfully updated `
+      );
+    } else if (!updateResponse.success) {
+      setActionFeedback(`Venue failed to update`);
+    }
+
+    setOperationSuccess(updateResponse.success);
+    setOperationError(updateResponse.error ?? "");
+  };
+
   const handleRegister = async (e: FormEvent) => {
     e.preventDefault();
     setOperationSuccess(null);
     setActionFeedback("");
     setOperationError("");
-    if (venue === undefined) {
-      if (!name || !capacity || !image) {
-        setActionFeedback("Please fill in all fields.");
-        return;
-      }
-      const newVenue: Omit<IVenue, "image" | "id"> = {
-        name,
-        capacity: Number(capacity),
-      };
-      const response: IVenueResponseSingle = await addVenue(newVenue, image);
-      if (response.success) {
-        setActionFeedback(`Venue ${response.data?.name} successfully created `);
-      }
-      if (!response.success) {
-        setActionFeedback(`Failed to create venue `);
-      }
-      setOperationSuccess(response.success);
-      setOperationError(response.error ?? "");
-    } else {
-      // image kan være tom, da beholdes gamle bildet
-      if (!name || !capacity) {
-        setActionFeedback("Please fill in all fields.");
-        return;
-      }
-      const updatedVenue: IVenue = {
-        id: venue.id,
-        name,
-        capacity: Number(capacity),
-        image: venue.image,
-      };
-      const updateResponse: IVenueResponseSingle = image
-        ? await updateVenue(updatedVenue, image)
-        : await updateVenue(updatedVenue);
-
-      if (updateResponse.success) {
-        setActionFeedback(
-          `Venue ${updateResponse.data?.name} successfully updated `
-        );
-      } else if (!updateResponse.success) {
-        setActionFeedback(`Venue failed to update`);
-        setOperationError(updateResponse.error ?? "");
-        setOperationSuccess(updateResponse.success);
-      }
-
-      setOperationSuccess(updateResponse.success);
-      setOperationError(updateResponse.error ?? "");
+    if (!isEditMode) {
+      handleAddVenue();
+      setName("");
+      setImage(null);
+      setCapacity("");
+    } else if (isEditMode) {
+      handleUpdateVenue();
     }
-    setName("");
-    setImage(null);
-    setCapacity("");
   };
-
-  // --- Tailwind styling variabler ---
-
-  const sectionStyling =
-    "col-span-9 col-start-3 sm:col-span-6 lg:col-span-4 py-6 pt-12 ";
-  const titleSectionStyling =
-    "rounded-sm shadow-md shadow-black/40 px-4 py-2 bg-black text-black w-full gap-6";
-  const titleStyling = isEditMode
-    ? "text-lg text-blue-500 font-bold text-center"
-    : "text-lg text-white font-bold text-center";
-  const inputStyling =
-    "flex-1 px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#4C0000] min-w-0";
-  const imageInputStyling =
-    "px-4 py-2 border border-gray-300 rounded cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-[#4C0000] file:text-white file:cursor-pointer hover:file:bg-[#870000]";
-
-  const buttonStyling =
-    "bg-[#4C0000] text-white px-6 py-2 rounded font-bold hover:shadow hover:cursor-pointer hover:bg-[#870000]";
-  const formSectionStyling = "flex flex-col gap-4 p-4";
-  const inputSectionStyling = "flex flex-col gap-1";
-  const labelTextStyling = "text-sm font-medium text-gray-700";
-
-  const feedbackStyling = "text-sm text-black text-center";
-  const feedbackContainerStyling = `gap-2 rounded-sm px-2 py-1 border border-gray-300 shadow bg-white flex items-center justify-center max-w-[400px] mx-auto mt-4`;
-
-  const errorsectionStyling =
-    "flex  flex-col gap-4 max-w-[200px] mx-auto mx-auto bg-red-50 border border-red-400 text-red-700 p-2 mb-10 rounded";
-
-  const loadingsectionStyling = "flex justify-center items-center py-12";
-  const loadingTextStyling = "text-gray-500 text-lg";
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { files } = e.target;
@@ -145,10 +124,39 @@ export const VenueRegister: FC = () => {
     }
   }, [venue, isEditMode]);
 
+  // --- Tailwind styling variabler ---
+  const sectionStyling =
+    "col-span-9 col-start-3 sm:col-span-6 lg:col-span-4 py-6 pt-12 ";
+  const titleContainerStyling = isEditMode
+    ? "rounded-sm shadow-md shadow-black/40 px-4 py-2 bg-[#3D4645] w-full gap-6"
+    : "rounded-sm shadow-md shadow-black/40 px-4 py-2 bg-black w-full gap-6";
+  const titleStyling = "text-lg text-white font-bold text-center";
+
+  const inputStyling =
+    "flex-1 px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#4C0000] min-w-0";
+  const imageInputStyling =
+    "px-4 py-2 border border-gray-300 rounded cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-[#4C0000] file:text-white file:cursor-pointer hover:file:bg-[#870000]";
+
+  const buttonStyling =
+    "bg-[#4C0000] text-white px-6 py-2 rounded font-bold hover:shadow hover:cursor-pointer hover:bg-[#870000]";
+  const formSectionStyling = "flex flex-col gap-4 p-4";
+  const inputSectionStyling = "flex flex-col gap-1";
+  const labelTextStyling = "text-sm font-medium text-gray-700";
+
+  const feedbackStyling = "text-sm text-black text-center";
+  const feedbackContainerStyling = `gap-2 rounded-sm px-2 py-1 border border-gray-300 shadow bg-white flex items-center justify-center max-w-[400px] mx-auto mt-4`;
+
+  const errorContainerStyling =
+    "bg-red-50 border border-red-400 text-red-700 px-4 py-3 my-10 mb-10 rounded max-w-[200px] mx-auto";
+
+  const loadingContainerStyling =
+    "flex w-full justify-center items-center py-12 max-w-[200px] mx-auto";
+  const loadingTextStyling = "w-full text-gray-500 text-lg text-center";
+
   const renderJsx = () => {
     // Generer header
     const renderHeader = () => (
-      <header className={titleSectionStyling}>
+      <header className={titleContainerStyling}>
         <h3 className={titleStyling}>
           {isEditMode ? `Editing Venue: ${venue?.name}` : "Register New Venue"}
         </h3>
@@ -159,8 +167,17 @@ export const VenueRegister: FC = () => {
     const renderContent = () => {
       if (initError) {
         return (
-          <div className={errorsectionStyling}>
+          <div className={errorContainerStyling}>
             <p>{initError}</p>
+          </div>
+        );
+      }
+
+      // Laster innhold
+      if (!hasInitialized) {
+        return (
+          <div className={loadingContainerStyling}>
+            <p className={loadingTextStyling}>Loading venues...</p>
           </div>
         );
       }
@@ -170,7 +187,7 @@ export const VenueRegister: FC = () => {
         const idNumber = Number(venueId);
         if (isNaN(idNumber)) {
           return (
-            <div className={errorsectionStyling}>
+            <div className={errorContainerStyling}>
               <p>Invalid id</p>
               <Link to="/venues">Back</Link>
             </div>
@@ -178,7 +195,7 @@ export const VenueRegister: FC = () => {
         }
         if (!venue || venue === undefined) {
           return (
-            <div className={errorsectionStyling}>
+            <div className={errorContainerStyling}>
               <p>Venue not found</p>
               <Link className={buttonStyling} to="/venues">
                 Create New Venue
@@ -188,20 +205,19 @@ export const VenueRegister: FC = () => {
         }
       }
 
-      // Laster innhold
-      if (!hasInitialized) {
+      // Dersom noe gikk galt (viktig å sjekke at den er false siden null er default)
+      if (operationSuccess === false) {
         return (
-          <div className={loadingsectionStyling}>
-            <p className={loadingTextStyling}>Loading venues...</p>
+          <div className={errorContainerStyling}>
+            <p>{operationError}</p>
           </div>
         );
       }
 
-      // Dersom noe gikk galt (viktig å sjekke at den er false siden null er default)
-      if (operationSuccess === false) {
+      if (isLoading) {
         return (
-          <div className={errorsectionStyling}>
-            <p>{operationError}</p>
+          <div className={loadingContainerStyling}>
+            <p className={loadingTextStyling}>Loading venues...</p>
           </div>
         );
       }
@@ -263,7 +279,6 @@ export const VenueRegister: FC = () => {
 
       return (
         <>
-          {isLoading && <p className={loadingTextStyling}>Loading venues...</p>}
           {actionFeedback && (
             <div className={feedbackContainerStyling}>
               <p className={feedbackStyling}>{actionFeedback}</p>

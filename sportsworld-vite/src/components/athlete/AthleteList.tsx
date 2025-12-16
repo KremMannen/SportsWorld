@@ -61,8 +61,10 @@ export const AthleteList: FC<IAthleteListProps> = ({
   // klasse som gjør innhold usynlig for seende brukere, men tilgjengelig for screen readers
   const searchBarLabelStyling = "sr-only";
 
-  const loadingContainerStyling = "flex justify-center items-center py-12";
-  const loadingTextStyling = "text-gray-500 text-lg";
+  const loadingContainerStyling =
+    "flex w-full justify-center items-center py-12 max-w-[200px] mx-auto";
+
+  const loadingTextStyling = "w-full text-gray-500 text-lg text-center";
 
   const cardsContainerBaseStyling = "grid grid-cols-12 gap-6 px-6";
   // Endre layout basert på layoutVariant, slik at admin-page ikke får horizontal scroll på lg-breakpoint
@@ -83,16 +85,15 @@ export const AthleteList: FC<IAthleteListProps> = ({
     if (searchQuery.trim()) {
       const response: IAthleteResponseList = await searchByName(searchQuery);
       if (!response.success && response.error) {
-        setOperationSuccess(response.success);
         setOperationError(response.error);
       } else if (response.success) {
-        setOperationSuccess(true);
         setActionFeedback("Search performed.");
         if (response.data.length === 0) {
           setActionFeedback("Search performed, no hits.");
         }
       }
 
+      setOperationSuccess(response.success);
       setIsSearchActive(true);
     } else {
       // Hvis søkefeltet er tomt, vis alle athletes igjen
@@ -104,7 +105,7 @@ export const AthleteList: FC<IAthleteListProps> = ({
 
   // Bruker actionfeedback til å vise beskjed til bruker dersom ingen athleter er signed eller available på forsiden
   const getEmptyStateMessage = () => {
-    if (filteredAthletes.length > 0) return "";
+    if (displayAthletes.length > 0 || athleteIsLoading) return "";
 
     if (filterType === "owned") {
       return "No fighters signed yet";
@@ -116,21 +117,17 @@ export const AthleteList: FC<IAthleteListProps> = ({
   };
 
   // Velg datakilde basert på om vi søker eller ikke
-  let filteredAthletes: IAthlete[] = isSearchActive ? searchResults : athletes;
+  let displayAthletes: IAthlete[] = isSearchActive ? searchResults : athletes;
   // Filtrer og sett tittel basert på listens filtertype
   let displayTitle: string;
 
   switch (filterType) {
     case "owned":
-      filteredAthletes = filteredAthletes.filter(
-        (athlete) => athlete.purchased
-      );
+      displayAthletes = displayAthletes.filter((athlete) => athlete.purchased);
       displayTitle = "Fighters in your arsenal";
       break;
     case "available":
-      filteredAthletes = filteredAthletes.filter(
-        (athlete) => !athlete.purchased
-      );
+      displayAthletes = displayAthletes.filter((athlete) => !athlete.purchased);
       displayTitle = "Available Fighters";
       break;
     case "all":
@@ -178,7 +175,7 @@ export const AthleteList: FC<IAthleteListProps> = ({
       if (!hasInitialized) {
         return (
           <div className={loadingContainerStyling}>
-            <div className={loadingTextStyling}>Loading fighters...</div>
+            <p className={loadingTextStyling}>Loading fighters...</p>
           </div>
         );
       }
@@ -194,7 +191,7 @@ export const AthleteList: FC<IAthleteListProps> = ({
       // Viser Athlete kortene
       return (
         <div className={cardsContainerStyling}>
-          {filteredAthletes.map((athlete) => (
+          {displayAthletes.map((athlete) => (
             <AthleteCard
               key={athlete.id}
               athlete={athlete}
@@ -219,6 +216,7 @@ export const AthleteList: FC<IAthleteListProps> = ({
 
       return (
         <>
+          {/* Bruker conditional rendering fremfor if statements, unngår flere returns */}
           {athleteIsLoading && (
             <p className={loadingTextStyling}>Loading athletes...</p>
           )}

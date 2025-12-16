@@ -30,6 +30,7 @@ export const AthleteProvider: FC<IProviderProps> = ({ children }) => {
   // Vi vil at context skal initialize uten en component, så for at component skal ha tilgang
   // til errors som oppstår under init bruker vi denne
   const initError = useRef<string | null>(null);
+
   // Unngår race condition
   const hasInitialized = useRef(false);
 

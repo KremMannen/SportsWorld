@@ -50,69 +50,75 @@ export const AthleteRegister: FC = () => {
     setOperationSuccess(null);
     setOperationError("");
 
-    // Knappen poster ny athlet om vi ikke er i redigeringsmodus
-    // Ved å sjekke om athlete er undefined i stedet for å sjekke isEditMode,
-    // kan updateAthlete trygt bruke athlete.id når vi er i redigeringsmodus uten typescript klage.
-    if (athlete === undefined) {
-      if (!name || !price || !gender || !image) {
-        alert("Please fill in all fields.");
-        return;
-      }
-      const newAthlete: Omit<IAthlete, "image" | "id"> = {
-        name,
-        price: Number(price),
-        gender,
-        purchased: false,
-      };
-
-      const response: IAthleteResponseSingle = await addAthlete(
-        newAthlete,
-        image
-      );
-      if (response.success) {
-        setActionFeedback(
-          `Athlete ${response.data?.name} successfully created `
-        );
-      }
-      if (!response.success) {
-        setActionFeedback(`Failed to create athlete `);
-      }
-      setOperationError(response.error ?? "");
-      setOperationSuccess(response.success);
-    } else {
-      // image kan være tom, da beholdes gamle bildet
-      if (!name || !price || !gender) {
-        alert("Please fill in all fields.");
-        return;
-      }
-
-      const updatedAthlete: IAthlete = {
-        id: athlete.id,
-        name,
-        price: Number(price),
-        gender,
-        image: athlete.image,
-        purchased: athlete.purchased,
-      };
-
-      const updateResponse: IAthleteResponseSingle = image
-        ? await updateAthlete(updatedAthlete, image)
-        : await updateAthlete(updatedAthlete);
-
-      if (updateResponse.success) {
-        setActionFeedback(
-          `Athlete ${updateResponse.data?.name} successfully updated `
-        );
-      } else if (!updateResponse.success) {
-        setActionFeedback(`Athlete failed to update`);
-        setOperationError(updateResponse.error ?? "");
-        setOperationSuccess(updateResponse.success);
-      }
+    // update skal beholde input fields ved register
+    if (!isEditMode) {
+      handleAddAthlete();
+      setName("");
+      setPrice("");
+      setGender("");
+      setImage(null);
+    } else if (isEditMode) {
+      handleUpdateAthlete();
     }
-    setName("");
-    setPrice("");
-    setGender("");
-    setImage(null);
+  };
+
+  const handleAddAthlete = async () => {
+    if (!name || !price || !gender || !image) {
+      alert("Please fill in all fields.");
+      return;
+    }
+    const newAthlete: Omit<IAthlete, "image" | "id"> = {
+      name,
+      price: Number(price),
+      gender,
+      purchased: false,
+    };
+
+    const response: IAthleteResponseSingle = await addAthlete(
+      newAthlete,
+      image
+    );
+    if (response.success) {
+      setActionFeedback(`Athlete ${response.data?.name} successfully created `);
+    }
+    if (!response.success) {
+      setActionFeedback(`Failed to create athlete `);
+    }
+    setOperationError(response.error ?? "");
+    setOperationSuccess(response.success);
+  };
+
+  const handleUpdateAthlete = async () => {
+    // vil aldri forekomme, tilfredsstiller IDE'en / TS
+    if (!athlete) return;
+    // image kan være tom, da beholdes gamle bildet
+    if (!name || !price || !gender) {
+      alert("Please fill in all fields.");
+      return;
+    }
+
+    const updatedAthlete: IAthlete = {
+      id: athlete.id,
+      name,
+      price: Number(price),
+      gender,
+      image: athlete.image,
+      purchased: athlete.purchased,
+    };
+
+    const updateResponse: IAthleteResponseSingle = image
+      ? await updateAthlete(updatedAthlete, image)
+      : await updateAthlete(updatedAthlete);
+
+    if (updateResponse.success) {
+      setActionFeedback(
+        `Athlete ${updateResponse.data?.name} successfully updated `
+      );
+    } else if (!updateResponse.success) {
+      setActionFeedback(`Athlete failed to update`);
+      setOperationError(updateResponse.error ?? "");
+      setOperationSuccess(updateResponse.success);
+    }
   };
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -138,11 +144,10 @@ export const AthleteRegister: FC = () => {
   // --- Tailwind styling variabler ---
   const sectionStyling =
     "col-span-9 col-start-3 sm:col-span-6 lg:col-span-4 py-6 pt-12";
-  const titleContainerStyling =
-    "flex gap-12 rounded-sm px-4 py-2 bg-black text-black w-full ";
-  const titleStyling = isEditMode
-    ? "text-lg text-blue-500 font-bold "
-    : "text-lg text-white font-bold ";
+  const titleContainerStyling = isEditMode
+    ? "rounded-sm shadow-md shadow-black/40 px-4 py-2 bg-[#3D4645] w-full gap-6"
+    : "rounded-sm shadow-md shadow-black/40 px-4 py-2 bg-black w-full gap-6";
+  const titleStyling = "text-lg text-white font-bold text-center";
   const feedbackStyling = "text-sm text-black text-center";
   const feedbackContainerStyling = `gap-2 rounded-sm px-2 py-1 border border-gray-300 shadow bg-white flex items-center justify-center gap-2 max-w-[400px] mx-auto`;
 
@@ -154,7 +159,7 @@ export const AthleteRegister: FC = () => {
   const inputContainerStyling = "flex flex-col gap-1";
 
   const errorContainerStyling =
-    "bg-red-50 border border-red-400 text-red-700 px-4 py-3 mb-10 rounded max-w-[200px] mx-auto";
+    "bg-red-50 border border-red-400 text-red-700 px-4 py-3 my-10 mb-10 rounded max-w-[200px] mx-auto";
   const loadingContainerStyling = "flex justify-center items-center py-12";
   const loadingTextStyling = "text-gray-500 text-lg";
 
@@ -164,7 +169,7 @@ export const AthleteRegister: FC = () => {
       <header className={titleContainerStyling}>
         <h3 className={titleStyling}>
           {isEditMode
-            ? `Editing Athlete: ${athlete?.name}`
+            ? `Currently editing athlete: ${athlete?.name}`
             : "Register New Athlete"}
         </h3>
       </header>
@@ -176,6 +181,15 @@ export const AthleteRegister: FC = () => {
         return (
           <div className={errorContainerStyling}>
             <p>{initError}</p>
+          </div>
+        );
+      }
+
+      // Laster innhold
+      if (!hasInitialized) {
+        return (
+          <div className={loadingContainerStyling}>
+            <p className={loadingTextStyling}>Loading athletes...</p>
           </div>
         );
       }
@@ -203,19 +217,18 @@ export const AthleteRegister: FC = () => {
         }
       }
 
-      // Laster innhold
-      if (!hasInitialized) {
-        return (
-          <div className={loadingContainerStyling}>
-            <p className={loadingTextStyling}>Loading athletes...</p>
-          </div>
-        );
-      }
-
       if (operationSuccess === false) {
         return (
           <div className={errorContainerStyling}>
             <p>{operationError}</p>
+          </div>
+        );
+      }
+
+      if (athleteIsLoading) {
+        return (
+          <div className={loadingContainerStyling}>
+            <p className={loadingTextStyling}>Loading athletes...</p>
           </div>
         );
       }
@@ -303,9 +316,6 @@ export const AthleteRegister: FC = () => {
 
       return (
         <>
-          {athleteIsLoading && (
-            <p className={loadingTextStyling}>Loading athletes...</p>
-          )}
           {actionFeedback && (
             <div className={feedbackContainerStyling}>
               <p className={feedbackStyling}>{actionFeedback}</p>

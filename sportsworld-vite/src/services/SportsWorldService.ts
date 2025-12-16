@@ -19,7 +19,6 @@ const financeEndpoint = "http://localhost:5110/api/finance";
 const getAthletes = async (): Promise<IAthleteResponseList> => {
   try {
     const response = await axios.get<IAthlete[]>(athleteEndpoint);
-
     const validation = validateResponseList(response);
 
     if (!validation.isValid) {
@@ -57,9 +56,11 @@ const getAthleteById = async (id: number): Promise<IAthleteResponseSingle> => {
     if (axios.isAxiosError(error) && error.response) {
       // 404 må differansieres fra andre errors--dette er et forventet outcome og ikke feil.
       if (error.response.status === 404) {
+        console.error("getAthleteById: No athlete found on id", error);
         return {
           success: true,
           data: null,
+          error: "No athlete found on id",
         };
       }
     }
@@ -98,6 +99,7 @@ const getAthletesByName = async (
         return {
           success: true,
           data: [],
+          error: "No athlete found by that query",
         };
       }
     }
@@ -215,6 +217,7 @@ const getVenueById = async (id: number): Promise<IVenueResponseSingle> => {
         return {
           success: true,
           data: null,
+          error: "No venue found by that id",
         };
       }
     }
@@ -247,6 +250,7 @@ const getVenuesByName = async (query: string): Promise<IVenueResponseList> => {
         return {
           success: true,
           data: [],
+          error: "No venue found by that query",
         };
       }
     }
@@ -423,7 +427,7 @@ const validateResponseSingle = (
     return { isValid: false, error: "Failed to fetch from server." };
   }
 
-  // Dropper sjekk for isArray, skal ikke være nødvendig.
+  // Dropper sjekk for isArray: getbyid returnerer uten liste
 
   // Sjekker at dataen eksisterer
   if (!response.data) {

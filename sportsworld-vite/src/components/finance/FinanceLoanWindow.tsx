@@ -31,7 +31,7 @@ export const FinanceLoanWindow: FC = () => {
   const buttonHover = "hover:shadow hover:cursor-pointer hover:bg-[#870000]";
 
   const inputContainerStyling =
-    "flex flex-col sm:flex-row gap-4 items-stretch sm:items-center lg:-mt-11";
+    "flex flex-col sm:flex-row gap-4 items-stretch sm:items-center lg:-mt-11 max-w-[600px] mx-auto";
 
   const loanInputLabelStyling = "sr-only";
 
@@ -93,25 +93,23 @@ export const FinanceLoanWindow: FC = () => {
     // Generer loan form
     const renderLoanForm = () => (
       <section className={sectionBase}>
-        <div className={inputContainerStyling}>
-          <form onSubmit={handleLoanRequest}>
-            <label htmlFor="loan-input" className={loanInputLabelStyling}>
-              Input loan amount
-            </label>
-            <input
-              id="loan-input"
-              type="number"
-              value={loanAmount}
-              onChange={(e) => setLoanAmount(e.target.value)}
-              placeholder="Enter amount"
-              className={inputBase}
-            />
+        <form className={inputContainerStyling} onSubmit={handleLoanRequest}>
+          <label htmlFor="loan-input" className={loanInputLabelStyling}>
+            Input loan amount
+          </label>
+          <input
+            id="loan-input"
+            type="number"
+            value={loanAmount}
+            onChange={(e) => setLoanAmount(e.target.value)}
+            placeholder="Enter amount"
+            className={inputBase}
+          />
 
-            <button type="submit" className={`${buttonBase} ${buttonHover}`}>
-              Request Loan
-            </button>
-          </form>
-        </div>
+          <button type="submit" className={`${buttonBase} ${buttonHover}`}>
+            Request Loan
+          </button>
+        </form>
         {actionFeedback && (
           <div className={feedbackContainerStyling}>
             <p className={feedbackStyling}>{actionFeedback}</p>

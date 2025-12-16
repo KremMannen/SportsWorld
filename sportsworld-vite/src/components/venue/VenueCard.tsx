@@ -35,12 +35,6 @@ export const VenueCard: FC<IVenueCardProps> = ({
   const cardClasses = `${baseCardClasses} ${cardColorClasses} ${cardGridSpan} ${cardHoverClasses} shadow-black/20`;
   const linkCardClasses = `${cardGridSpan}`;
 
-  const deleteCardClasses = `
-    bg-[#252828] text-white text-lg font-bold rounded-lg shadow-md overflow-hidden
-    border-1 border-red-600 shadow-black/60 scale-[1.05]
-    ${cardGridSpan}
-  `;
-
   const venueViewCardHref = "/venues";
 
   // --- Button styling ---
@@ -62,7 +56,12 @@ export const VenueCard: FC<IVenueCardProps> = ({
   // --- Separate stylinger for bekreftelses-kortet til delete-knappen  ---
   const deleteContentClasses = "p-4 h-full flex flex-col justify-between";
   const deleteTextClasses =
-    "flex-1 flex items-center justify-center text-center";
+    "flex-1 flex items-center justify-center text-center text-white text-lg font-bold";
+  const deleteCardClasses = `
+    bg-[#252828]  rounded-lg shadow-md overflow-hidden
+    border-1 border-red-600 shadow-black/60 scale-[1.05]
+    ${cardGridSpan}
+  `;
 
   // Delete-knappen åpner bekreftelse-popup i kortet
   // Knappene i popuppen kaller på deleteVenueById fra context, eller lukker staten og går tilbake til vanlig kort

@@ -18,8 +18,10 @@ export const FinanceDashboard: FC<IFinanceDashboardProps> = ({
   ) as IFinanceContext;
 
   // --- Styling ---
-  const loadingContainer = "text-center";
-  const loadingText = "text-xl text-gray-600";
+  const loadingContainer =
+    "flex w-full justify-center items-center py-12 max-w-[200px] mx-auto";
+
+  const loadingText = "w-full text-gray-500 text-lg text-center";
   const errorContainer =
     "bg-red-50 border border-red-400 text-red-700 px-4 py-3 mb-10 rounded max-w-[200px] mx-auto";
   const sectionBase = "w-full pt-12 grid grid-cols-12 gap-6 text-center";
@@ -65,7 +67,6 @@ export const FinanceDashboard: FC<IFinanceDashboardProps> = ({
     );
 
     // TODO: Bør egentlig sjekke athletes og, men krever refacor av variable names, ingen konsekvens atm
-    // Håndter init feil til context
     if (initError) {
       return (
         <section className={sectionContainerStyling}>
@@ -77,7 +78,7 @@ export const FinanceDashboard: FC<IFinanceDashboardProps> = ({
     }
 
     // TODO: Bør egentlig sjekke athletes...
-    // Innhold laster inn..
+    // Innhold laster inn
     if (!hasInitialized) {
       return (
         <section className={sectionContainerStyling}>
@@ -85,6 +86,14 @@ export const FinanceDashboard: FC<IFinanceDashboardProps> = ({
             <p className={loadingText}>Loading dashboard...</p>
           </div>
         </section>
+      );
+    }
+
+    if (financeIsLoading) {
+      return (
+        <div className={loadingContainer}>
+          <p className={loadingText}>Loading finances…</p>
+        </div>
       );
     }
 
@@ -99,9 +108,6 @@ export const FinanceDashboard: FC<IFinanceDashboardProps> = ({
         <div className={containerStyling}>{renderCards()}</div>
         <div className={containerStyling}>
           <FinanceLoanWindow />
-          {financeIsLoading && (
-            <p className={loadingText}>Updating finances…</p>
-          )}
         </div>
       </section>
     );

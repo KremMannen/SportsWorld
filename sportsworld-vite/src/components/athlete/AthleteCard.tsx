@@ -64,10 +64,11 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
   const viewCardHref = athlete.purchased ? "/admin" : "/finances";
 
   // --- Confirm-Delete Styling ---
-  const deleteContentClasses = "p-4 h-full flex flex-col justify-between";
+  const deleteContentClasses =
+    "p-4 h-full w-full flex flex-col justify-center justify-between";
   const deleteTextClasses =
-    "flex-1 flex items-center justify-center text-center";
-  const deleteCardClasses = `${baseCardClasses} bg-[#252828] text-white text-lg ${cardHeightClasses} ${cardGridClasses} border-1 border-red-600 shadow-black/60 scale-[1.05]`;
+    "flex-1 flex items-center justify-center text-center font-bold text-white text-lg";
+  const deleteCardClasses = `${baseCardClasses} bg-[#252828]  ${cardHeightClasses} ${cardGridClasses} border-1 border-red-600 shadow-black/60 scale-[1.05]`;
 
   // --- Button Styling ---
   const buttonBase =

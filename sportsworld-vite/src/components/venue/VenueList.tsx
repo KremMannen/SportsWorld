@@ -60,8 +60,9 @@ export const VenueList: FC<IVenueListProps> = ({
   const feedbackStyling = "text-sm text-black text-center";
   const feedbackContainerStyling = `gap-2 rounded-sm px-2 py-1 border border-gray-300 shadow bg-white flex items-center justify-center max-w-[400px] mx-auto mt-4`;
 
-  const loadingContainerStyling = "flex justify-center items-center py-12";
-  const loadingTextStyling = "text-gray-500 text-lg";
+  const loadingContainerStyling =
+    "flex mx-auto justify-center items-center py-12";
+  const loadingTextStyling = "text-gray-500 text-lg text-center col-span-12";
 
   const errorContainerStyling =
     "bg-red-50 border border-red-400 text-red-700 px-4 py-3 my-10 rounded max-w-[200px] mx-auto";
@@ -113,7 +114,7 @@ export const VenueList: FC<IVenueListProps> = ({
 
         if (response.data === null) {
           // Ingen treff på ID, prøv navn søk i tilfelle tallet var en del av navnet
-          await performNameSearch();
+          await handleNameSearch();
         } else {
           setActionFeedback("Search performed.");
         }
@@ -122,31 +123,27 @@ export const VenueList: FC<IVenueListProps> = ({
     }
 
     // Søk på navn
-    await performNameSearch();
+    await handleNameSearch();
   };
 
-  const performNameSearch = async () => {
+  const handleNameSearch = async () => {
     const response: IVenueResponseList = await searchByName(searchQuery);
 
     if (!response.success && response.error) {
-      setOperationSuccess(false);
       setOperationError(response.error);
     } else if (response.success) {
-      setOperationSuccess(true);
-
       if (response.data.length === 0) {
         setActionFeedback("Search performed, no hits.");
       } else {
         setActionFeedback("Search performed.");
       }
     }
-
+    setOperationSuccess(response.success);
     setIsSearchActive(true);
   };
 
   // Velg datakilde basert på om vi søker eller ikke
   let displayVenues: IVenue[] = isSearchActive ? searchResults : venues;
-
   let displayTitle: string;
 
   switch (cardVariant) {
