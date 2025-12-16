@@ -254,7 +254,6 @@ export const AthleteProvider: FC<IProviderProps> = ({ children }) => {
         searchResults,
         athleteIsLoading,
         initError: initError.current, //  gjør det lettere for callers å aksessere verdien, de må ikke vite at initError er en useRef
-        hasInitialized: hasInitialized.current,
         searchByID,
         searchByName,
         addAthlete,

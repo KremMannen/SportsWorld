@@ -5,6 +5,5 @@ export interface IFinanceContext {
   finances: IFinance;
   financeIsLoading: boolean;
   initError: string | null;
-  hasInitialized: boolean;
   updateFinance: (finance: IFinance) => Promise<IFinanceResponseSingle>;
 }

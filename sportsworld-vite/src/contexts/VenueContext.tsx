@@ -227,7 +227,6 @@ export const VenueProvider: FC<IProviderProps> = ({ children }) => {
         searchResults,
         isLoading,
         initError: initError.current,
-        hasInitialized: hasInitialized.current,
         searchByID,
         searchByName,
         addVenue,

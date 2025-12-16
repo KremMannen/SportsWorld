@@ -13,20 +13,19 @@ export const FinanceDashboard: FC<IFinanceDashboardProps> = ({
 }) => {
   const { athletes } = useContext(AthleteContext) as IAthleteContext;
 
-  const { finances, initError, hasInitialized } = useContext(
+  const { finances, initError, financeIsLoading } = useContext(
     FinanceContext
   ) as IFinanceContext;
 
   // --- Styling ---
-  const loadingContainer =
-    "flex w-full justify-center items-center py-12 max-w-[200px] mx-auto";
 
-  const loadingText = "w-full text-gray-500 text-lg text-center";
   const errorContainer =
     "bg-red-50 border border-red-400 text-red-700 px-4 py-3 mb-10 rounded max-w-[200px] mx-auto";
   const sectionBase = "w-full pt-12 grid grid-cols-12 gap-6 text-center";
   const sectionContainerStyling = `py-12`;
   const containerStyling = "col-span-12 lg:col-span-6 grid grid-cols-12 gap-6";
+  const loadingContainerStyling = "flex justify-center items-center py-12";
+  const loadingTextStyling = "w-full text-gray-500 text-lg text-center";
 
   // --- Kalkulerte visningsverdier ---
   const purchasedAthletes: IAthlete[] = athletes.filter((a) => a.purchased);
@@ -77,20 +76,16 @@ export const FinanceDashboard: FC<IFinanceDashboardProps> = ({
       );
     }
 
-    // TODO: Bør egentlig sjekke athletes...
-    // Innhold laster inn
-    if (!hasInitialized) {
+    if (financeIsLoading) {
       return (
-        <section className={sectionContainerStyling}>
-          <div className={loadingContainer}>
-            <p className={loadingText}>Loading dashboard...</p>
-          </div>
-        </section>
+        <div className={loadingContainerStyling}>
+          <p className={loadingTextStyling}>Loading finances...</p>
+        </div>
       );
     }
 
-    // Begrenset variant som vises kun på forsiden (homepage)
     if (limitedVariant) {
+      // Begrenset variant som vises kun på forsiden (homepage)
       return <section className={sectionBase}>{renderCards()}</section>;
     }
 

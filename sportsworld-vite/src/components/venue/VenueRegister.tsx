@@ -14,14 +14,9 @@ import type { IVenue } from "../../interfaces/objects/IVenue";
 import type { IVenueResponseSingle } from "../../interfaces/IServiceResponses";
 
 export const VenueRegister: FC = () => {
-  const {
-    venues,
-    initError,
-    hasInitialized,
-    addVenue,
-    updateVenue,
-    isLoading,
-  } = useContext(VenueContext) as IVenueContext;
+  const { venues, initError, addVenue, updateVenue, isLoading } = useContext(
+    VenueContext
+  ) as IVenueContext;
 
   const { venueId } = useParams<{ venueId: string }>();
   const [name, setName] = useState<string>("");
@@ -173,15 +168,6 @@ export const VenueRegister: FC = () => {
         );
       }
 
-      // Laster innhold
-      if (!hasInitialized) {
-        return (
-          <div className={loadingContainerStyling}>
-            <p className={loadingTextStyling}>Loading venues...</p>
-          </div>
-        );
-      }
-
       // Sjekker etter id- og venue-relaterte feil når ID er passert og komponenten skal være i redigeringsmodus
       if (isEditMode) {
         const idNumber = Number(venueId);
@@ -275,7 +261,7 @@ export const VenueRegister: FC = () => {
 
     // Generer feedback til bruker
     const renderFeedback = () => {
-      if (initError || !hasInitialized) return null;
+      if (initError) return null;
 
       return (
         <>

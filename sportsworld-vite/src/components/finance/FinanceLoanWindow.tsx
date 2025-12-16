@@ -5,7 +5,7 @@ import type { IFinanceResponseSingle } from "../../interfaces/IServiceResponses"
 import type { IFinance } from "../../interfaces/objects/IFinance";
 
 export const FinanceLoanWindow: FC = () => {
-  const { finances, updateFinance, initError, hasInitialized } = useContext(
+  const { finances, updateFinance, initError } = useContext(
     FinanceContext
   ) as IFinanceContext;
 
@@ -35,10 +35,6 @@ export const FinanceLoanWindow: FC = () => {
 
   const loanInputLabelStyling = "sr-only";
 
-  const loadingText = "text-xl text-gray-600";
-  const loadingContainer = "text-center";
-
-  const sectionErrorBase = "pt-12";
   const errorContainer =
     "bg-red-50 border border-red-400 text-red-700 px-4 py-3 my-10 rounded max-w-[200px] mx-auto";
 
@@ -124,16 +120,6 @@ export const FinanceLoanWindow: FC = () => {
         <section className={sectionBase}>
           <div className={errorContainer}>
             <p>{initError}</p>
-          </div>
-        </section>
-      );
-    }
-
-    if (!hasInitialized) {
-      return (
-        <section className={sectionErrorBase}>
-          <div className={loadingContainer}>
-            <p className={loadingText}>Loading Loan Window...</p>
           </div>
         </section>
       );

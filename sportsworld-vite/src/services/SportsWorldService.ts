@@ -404,7 +404,7 @@ const validateResponseList = (
   }
 
   // Sjekker at dataen eksisterer, og at den er i forventet format (array)
-  // isArray sjekken hentet på forelesers anbefaling fra: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/isArray
+
   if (!response.data || !Array.isArray(response.data)) {
     return {
       isValid: false,

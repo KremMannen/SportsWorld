@@ -123,7 +123,6 @@ export const FinanceProvider: FC<IProviderProps> = ({ children }) => {
       value={{
         finances,
         initError: initError.current, //  gjør det lettere for callers å aksessere verdien, de må ikke vite at initError er en useRef
-        hasInitialized: hasInitialized.current,
         financeIsLoading,
         updateFinance,
       }}

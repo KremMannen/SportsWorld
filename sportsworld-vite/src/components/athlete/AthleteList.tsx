@@ -13,14 +13,8 @@ export const AthleteList: FC<IAthleteListProps> = ({
   cardVariant = "view",
   layoutVariant = "horizontal",
 }) => {
-  const {
-    athletes,
-    initError,
-    hasInitialized,
-    searchResults,
-    athleteIsLoading,
-    searchByName,
-  } = useContext(AthleteContext) as IAthleteContext;
+  const { athletes, initError, searchResults, athleteIsLoading, searchByName } =
+    useContext(AthleteContext) as IAthleteContext;
 
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [isSearchActive, setIsSearchActive] = useState<boolean>(false);
@@ -60,9 +54,6 @@ export const AthleteList: FC<IAthleteListProps> = ({
   // sr-only: screen-reader only.
   // klasse som gjør innhold usynlig for seende brukere, men tilgjengelig for screen readers
   const searchBarLabelStyling = "sr-only";
-
-  const loadingContainerStyling =
-    "flex w-full justify-center items-center py-12 max-w-[200px] mx-auto";
 
   const loadingTextStyling = "w-full text-gray-500 text-lg text-center";
 
@@ -172,14 +163,6 @@ export const AthleteList: FC<IAthleteListProps> = ({
         );
       }
 
-      if (!hasInitialized) {
-        return (
-          <div className={loadingContainerStyling}>
-            <p className={loadingTextStyling}>Loading fighters...</p>
-          </div>
-        );
-      }
-
       if (operationSuccess === false) {
         return (
           <div className={errorContainerStyling}>
@@ -212,7 +195,7 @@ export const AthleteList: FC<IAthleteListProps> = ({
 
     // Generer feedback til bruker
     const renderFeedback = () => {
-      if (initError || !hasInitialized) return null;
+      if (initError) return null;
 
       return (
         <>

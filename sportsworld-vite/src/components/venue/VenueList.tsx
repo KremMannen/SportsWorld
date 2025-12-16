@@ -23,7 +23,6 @@ export const VenueList: FC<IVenueListProps> = ({
   const {
     venues,
     initError,
-    hasInitialized,
     searchResults,
     isLoading,
     searchByName,
@@ -60,8 +59,6 @@ export const VenueList: FC<IVenueListProps> = ({
   const feedbackStyling = "text-sm text-black text-center";
   const feedbackContainerStyling = `gap-2 rounded-sm px-2 py-1 border border-gray-300 shadow bg-white flex items-center justify-center max-w-[400px] mx-auto mt-4`;
 
-  const loadingContainerStyling =
-    "flex mx-auto justify-center items-center py-12";
   const loadingTextStyling = "text-gray-500 text-lg text-center col-span-12";
 
   const errorContainerStyling =
@@ -194,15 +191,6 @@ export const VenueList: FC<IVenueListProps> = ({
         );
       }
 
-      // Context initialiserer, viser loading melding
-      if (!hasInitialized) {
-        return (
-          <div className={loadingContainerStyling}>
-            <div className={loadingTextStyling}>Loading venues...</div>
-          </div>
-        );
-      }
-
       // Ved feil vises tilhørende feilmelding
       if (operationSuccess === false) {
         return (
@@ -251,12 +239,7 @@ export const VenueList: FC<IVenueListProps> = ({
 
     // Helper for å rendre feedback (kun når ikke i limited mode eller tekniske feil har skjedd)
     const renderFeedback = () => {
-      if (
-        initError ||
-        !hasInitialized ||
-        operationSuccess === false ||
-        isLimited
-      ) {
+      if (initError || operationSuccess === false || isLimited) {
         return null;
       }
 

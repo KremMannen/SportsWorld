@@ -16,14 +16,8 @@ import type { IAthlete } from "../../interfaces/objects/IAthlete";
 // Om id er passert som parameter, oppdateres den assosierte athleten
 
 export const AthleteRegister: FC = () => {
-  const {
-    athletes,
-    initError,
-    hasInitialized,
-    updateAthlete,
-    addAthlete,
-    athleteIsLoading,
-  } = useContext(AthleteContext) as IAthleteContext;
+  const { athletes, initError, updateAthlete, addAthlete, athleteIsLoading } =
+    useContext(AthleteContext) as IAthleteContext;
 
   const { athleteId } = useParams<{ athleteId: string }>();
   const [name, setName] = useState<string>("");
@@ -185,15 +179,6 @@ export const AthleteRegister: FC = () => {
         );
       }
 
-      // Laster innhold
-      if (!hasInitialized) {
-        return (
-          <div className={loadingContainerStyling}>
-            <p className={loadingTextStyling}>Loading athletes...</p>
-          </div>
-        );
-      }
-
       // Sjekker bare for ID feil om vi er i edit-mode
       if (isEditMode) {
         const idNumber = Number(athleteId);
@@ -312,7 +297,7 @@ export const AthleteRegister: FC = () => {
 
     // Generer feedback til bruker
     const renderFeedback = () => {
-      if (initError || !hasInitialized) return null;
+      if (initError) return null;
 
       return (
         <>
