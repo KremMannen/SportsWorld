@@ -91,8 +91,14 @@ export const AthleteProvider: FC<IProviderProps> = ({ children }) => {
     if (!response.success) {
       return response;
     }
-    // sparer api kall ved å gjøre dette fremfor getAll
-    setAthletes((prev) => prev.filter((a) => a.id !== id));
+
+    if (response.success) {
+      // sparer api kall ved å gjøre dette fremfor getAll
+      setAthletes((prev) => prev.filter((a) => a.id !== id));
+      // tilfelle bruker slettet gjennom et søk
+      setSearchResults((prev) => prev.filter((a) => a.id !== id));
+    }
+
     return response;
   };
 

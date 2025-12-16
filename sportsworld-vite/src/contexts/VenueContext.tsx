@@ -86,6 +86,7 @@ export const VenueProvider: FC<IProviderProps> = ({ children }) => {
     }
     if (response.success) {
       setVenues((prev) => prev.filter((a) => a.id !== id));
+      setSearchResults((prev) => prev.filter((a) => a.id !== id));
     }
     return response;
   };
