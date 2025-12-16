@@ -129,7 +129,7 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
       onActionFeedback?.(`Failed to sign ${athlete.name}`);
     }
   };
-  // Bekreftelses vindu før sletting.
+  // Gir bruker bekreftelses vindu før sletting.
   const handleDeleteClick = () => {
     onConfirmingChange?.(true);
     onActionFeedback?.("");
@@ -155,88 +155,65 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
     }
   };
 
-  const renderButtons = () => {
-    switch (variant) {
-      case "view":
-        return null;
+  const renderJsx = () => {
+    // Generer knapper basert på variant
+    const renderButtons = () => {
+      switch (variant) {
+        case "view":
+          return null;
 
-      case "manage":
-        // Bekreftelses vindu for sletting
-        if (confirming) {
+        case "manage":
+          // Bekreftelses vindu for sletting
+          if (confirming) {
+            return (
+              <div className={buttonContainerClasses}>
+                <button onClick={handleConfirmDelete} className={buttonDelete}>
+                  Yes
+                </button>
+                <button onClick={handleCancel} className={buttonPrimary}>
+                  No
+                </button>
+              </div>
+            );
+          }
+
+          // Manage-variant kort (edit og delete knapper)
           return (
-            <div className={buttonContainerClasses}>
-              <button onClick={handleConfirmDelete} className={buttonDelete}>
-                Yes
+            <>
+              <Link
+                to={`/register/${athlete.id}`}
+                className={buttonLink}
+                onClick={() => onActionFeedback?.("")}
+              >
+                Edit
+              </Link>
+              <button
+                type="button"
+                onClick={handleDeleteClick}
+                className={buttonDelete}
+              >
+                Delete
               </button>
-              <button onClick={handleCancel} className={buttonPrimary}>
-                No
-              </button>
-            </div>
+            </>
           );
-        }
 
-        // Manage-variant kort (edit og delete knapper)
-        return (
-          <>
-            <Link
-              to={`/register/${athlete.id}`}
-              className={buttonLink}
-              onClick={() => onActionFeedback?.("")}
-            >
-              Edit
-            </Link>
+        // Finance-variant kort (sign og sell knapper)
+        case "finance":
+          return (
             <button
               type="button"
-              onClick={handleDeleteClick}
-              className={buttonDelete}
+              onClick={handleFinanceClick}
+              className={buttonSell}
             >
-              Delete
+              {athlete.purchased ? "Sell Athlete" : "Sign Athlete"}
             </button>
-          </>
-        );
+          );
 
-      // Finance-variant kort (sign og sell knapper)
-      case "finance":
-        return (
-          <button
-            type="button"
-            onClick={handleFinanceClick}
-            className={buttonSell}
-          >
-            {athlete.purchased ? "Sell Athlete" : "Sign Athlete"}
-          </button>
-        );
+        default:
+          return null;
+      }
+    };
 
-      default:
-        return null;
-    }
-  };
-
-  // Athlete Kortet
-  const content = (
-    // Bruker React fragments <> siden vi må wrappe content i andre tags conditionally etterpå
-    <>
-      <div className={imageContainerClasses}>
-        <img
-          src={`http://localhost:5110/images/AthleteImages/${athlete.image}`}
-          alt={athlete.name}
-          className={imageClasses}
-        />
-      </div>
-
-      <div className={contentContainerClasses}>
-        <div>
-          <h3 className={titleClasses}>{athlete.name}</h3>
-          <p>Price: {athlete.price.toLocaleString()} $</p>
-          <p>Gender: {athlete.gender}</p>
-        </div>
-
-        <div className={buttonContainerClasses}>{renderButtons()}</div>
-      </div>
-    </>
-  );
-
-  const renderJsx = () => {
     // Sjekker først om vi skal vise confirmdelete vindu
     if (confirming) {
       return (
@@ -251,17 +228,40 @@ export const AthleteCard: FC<IAthleteCardProps> = ({
       );
     }
 
+    // Generer athlete kort innhold
+    const renderContent = () => (
+      <>
+        <div className={imageContainerClasses}>
+          <img
+            src={`http://localhost:5110/images/AthleteImages/${athlete.image}`}
+            alt={athlete.name}
+            className={imageClasses}
+          />
+        </div>
+
+        <div className={contentContainerClasses}>
+          <div>
+            <h3 className={titleClasses}>{athlete.name}</h3>
+            <p>Price: {athlete.price.toLocaleString()} $</p>
+            <p>Gender: {athlete.gender}</p>
+          </div>
+
+          <div className={buttonContainerClasses}>{renderButtons()}</div>
+        </div>
+      </>
+    );
+
     // View-varianten skal være clickable, trenger link-wrapper
     if (variant === "view") {
       // Grid column span (cardClasses) må settes på ytterste element for å svare AthleteLists grid-col-12.
       // Vanligvis er column-logikk samlet i en komponent, men vi tillater dette siden AthleteCard alltid er child av AthleteList
       return (
         <Link to={viewCardHref} className={linkCardClasses}>
-          <article className={cardClasses}>{content}</article>
+          <article className={cardClasses}>{renderContent()}</article>
         </Link>
       );
     } else {
-      return <article className={cardClasses}>{content}</article>;
+      return <article className={cardClasses}>{renderContent()}</article>;
     }
   };
 

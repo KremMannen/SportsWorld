@@ -166,7 +166,7 @@ export const AthleteList: FC<IAthleteListProps> = ({
     );
 
     // Viser hovedinnhold, evt ved teknisk feil feilmeldinger
-    const getMainContent = () => {
+    const renderContent = () => {
       if (initError) {
         return (
           <div className={errorContainerStyling}>
@@ -237,7 +237,7 @@ export const AthleteList: FC<IAthleteListProps> = ({
     return (
       <section className={sectionContainerStyling}>
         {renderHeader()}
-        {getMainContent()}
+        {renderContent()}
         {renderFeedback()}
       </section>
     );

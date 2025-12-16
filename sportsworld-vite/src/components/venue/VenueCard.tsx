@@ -84,83 +84,85 @@ export const VenueCard: FC<IVenueCardProps> = ({
     }
   };
 
-  const renderButtons = () => {
-    switch (variant) {
-      case "view":
-        return null;
+  const renderJsx = () => {
+    // Generer knapper basert på variant
+    const renderButtons = () => {
+      switch (variant) {
+        case "view":
+          return null;
 
-      case "manage":
-        // Manage-variant confirm delete buttons
-        if (confirming) {
+        case "manage":
+          // Manage-variant confirm delete buttons
+          if (confirming) {
+            return (
+              <div className={buttonContainerStyling}>
+                <button
+                  onClick={handleConfirmDelete}
+                  className={`${buttonBase} ${buttonHover} ${deleteButtonColor}`}
+                >
+                  Yes
+                </button>
+                <button
+                  onClick={handleCancel}
+                  className={`${buttonBase} ${buttonHover} ${buttonColor}`}
+                >
+                  No
+                </button>
+              </div>
+            );
+          }
+
+          // Manage-variant venue card buttons
           return (
-            <div className={buttonContainerStyling}>
+            <>
+              <Link
+                to={`/venues/${venue.id}`}
+                className={`${buttonBase} ${buttonHover} ${buttonColor} text-center`}
+              >
+                Edit
+              </Link>
               <button
-                onClick={handleConfirmDelete}
+                type="button"
+                onClick={handleDeleteClick}
                 className={`${buttonBase} ${buttonHover} ${deleteButtonColor}`}
               >
-                Yes
+                Delete
               </button>
-              <button
-                onClick={handleCancel}
-                className={`${buttonBase} ${buttonHover} ${buttonColor}`}
-              >
-                No
-              </button>
-            </div>
+            </>
           );
-        }
 
-        // Manage-variant venue card buttons
-        return (
-          <>
-            <Link
-              to={`/venues/${venue.id}`}
-              className={`${buttonBase} ${buttonHover} ${buttonColor} text-center`}
-            >
-              Edit
-            </Link>
-            <button
-              type="button"
-              onClick={handleDeleteClick}
-              className={`${buttonBase} ${buttonHover} ${deleteButtonColor}`}
-            >
-              Delete
-            </button>
-          </>
-        );
+        default:
+          return null;
+      }
+    };
 
-      default:
-        return null;
-    }
-  };
-
-  const content = (
-    <>
-      <div className={imageContainerClasses}>
-        <img
-          src={`http://localhost:5110/images/VenueImages/${venue.image}`}
-          alt={venue.name}
-          className={imageClasses}
-        />
-      </div>
-
-      <div className={contentContainerClasses}>
-        <div>
-          <div className={idContainerClasses}>
-            <h3 className={titleClasses}>{venue.name}</h3>
-            <span className={idTextClasses}>#{venue.id}</span>
-          </div>
-          <p>Capacity: {venue.capacity.toLocaleString()}</p>
+    // Generer venue kort innhold
+    const renderContent = () => (
+      <>
+        <div className={imageContainerClasses}>
+          <img
+            src={`http://localhost:5110/images/VenueImages/${venue.image}`}
+            alt={venue.name}
+            className={imageClasses}
+          />
         </div>
 
-        <div className={buttonContainerStyling}>{renderButtons()}</div>
-      </div>
-    </>
-  );
+        <div className={contentContainerClasses}>
+          <div>
+            <div className={idContainerClasses}>
+              <h3 className={titleClasses}>{venue.name}</h3>
+              <span className={idTextClasses}>#{venue.id}</span>
+            </div>
+            <p>Capacity: {venue.capacity.toLocaleString()}</p>
+          </div>
 
-  // Grid column span må håndteres her for å fungere med Venuelists grid-col-12.
-  // Vanligvis vil vi ha all column-logikk samlet i en komponent, men vi tillater dette for nå.
-  const renderJsx = () => {
+          <div className={buttonContainerStyling}>{renderButtons()}</div>
+        </div>
+      </>
+    );
+
+    // Grid column span må håndteres her for å fungere med Venuelists grid-col-12.
+    // Vanligvis vil vi ha all column-logikk samlet i en komponent, men vi tillater dette for nå.
     if (confirming) {
       return (
         <article className={deleteCardClasses}>
@@ -177,11 +179,11 @@ export const VenueCard: FC<IVenueCardProps> = ({
     if (variant === "view") {
       return (
         <Link to={venueViewCardHref} className={linkCardClasses}>
-          <article className={cardClasses}>{content}</article>
+          <article className={cardClasses}>{renderContent()}</article>
         </Link>
       );
     } else {
-      return <article className={cardClasses}>{content}</article>;
+      return <article className={cardClasses}>{renderContent()}</article>;
     }
   };
 

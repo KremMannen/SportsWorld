@@ -188,7 +188,7 @@ export const VenueList: FC<IVenueListProps> = ({
     );
 
     // Bestemmer hvilket innhold som skal vises
-    const getMainContent = () => {
+    const renderContent = () => {
       if (initError) {
         return (
           <div className={errorContainerStyling}>
@@ -278,7 +278,7 @@ export const VenueList: FC<IVenueListProps> = ({
     return (
       <section className={sectionContainerStyling}>
         {renderHeader()}
-        {getMainContent()}
+        {renderContent()}
         {renderFeedback()}
       </section>
     );

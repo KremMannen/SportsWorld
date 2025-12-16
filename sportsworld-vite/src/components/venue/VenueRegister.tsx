@@ -107,10 +107,14 @@ export const VenueRegister: FC = () => {
     : "text-lg text-white font-bold text-center";
   const inputStyling =
     "flex-1 px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#4C0000] min-w-0";
+  const imageInputStyling =
+    "px-4 py-2 border border-gray-300 rounded cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-[#4C0000] file:text-white file:cursor-pointer hover:file:bg-[#870000]";
+
   const buttonStyling =
     "bg-[#4C0000] text-white px-6 py-2 rounded font-bold hover:shadow hover:cursor-pointer hover:bg-[#870000]";
   const formSectionStyling = "flex flex-col gap-4 p-4";
-  const inputsectionStyling = "flex flex-col gap-1";
+  const inputSectionStyling = "flex flex-col gap-1";
+  const labelTextStyling = "text-sm font-medium text-gray-700";
 
   const feedbackStyling = "text-sm text-black text-center";
   const feedbackContainerStyling = `gap-2 rounded-sm px-2 py-1 border border-gray-300 shadow bg-white flex items-center justify-center max-w-[400px] mx-auto mt-4`;
@@ -130,7 +134,7 @@ export const VenueRegister: FC = () => {
   };
 
   useEffect(() => {
-    if (venue) {
+    if (venue && isEditMode) {
       setName(venue.name);
       setCapacity(venue.capacity.toString());
     } else if (!isEditMode) {
@@ -152,7 +156,7 @@ export const VenueRegister: FC = () => {
     );
 
     // Bestemmer hvilket innhold som skal vises
-    const getMainContent = () => {
+    const renderContent = () => {
       if (initError) {
         return (
           <div className={errorsectionStyling}>
@@ -205,11 +209,8 @@ export const VenueRegister: FC = () => {
       // Redigerings vindu
       return (
         <form className={formSectionStyling} onSubmit={handleRegister}>
-          <div className={inputsectionStyling}>
-            <label
-              htmlFor="venue-name"
-              className="text-sm font-medium text-gray-700"
-            >
+          <div className={inputSectionStyling}>
+            <label htmlFor="venue-name" className={labelTextStyling}>
               Name
             </label>
             <input
@@ -222,11 +223,8 @@ export const VenueRegister: FC = () => {
             />
           </div>
 
-          <div className={inputsectionStyling}>
-            <label
-              htmlFor="venue-capacity"
-              className="text-sm font-medium text-gray-700"
-            >
+          <div className={inputSectionStyling}>
+            <label htmlFor="venue-capacity" className={labelTextStyling}>
               Capacity
             </label>
             <input
@@ -239,18 +237,15 @@ export const VenueRegister: FC = () => {
             />
           </div>
 
-          <div className={inputsectionStyling}>
-            <label
-              htmlFor="venue-image"
-              className="text-sm font-medium text-gray-700"
-            >
+          <div className={inputSectionStyling}>
+            <label htmlFor="venue-image" className={labelTextStyling}>
               Venue Image
             </label>
             <input
               id="venue-image"
               type="file"
               onChange={handleImageChange}
-              className="px-4 py-2 border border-gray-300 rounded cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-[#4C0000] file:text-white file:cursor-pointer hover:file:bg-[#870000]"
+              className={imageInputStyling}
               accept="image/*"
             />
           </div>
@@ -282,7 +277,7 @@ export const VenueRegister: FC = () => {
     return (
       <section className={sectionStyling}>
         {renderHeader()}
-        {getMainContent()}
+        {renderContent()}
         {renderFeedback()}
       </section>
     );

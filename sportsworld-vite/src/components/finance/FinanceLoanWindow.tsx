@@ -79,6 +79,48 @@ export const FinanceLoanWindow: FC = () => {
   };
 
   const renderJsx = () => {
+    const renderHeader = () => (
+      <section className={sectionBase}>
+        <div className={titleContainerStyling}>
+          <h3 className={titleStyling}>Loan Portal</h3>
+        </div>
+        <p className={debtTextStyling}>
+          Total debt: ${finances.debt.toLocaleString()}
+        </p>
+      </section>
+    );
+
+    // Generer loan form
+    const renderLoanForm = () => (
+      <section className={sectionBase}>
+        <div className={inputContainerStyling}>
+          <form onSubmit={handleLoanRequest}>
+            <label htmlFor="loan-input" className={loanInputLabelStyling}>
+              Input loan amount
+            </label>
+            <input
+              id="loan-input"
+              type="number"
+              value={loanAmount}
+              onChange={(e) => setLoanAmount(e.target.value)}
+              placeholder="Enter amount"
+              className={inputBase}
+            />
+
+            <button type="submit" className={`${buttonBase} ${buttonHover}`}>
+              Request Loan
+            </button>
+          </form>
+        </div>
+        {actionFeedback && (
+          <div className={feedbackContainerStyling}>
+            <p className={feedbackStyling}>{actionFeedback}</p>
+          </div>
+        )}
+      </section>
+    );
+
+    // Håndter feil og loading states
     if (initError) {
       return (
         <section className={sectionBase}>
@@ -101,41 +143,8 @@ export const FinanceLoanWindow: FC = () => {
 
     return (
       <>
-        <section className={sectionBase}>
-          <div className={titleContainerStyling}>
-            <h3 className={titleStyling}>Loan Portal</h3>
-          </div>
-          <p className={debtTextStyling}>
-            Total debt: ${finances.debt.toLocaleString()}
-          </p>
-        </section>
-
-        <section className={sectionBase}>
-          <div className={inputContainerStyling}>
-            <form onSubmit={handleLoanRequest}>
-              <label htmlFor="loan-input" className={loanInputLabelStyling}>
-                Input loan amount
-              </label>
-              <input
-                id="loan-input"
-                type="number"
-                value={loanAmount}
-                onChange={(e) => setLoanAmount(e.target.value)}
-                placeholder="Enter amount"
-                className={inputBase}
-              />
-
-              <button type="submit" className={`${buttonBase} ${buttonHover}`}>
-                Request Loan
-              </button>
-            </form>
-          </div>
-          {actionFeedback && (
-            <div className={feedbackContainerStyling}>
-              <p className={feedbackStyling}>{actionFeedback}</p>
-            </div>
-          )}
-        </section>
+        {renderHeader()}
+        {renderLoanForm()}
       </>
     );
   };

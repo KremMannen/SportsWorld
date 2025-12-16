@@ -171,7 +171,7 @@ export const AthleteRegister: FC = () => {
     );
 
     // Viser hovedinnhold, evt ved teknisk feil feilmeldinger
-    const getMainContent = () => {
+    const renderContent = () => {
       if (initError) {
         return (
           <div className={errorContainerStyling}>
@@ -319,7 +319,7 @@ export const AthleteRegister: FC = () => {
     return (
       <section className={sectionStyling}>
         {renderHeader()}
-        {getMainContent()}
+        {renderContent()}
         {renderFeedback()}
       </section>
     );

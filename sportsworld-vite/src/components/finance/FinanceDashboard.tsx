@@ -34,35 +34,38 @@ export const FinanceDashboard: FC<IFinanceDashboardProps> = ({
     0
   );
 
-  const renderCards = () => (
-    <>
-      <FinanceCard
-        title="Account Balance"
-        value={`$${finances.moneyLeft.toLocaleString()}`}
-        limitedVariant={limitedVariant}
-      />
-      <FinanceCard
-        title="Fighters Owned"
-        value={fightersOwned}
-        limitedVariant={limitedVariant}
-      />
-      <FinanceCard
-        title="Fighters Worth"
-        value={`$${fightersWorth.toLocaleString()}`}
-        limitedVariant={limitedVariant}
-      />
-      {/* Viser ikke denne på hovedsiden */}
-      {!limitedVariant && (
+  const renderJsx = () => {
+    // Generer finance cards
+    const renderCards = () => (
+      <>
         <FinanceCard
-          title="Total Spending"
-          value={`$${finances.moneySpent.toLocaleString()}`}
+          title="Account Balance"
+          value={`$${finances.moneyLeft.toLocaleString()}`}
           limitedVariant={limitedVariant}
         />
-      )}
-    </>
-  );
+        <FinanceCard
+          title="Fighters Owned"
+          value={fightersOwned}
+          limitedVariant={limitedVariant}
+        />
+        <FinanceCard
+          title="Fighters Worth"
+          value={`$${fightersWorth.toLocaleString()}`}
+          limitedVariant={limitedVariant}
+        />
+        {/* Viser ikke denne på hovedsiden */}
+        {!limitedVariant && (
+          <FinanceCard
+            title="Total Spending"
+            value={`$${finances.moneySpent.toLocaleString()}`}
+            limitedVariant={limitedVariant}
+          />
+        )}
+      </>
+    );
 
-  const renderJsx = () => {
+    // TODO: Bør egentlig sjekke athletes og, men krever refacor av variable names, ingen konsekvens atm
+    // Håndter init feil til context
     if (initError) {
       return (
         <section className={sectionContainerStyling}>
@@ -72,7 +75,9 @@ export const FinanceDashboard: FC<IFinanceDashboardProps> = ({
         </section>
       );
     }
-    // TODO: Bør egentlig sjekke athletes og, men krever refacor av variable names, ingen konsekvens atm
+
+    // TODO: Bør egentlig sjekke athletes...
+    // Innhold laster inn..
     if (!hasInitialized) {
       return (
         <section className={sectionContainerStyling}>
@@ -87,6 +92,7 @@ export const FinanceDashboard: FC<IFinanceDashboardProps> = ({
     if (limitedVariant) {
       return <section className={sectionBase}>{renderCards()}</section>;
     }
+
     // Default output
     return (
       <section className={sectionBase}>
