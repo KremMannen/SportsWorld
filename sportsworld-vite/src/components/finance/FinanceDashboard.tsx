@@ -13,7 +13,7 @@ export const FinanceDashboard: FC<IFinanceDashboardProps> = ({
 }) => {
   const { athletes } = useContext(AthleteContext) as IAthleteContext;
 
-  const { finances, initError, hasInitialized, financeIsLoading } = useContext(
+  const { finances, initError, hasInitialized } = useContext(
     FinanceContext
   ) as IFinanceContext;
 
@@ -86,14 +86,6 @@ export const FinanceDashboard: FC<IFinanceDashboardProps> = ({
             <p className={loadingText}>Loading dashboard...</p>
           </div>
         </section>
-      );
-    }
-
-    if (financeIsLoading) {
-      return (
-        <div className={loadingContainer}>
-          <p className={loadingText}>Loading finances…</p>
-        </div>
       );
     }
 
