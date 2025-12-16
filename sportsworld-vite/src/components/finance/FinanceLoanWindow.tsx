@@ -5,7 +5,7 @@ import type { IFinanceResponseSingle } from "../../interfaces/IServiceResponses"
 import type { IFinance } from "../../interfaces/objects/IFinance";
 
 export const FinanceLoanWindow: FC = () => {
-  const { finances, updateFinance, initError } = useContext(
+  const { finances, updateFinance, initError, financeIsLoading } = useContext(
     FinanceContext
   ) as IFinanceContext;
 
@@ -31,7 +31,10 @@ export const FinanceLoanWindow: FC = () => {
   const buttonHover = "hover:shadow hover:cursor-pointer hover:bg-[#870000]";
 
   const inputContainerStyling =
-    "flex flex-col sm:flex-row gap-4 items-stretch sm:items-center lg:-mt-11 max-w-[600px] mx-auto";
+    "flex flex-col sm:flex-row gap-4 items-stretch sm:items-center max-w-[600px] mx-auto";
+
+  const loadingTextStyling = "w-full text-gray-500 text-lg text-center";
+  const loadingContainerStyling = "flex justify-center items-center py-12";
 
   const loanInputLabelStyling = "sr-only";
 
@@ -106,23 +109,31 @@ export const FinanceLoanWindow: FC = () => {
             Request Loan
           </button>
         </form>
-        {actionFeedback && (
-          <div className={feedbackContainerStyling}>
-            <p className={feedbackStyling}>{actionFeedback}</p>
-          </div>
-        )}
+        <div className="h-[28px] mt-4 flex items-center justify-center">
+          {actionFeedback && (
+            <div className={feedbackContainerStyling}>
+              <p className={feedbackStyling}>{actionFeedback}</p>
+            </div>
+          )}
+        </div>
       </section>
     );
 
     // Håndter feil og loading states
     if (initError) {
       return (
-        <section className={sectionBase}>
-          <div className={errorContainer}>
-            <p>{initError}</p>
-          </div>
-        </section>
+        <>
+          <section className={sectionBase}>
+            <div className={errorContainer}>
+              <p>{initError}</p>
+            </div>
+          </section>
+        </>
       );
+    }
+
+    if (financeIsLoading) {
+      return;
     }
 
     return (

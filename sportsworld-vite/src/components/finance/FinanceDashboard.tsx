@@ -76,14 +76,6 @@ export const FinanceDashboard: FC<IFinanceDashboardProps> = ({
       );
     }
 
-    if (financeIsLoading) {
-      return (
-        <div className={loadingContainerStyling}>
-          <p className={loadingTextStyling}>Loading finances...</p>
-        </div>
-      );
-    }
-
     if (limitedVariant) {
       // Begrenset variant som vises kun på forsiden (homepage)
       return <section className={sectionBase}>{renderCards()}</section>;
