@@ -13,9 +13,7 @@ export const FinanceDashboard: FC<IFinanceDashboardProps> = ({
 }) => {
   const { athletes } = useContext(AthleteContext) as IAthleteContext;
 
-  const { finances, initError, financeIsLoading } = useContext(
-    FinanceContext
-  ) as IFinanceContext;
+  const { finances, initError } = useContext(FinanceContext) as IFinanceContext;
 
   // --- Styling ---
 
@@ -24,8 +22,6 @@ export const FinanceDashboard: FC<IFinanceDashboardProps> = ({
   const sectionBase = "w-full pt-12 grid grid-cols-12 gap-6 text-center";
   const sectionContainerStyling = `py-12`;
   const containerStyling = "col-span-12 lg:col-span-6 grid grid-cols-12 gap-6";
-  const loadingContainerStyling = "flex justify-center items-center py-12";
-  const loadingTextStyling = "w-full text-gray-500 text-lg text-center";
 
   // --- Kalkulerte visningsverdier ---
   const purchasedAthletes: IAthlete[] = athletes.filter((a) => a.purchased);

@@ -20,9 +20,6 @@ export const FinanceCard: FC<IFinanceCardProps> = ({
   const titleStyling = "text-lg text-white font-bold";
   const valueStyling = "text-2xl font-bold mt-3 text-[#4C0000]";
 
-  const loadingContainerStyling = "flex justify-center items-center py-12";
-  const loadingTextStyling = "w-full text-gray-500 text-lg text-center";
-
   const renderJsx = () => {
     // trenger ikke UI feedback per kort når det laster inn
     if (financeIsLoading) {

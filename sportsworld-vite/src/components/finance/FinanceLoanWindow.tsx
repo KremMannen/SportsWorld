@@ -33,9 +33,6 @@ export const FinanceLoanWindow: FC = () => {
   const inputContainerStyling =
     "flex flex-col sm:flex-row gap-4 items-stretch sm:items-center max-w-[600px] mx-auto";
 
-  const loadingTextStyling = "w-full text-gray-500 text-lg text-center";
-  const loadingContainerStyling = "flex justify-center items-center py-12";
-
   const loanInputLabelStyling = "sr-only";
 
   const errorContainer =
